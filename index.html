@@ -1117,6 +1117,7 @@
                                         <option>Mentor</option>
                                     </select>
                                 </div>
+                                <button class="btn btn-outline" style="width:100%; border-color:var(--accent-pink); color:var(--accent-pink); margin-top:8px;" onclick="deleteCurrentCharFromForm()"><i class="fa-solid fa-trash"></i> Excluir Personagem</button>
                             </div>
 
                             <!-- Full Body Image Box -->
@@ -1250,19 +1251,29 @@
                     </div>
 
                     <div class="card">
-                        <h3 class="section-title "><i class="fa-solid fa-scroll"></i> Sinopse da História</h3>
-                        <textarea id="storySynopsisText" class="form-control" style="min-height: 90px;" placeholder="Escreva a sinopse principal aqui..."></textarea>
+                        <h3 class="section-title "><i class="fa-solid fa-pen-to-square"></i> Título & Sinopse da História</h3>
+                        <div class="form-group">
+                            <label for="storyTitleInput">Nome da História / Livro</label>
+                            <input type="text" id="storyTitleInput" class="form-control" placeholder="Ex: O Reino das Sombras" oninput="document.getElementById('headerTitle').innerText = this.value || 'História'">
+                        </div>
+                        <div class="form-group">
+                            <label for="storySynopsisText">Sinopse da História</label>
+                            <textarea id="storySynopsisText" class="form-control" style="min-height: 90px;" placeholder="Escreva a sinopse principal aqui..."></textarea>
+                        </div>
                     </div>
 
                     <div class="open-book-container">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <div style="display: flex; gap: 10px; align-items: center;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                                 <label style="font-weight: 700; color: var(--accent-brown);">Capítulo:</label>
                                 <select id="chapterSelect" class="form-control" style="width: auto;" onchange="loadChapterContent()"></select>
                                 <button class="btn btn-outline" onclick="addNewChapterToStory()"><i class="fa-solid fa-plus"></i> Novo Capítulo</button>
+                                <button class="btn btn-outline" onclick="deleteCurrentChapter()" title="Excluir Capítulo Atual"><i class="fa-solid fa-trash" style="color:var(--accent-pink);"></i> Excluir Capítulo</button>
                             </div>
-                            <button class="btn btn-outline" onclick="exportStoryToTxt()"><i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar TXT</button>
-                            <button class="btn btn-primary" onclick="saveCurrentStory()"><i class="fa-solid fa-bookmark"></i> Salvar História</button>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-outline" onclick="exportStoryToTxt()"><i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar TXT</button>
+                                <button class="btn btn-primary" onclick="saveCurrentStory()"><i class="fa-solid fa-bookmark"></i> Salvar História</button>
+                            </div>
                         </div>
 
                         <div class="open-book">
@@ -1689,7 +1700,10 @@
             const div = document.createElement('div');
             div.className = 'form-group custom-field-item';
             div.innerHTML = `
-                <label>${name}</label>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <label style="margin:0;">${name}</label>
+                    <i class="fa-solid fa-trash" style="cursor:pointer; color:var(--accent-pink); font-size:0.85rem;" onclick="this.closest('.custom-field-item').remove()" title="Excluir este campo"></i>
+                </div>
                 <input type="text" class="form-control" data-label="${name}">
             `;
             container.appendChild(div);
@@ -1702,7 +1716,10 @@
                 const div = document.createElement('div');
                 div.className = 'form-group custom-field-item';
                 div.innerHTML = `
-                    <label>${f.label}</label>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                        <label style="margin:0;">${f.label}</label>
+                        <i class="fa-solid fa-trash" style="cursor:pointer; color:var(--accent-pink); font-size:0.85rem;" onclick="this.closest('.custom-field-item').remove()" title="Excluir este campo"></i>
+                    </div>
                     <input type="text" class="form-control" data-label="${f.label}" value="${f.value}">
                 `;
                 container.appendChild(div);
@@ -1748,6 +1765,18 @@
             localStorage.setItem('diario_personagens_v4', JSON.stringify(characters));
             alert('Ficha salva com sucesso! ✨');
             showGroupView();
+        }
+
+                function deleteCurrentCharFromForm() {
+            if (activeCharId) {
+                if (confirm('Deseja excluir este personagem?')) {
+                    characters = characters.filter(c => c.id !== activeCharId);
+                    localStorage.setItem('diario_personagens_v4', JSON.stringify(characters));
+                    showGroupView();
+                }
+            } else {
+                showGroupView();
+            }
         }
 
         function deleteChar(id, e) {
@@ -1887,8 +1916,12 @@
                             <div class="story-title">${s.title}</div>
                             <span style="font-size:0.85rem; color: var(--text-muted);">Clique para abrir a história e o livro de capítulos</span>
                         </div>
-                        <i class="fa-solid ${s.openLongline ? 'fa-chevron-up' : 'fa-chevron-down'}" 
-                           onclick="toggleLongline('${s.id}', event)" title="Ver Longline"></i>
+                        <div style="display:flex; gap:14px; align-items:center;">
+                            <i class="fa-solid ${s.openLongline ? 'fa-chevron-up' : 'fa-chevron-down'}" 
+                               onclick="toggleLongline('${s.id}', event)" title="Ver Longline"></i>
+                            <i class="fa-solid fa-trash" style="color:var(--accent-pink); cursor:pointer;" 
+                               onclick="deleteStory('${s.id}', event)" title="Excluir História"></i>
+                        </div>
                     </div>
                     ${s.openLongline ? `<div class="longline-box" contenteditable="true" onblur="updateLongline('${s.id}', this.innerText)">${s.longline || 'Clique para editar a longline...'}</div>` : ''}
                 `;
@@ -1949,6 +1982,7 @@
                 document.getElementById('bannerPlaceholder').classList.remove('hidden');
             }
 
+            document.getElementById('storyTitleInput').value = s.title || '';
             document.getElementById('storySynopsisText').value = s.synopsis || '';
             document.getElementById('storySpotifyUrl').value = s.spotifyUrl || '';
 
@@ -1998,6 +2032,10 @@
         function saveCurrentStory() {
             const story = stories.find(x => x.id === activeStoryId);
             if (!story) return;
+            const newTitle = document.getElementById('storyTitleInput').value.trim();
+            if (newTitle) {
+                story.title = newTitle;
+            }
             story.synopsis = document.getElementById('storySynopsisText').value;
             story.spotifyUrl = document.getElementById('storySpotifyUrl').value;
             story.chapters[activeChapterNum] = {
@@ -2025,6 +2063,31 @@
         }
 
         
+                function deleteStory(id, e) {
+            if (e) e.stopPropagation();
+            if (confirm('Tem certeza que deseja excluir esta história e todos os seus capítulos?')) {
+                stories = stories.filter(s => s.id !== id);
+                saveStories();
+                showStoryFoldersList();
+            }
+        }
+
+        function deleteCurrentChapter() {
+            const story = stories.find(x => x.id === activeStoryId);
+            if (!story) return;
+            const keys = Object.keys(story.chapters);
+            if (keys.length <= 1) {
+                alert('A história precisa ter pelo menos 1 capítulo!');
+                return;
+            }
+            if (confirm(`Deseja excluir o Capítulo ${activeChapterNum}?`)) {
+                delete story.chapters[activeChapterNum];
+                saveStories();
+                renderChapterOptions(story);
+                loadChapterContent();
+            }
+        }
+
         function exportStoryToTxt() {
             const story = stories.find(x => x.id === activeStoryId);
             if (!story) return;
@@ -2085,11 +2148,14 @@
             locations.forEach(loc => {
                 const card = document.createElement('div');
                 card.className = 'location-card';
-                card.onclick = () => openLocationDetail(loc.id);
+                card.onclick = (e) => {
+                    if (!e.target.classList.contains('fa-trash')) openLocationDetail(loc.id);
+                };
 
                 const photosPreview = (loc.photos || []).map(p => `<img src="${p}">`).join('');
 
                 card.innerHTML = `
+                    <i class="fa-solid fa-trash" style="position:absolute; bottom:14px; right:16px; color:var(--text-muted); cursor:pointer; font-size:1rem;" onclick="deleteLocation('${loc.id}', event)" title="Excluir Local"></i>
                     <div class="passport-stamp"><div class="passport-stamp-inner">${loc.stamp || 'EXPLORADO'}</div></div>
                     <h3 style="font-size: 2rem; color: var(--accent-pink);">${loc.name}</h3>
                     <p style="font-size: 0.85rem; font-weight: 700; color: var(--accent-brown); margin-bottom: 8px;">${loc.tag}</p>
@@ -2209,6 +2275,15 @@
             saveLocations();
             alert('Local atualizado com sucesso! 🗺️');
             showWorldList();
+        }
+
+                function deleteLocation(id, e) {
+            if (e) e.stopPropagation();
+            if (confirm('Deseja excluir este local?')) {
+                locations = locations.filter(l => l.id !== id);
+                saveLocations();
+                showWorldList();
+            }
         }
 
         function saveLocations() { localStorage.setItem('diario_locais', JSON.stringify(locations)); }
