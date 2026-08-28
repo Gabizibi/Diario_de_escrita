@@ -2366,63 +2366,104 @@ function togglePasswordVisibility() {
         }
 
         function exportStoryToTxt() {
-            const story = stories.find(x => x.id === activeStoryId);
-            if (!story) return;
+    const story = stories.find(x => x.id === activeStoryId);
+    if (!story) return;
 
-            let txtContent = "========================================\n";
-            txtContent += `${story.title.toUpperCase()}\n`;
-            txtContent += "========================================\n\n";
+    let txtContent = "========================================\n";
+    txtContent += `${story.title.toUpperCase()}\n`;
+    txtContent += "========================================\n\n";
 
-            if (story.longline && story.longline.trim()) {
-                txtContent += `LONGLINE DA HISTÓRIA:\n${story.longline.trim()}\n\n`;
-            }
+    if (story.longline && story.longline.trim()) {
+        txtContent += `LONGLINE DA HISTÓRIA:\n${story.longline.trim()}\n\n`;
+    }
 
-            const synopsis = document.getElementById('storySynopsisText').value;
-            if (synopsis && synopsis.trim()) {
-                txtContent += `SINOPSE:\n${synopsis.trim()}\n\n`;
-            }
+    const synopsis = document.getElementById('storySynopsisText').value;
+    if (synopsis && synopsis.trim()) {
+        txtContent += `SINOPSE:\n${synopsis.trim()}\n\n`;
+    }
 
-            txtContent += "----------------------------------------\n\n";
+    txtContent += "----------------------------------------\n\n";
 
-            const currentChObj = story.chapters[activeChapterNum];
-            const currentTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
+    const currentChObj = story.chapters[activeChapterNum];
+    const currentTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
 
-            story.chapters[activeChapterNum] = {
-                title: currentTitle,
-                longline: document.getElementById('chapterLonglineText').value,
-                left: document.getElementById('chapterLeftText').value,
-                right: document.getElementById('chapterRightText').value
-            };
+    story.chapters[activeChapterNum] = {
+        title: currentTitle,
+        longline: document.getElementById('chapterLonglineText').value,
+        left: document.getElementById('chapterLeftText').value,
+        right: document.getElementById('chapterRightText').value
+    };
 
-            const sortedChapterKeys = Object.keys(story.chapters).sort((a, b) => parseInt(a) - parseInt(b));
+    const sortedChapterKeys = Object.keys(story.chapters).sort((a, b) => parseInt(a) - parseInt(b));
 
-            sortedChapterKeys.forEach(chNum => {
-                const ch = story.chapters[chNum];
-                const chTitle = (typeof ch === 'object' && ch.title) ? ch.title : `CAPÍTULO ${chNum}`;
-                txtContent += `=== ${chTitle.toUpperCase()} ===\n`;
-                if (typeof ch === 'object' && ch.longline && ch.longline.trim()) {
-                    txtContent += `Longline do Capítulo: ${ch.longline.trim()}\n`;
-                }
-                txtContent += `\n`;
-                if (typeof ch === 'object') {
-                    if (ch.left && ch.left.trim()) txtContent += `${ch.left.trim()}\n\n`;
-                    if (ch.right && ch.right.trim()) txtContent += `${ch.right.trim()}\n\n`;
-                } else if (typeof ch === 'string') {
-                    txtContent += `${ch.trim()}\n\n`;
-                }
-                txtContent += "\n";
-            });
-
-            const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
-            const downloadAnchor = document.createElement('a');
-            const fileName = story.title.replace(/[^a-zA-Z0-9_ -]/g, '').trim().replace(/\s+/g, '_') || 'historia';
-            
-            downloadAnchor.href = URL.createObjectURL(blob);
-            downloadAnchor.download = `${fileName}.txt`;
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
+    sortedChapterKeys.forEach(chNum => {
+        const ch = story.chapters[chNum];
+        const chTitle = (typeof ch === 'object' && ch.title) ? ch.title : `CAPÍTULO ${chNum}`;
+        txtContent += `=== ${chTitle.toUpperCase()} ===\n`;
+        if (typeof ch === 'object' && ch.longline && ch.longline.trim()) {
+            txtContent += `Longline do Capítulo: ${ch.longline.trim()}\n`;
         }
+        txtContent += `\n`;
+        if (typeof ch === 'object') {
+            if (ch.left && ch.left.trim()) txtContent += `${ch.left.trim()}\n\n`;
+            if (ch.right && ch.right.trim()) txtContent += `${ch.right.trim()}\n\n`;
+        } else if (typeof ch === 'string') {
+            txtContent += `${ch.trim()}\n\n`;
+        }
+        txtContent += "\n";
+    });
+
+    const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
+    const downloadAnchor = document.createElement('a');
+    const fileName = story.title.replace(/[^a-zA-Z0-9_ -]/g, '').trim().replace(/\s+/g, '_') || 'historia';
+    
+    downloadAnchor.href = URL.createObjectURL(blob);
+    downloadAnchor.download = `${fileName}.txt`;
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+}
+
+// Opção 1: Gerar Link Público de Leitura
+function generatePublicShareLink() {
+    const story = stories.find(x => x.id === activeStoryId);
+    if (!story) {
+        alert('Selecione ou abra uma história primeiro.');
+        return;
+    }
+    
+    const baseUrl = window.location.href.split('?')[0];
+    const shareUrl = `${baseUrl}?read_story=${story.id}`;
+    
+    navigator.clipboard.writeText(shareUrl).then(() => {
+        alert(`✨ Link de leitura gerado e copiado para a sua área de transferência!\n\nEnvie para quem quiser:\n${shareUrl}`);
+    }).catch(() => {
+        prompt('Copie o link público de leitura abaixo:', shareUrl);
+    });
+}
+
+// Opção 2: Adicionar Leitor / Coautor via E-mail
+async function addSharedReader() {
+    const story = stories.find(x => x.id === activeStoryId);
+    if (!story) {
+        alert('Selecione ou abra uma história primeiro.');
+        return;
+    }
+
+    const readerEmail = prompt('Digite o e-mail cadastrado do amigo que poderá ler esta história:');
+    if (!readerEmail || !readerEmail.trim()) return;
+
+    if (!story.allowed_readers) story.allowed_readers = [];
+    
+    if (story.allowed_readers.includes(readerEmail.trim())) {
+        alert('Este e-mail já possui acesso a esta história.');
+        return;
+    }
+
+    story.allowed_readers.push(readerEmail.trim());
+    saveStories();
+    alert(`🎉 Acesso concedido! O usuário (${readerEmail.trim()}) agora poderá visualizar esta história no painel dele.`);
+}
 
         function saveStories() { localStorage.setItem('diario_historias', JSON.stringify(stories)); }
 
