@@ -1448,24 +1448,28 @@
 
     <script>
         /* SUPABASE INITIALIZATION & AUTH LOGIC */
-        let supabaseClient = null;
+let supabaseClient = null;
 
-        function initSupabase() {
-            const savedUrl = localStorage.getItem('diario_supabase_url') || '';
-            const savedKey = localStorage.getItem('diario_supabase_key') || '';
+// Credenciais padrão do seu projeto no Supabase
+const SUPABASE_URL_DEFAULT = "https://opsybfoxbwmbzrpujyyf.supabase.co";
+const SUPABASE_KEY_DEFAULT = "SUA_ANON_KEY_AQUI"; 
 
-            if (savedUrl) document.getElementById('supabaseUrlInput').value = savedUrl;
-            if (savedKey) document.getElementById('supabaseKeyInput').value = savedKey;
+function initSupabase() {
+    const savedUrl = localStorage.getItem('diario_supabase_url') || SUPABASE_URL_DEFAULT;
+    const savedKey = localStorage.getItem('diario_supabase_key') || SUPABASE_KEY_DEFAULT;
 
-            if (savedUrl && savedKey) {
-                try {
-                    supabaseClient = window.supabase.createClient(savedUrl, savedKey);
-                    checkUserSession();
-                } catch (err) {
-                    console.error("Erro ao inicializar Supabase:", err);
-                }
-            }
+    if (savedUrl) document.getElementById('supabaseUrlInput').value = savedUrl;
+    if (savedKey) document.getElementById('supabaseKeyInput').value = savedKey;
+
+    if (savedUrl && savedKey) {
+        try {
+            supabaseClient = window.supabase.createClient(savedUrl, savedKey);
+            checkUserSession();
+        } catch (err) {
+            console.error("Erro ao inicializar Supabase:", err);
         }
+    }
+}
 
         function saveSupabaseConfig() {
             const url = document.getElementById('supabaseUrlInput').value.trim();
