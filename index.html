@@ -972,45 +972,50 @@
 <body>
 
     <!-- AUTHENTICATION OVERLAY MODAL -->
-    <div id="authOverlay">
-        <div class="auth-card">
-            <h2>Diário de Escrita</h2>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">Entre com sua conta do Supabase para acessar e sincronizar seus livros.</p>
+<div id="authOverlay">
+    <div class="auth-card">
+        <h2>Diário de Escrita</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">Entre com sua conta do Supabase para acessar e sincronizar seus livros.</p>
 
-            <!-- Supabase Config Collapsible Section -->
-            <details style="margin-bottom: 18px; text-align: left; background: #fdf8f0; padding: 10px; border-radius: 12px; border: 1px dashed var(--border-style);">
-                <summary style="font-weight: 700; color: var(--accent-brown); cursor: pointer;"><i class="fa-solid fa-gear"></i> Configuração do Supabase</summary>
-                <div style="margin-top: 10px;">
-                    <div class="form-group">
-                        <label style="font-size:0.8rem;">Project URL</label>
-                        <input type="text" id="supabaseUrlInput" class="form-control" placeholder="https://xyz.supabase.co" style="font-size:0.85rem; padding:6px 10px;">
-                    </div>
-                    <div class="form-group" style="margin-bottom:8px;">
-                        <label style="font-size:0.8rem;">Anon / Public Key</label>
-                        <input type="password" id="supabaseKeyInput" class="form-control" placeholder="eyJhbGciOi..." style="font-size:0.85rem; padding:6px 10px;">
-                    </div>
-                    <button class="btn btn-outline" onclick="saveSupabaseConfig()" style="width:100%; font-size:0.8rem; padding:6px;"><i class="fa-solid fa-floppy-disk"></i> Salvar Credenciais</button>
+        <!-- Supabase Config Collapsible Section -->
+        <details style="margin-bottom: 18px; text-align: left; background: #fdf8f0; padding: 10px; border-radius: 12px; border: 1px dashed var(--border-style);">
+            <summary style="font-weight: 700; color: var(--accent-brown); cursor: pointer;"><i class="fa-solid fa-gear"></i> Configuração do Supabase</summary>
+            <div style="margin-top: 10px;">
+                <div class="form-group">
+                    <label style="font-size:0.8rem;">Project URL</label>
+                    <input type="text" id="supabaseUrlInput" class="form-control" placeholder="https://xyz.supabase.co" style="font-size:0.85rem; padding:6px 10px;">
                 </div>
-            </details>
-
-            <div class="form-group">
-                <label for="authEmail"><i class="fa-solid fa-envelope"></i> E-mail</label>
-                <input type="email" id="authEmail" class="form-control" placeholder="seuemail@exemplo.com">
+                <div class="form-group" style="margin-bottom:8px;">
+                    <label style="font-size:0.8rem;">Anon / Public Key</label>
+                    <input type="password" id="supabaseKeyInput" class="form-control" placeholder="eyJhbGciOi..." style="font-size:0.85rem; padding:6px 10px;">
+                </div>
+                <button class="btn btn-outline" onclick="saveSupabaseConfig()" style="width:100%; font-size:0.8rem; padding:6px;"><i class="fa-solid fa-floppy-disk"></i> Salvar Credenciais</button>
             </div>
+        </details>
 
-            <div class="form-group">
-                <label for="authPassword"><i class="fa-solid fa-lock"></i> Senha</label>
-                <input type="password" id="authPassword" class="form-control" placeholder="••••••••">
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 24px;">
-                <button class="btn btn-primary" style="flex:1; justify-content:center;" onclick="handleLogin()"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>
-                <button class="btn btn-outline" style="flex:1; justify-content:center;" onclick="handleSignUp()"><i class="fa-solid fa-user-plus"></i> Cadastrar</button>
-            </div>
-            <p id="authStatus" style="font-size:0.85rem; margin-top:14px; font-weight:700; color:var(--accent-pink);"></p>
+        <div class="form-group" style="text-align: left;">
+            <label for="authEmail"><i class="fa-solid fa-envelope"></i> E-mail</label>
+            <input type="email" id="authEmail" class="form-control" placeholder="seuemail@exemplo.com">
         </div>
-    </div>
 
+        <!-- CAMPO DE SENHA COM O OLHO -->
+        <div class="form-group" style="text-align: left;">
+            <label for="authPassword"><i class="fa-solid fa-lock"></i> Senha</label>
+            <div style="position: relative;">
+                <input type="password" id="authPassword" class="form-control" placeholder="••••••••" style="padding-right: 40px;">
+                <i class="fa-solid fa-eye" id="togglePasswordIcon" onclick="togglePasswordVisibility()" 
+                   style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted);" 
+                   title="Mostrar/Ocultar Senha"></i>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 24px;">
+            <button class="btn btn-primary" style="flex:1; justify-content:center;" onclick="handleLogin()"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>
+            <button class="btn btn-outline" style="flex:1; justify-content:center;" onclick="handleSignUp()"><i class="fa-solid fa-user-plus"></i> Cadastrar</button>
+        </div>
+        <p id="authStatus" style="font-size:0.85rem; margin-top:14px; font-weight:700; color:var(--accent-pink);"></p>
+    </div>
+</div>
     <!-- Generic hidden inputs for image uploads -->
     <input type="file" id="overviewBannerInput" accept="image/*" style="display: none;" onchange="handleOverviewBannerUpload(event)">
     <input type="file" id="charImageInput" accept="image/*" style="display: none;" onchange="handleCharImageUpload(event)">
