@@ -1562,10 +1562,9 @@ function initSupabase() {
     if (error) {
         status.innerText = "Erro ao cadastrar: " + error.message;
     } else {
-        status.innerText = "Conta criada com sucesso! Verifique seu e-mail para confirmar o cadastro (se habilitado) ou faça o login.";
+        status.innerText = "🎉 Conta criada com sucesso! Você já pode clicar em 'Entrar'.";
     }
 }
-
 function togglePasswordVisibility() {
     const passwordInput = document.getElementById('authPassword');
     const toggleIcon = document.getElementById('togglePasswordIcon');
