@@ -1533,29 +1533,43 @@ function initSupabase() {
         }
 
         async function handleSignUp() {
-            const email = document.getElementById('authEmail').value.trim();
-            const password = document.getElementById('authPassword').value;
-            const status = document.getElementById('authStatus');
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const status = document.getElementById('authStatus');
 
-            if (!supabaseClient) {
-                status.innerText = "Configure a URL e Key do Supabase primeiro!";
-                return;
-            }
-            if (!email || !password) {
-                status.innerText = "Preencha e-mail e senha.";
-                return;
-            }
+    if (!supabaseClient) {
+        status.innerText = "Configure a URL e Key do Supabase primeiro!";
+        return;
+    }
+    if (!email || !password) {
+        status.innerText = "Preencha e-mail e senha.";
+        return;
+    }
 
-            status.innerText = "Criando conta...";
-            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+    status.innerText = "Criando conta...";
+    const { data, error } = await supabaseClient.auth.signUp({ email, password });
 
-            if (error) {
-                status.innerText = "Erro ao cadastrar: " + error.message;
-            } else {
-                status.innerText = "Conta criada com sucesso! Verifique seu e-mail para confirmar o cadastro (se habilitado) ou faça o login.";
-            }
-        }
+    if (error) {
+        status.innerText = "Erro ao cadastrar: " + error.message;
+    } else {
+        status.innerText = "Conta criada com sucesso! Verifique seu e-mail para confirmar o cadastro (se habilitado) ou faça o login.";
+    }
+}
 
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('authPassword');
+    const toggleIcon = document.getElementById('togglePasswordIcon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
         async function handleLogout() {
             if (supabaseClient) {
                 await supabaseClient.auth.signOut();
