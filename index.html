@@ -778,6 +778,33 @@
             margin-bottom: 4px;
         }
 
+        /* --- CÓDIGO NOVO ENTRA AQUI --- */
+        .action-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+            width: 100%;
+       }
+
+       .action-buttons-grid .btn {
+           border-radius: 20px;
+           padding: 8px 12px;
+           font-size: 0.85rem;
+           white-space: nowrap;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           gap: 6px;
+           width: 100%;
+      }
+
+      @media (min-width: 768px) {
+          .action-buttons-grid {
+          grid-template-columns: repeat(4, 1fr);
+      }
+}
+      /* -------------------------------- */
         .story-banner {
             width: 100%;
             height: 180px;
@@ -1370,21 +1397,21 @@
                                 <button class="btn btn-outline" onclick="addNewChapterToStory()"><i class="fa-solid fa-plus"></i> Novo Capítulo</button>
                                 <button class="btn btn-outline" onclick="deleteCurrentChapter()" title="Excluir Capítulo Atual"><i class="fa-solid fa-trash" style="color:var(--accent-pink);"></i> Excluir Capítulo</button>
                             </div>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-outline" onclick="generatePublicShareLink()" title="Gerar link de leitura pública">
-    <i class="fa-solid fa-share-nodes" style="color: var(--accent-pink);"></i> Criar Link Público
-</button>
-<button class="btn btn-outline" onclick="addSharedReader()" title="Conceder acesso de leitura a um amigo">
-    <i class="fa-solid fa-user-plus" style="color: var(--accent-brown);"></i> Adicionar Leitor
-</button>
-<button class="btn btn-outline" onclick="exportStoryToTxt()">
-    <i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar TXT
-</button>
-<button class="btn btn-primary" onclick="saveCurrentStory()">
-    <i class="fa-solid fa-bookmark"></i> Salvar História
-</button>
-                            </div>
-                        </div>
+                            <div class="action-buttons-grid">
+    <button class="btn btn-outline" onclick="generatePublicShareLink()" title="Gerar link de leitura pública">
+        <i class="fa-solid fa-share-nodes" style="color: var(--accent-pink);"></i> Criar Link Leitura
+    </button>
+    <button class="btn btn-outline" onclick="addSharedReader()" title="Conceder acesso de edição para colaboração de escrita">
+        <i class="fa-solid fa-user-plus" style="color: var(--accent-brown);"></i> Adicionar Colaborador
+    </button>
+    <button class="btn btn-outline" onclick="exportStoryToTxt()">
+        <i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar TXT
+    </button>
+    <button class="btn btn-primary" onclick="saveCurrentStory()">
+        <i class="fa-solid fa-bookmark"></i> Salvar História
+    </button>
+</div>
+</div>
 
                         <!-- Campo para Longline do Capítulo -->
                         <div class="chapter-longline-container">
