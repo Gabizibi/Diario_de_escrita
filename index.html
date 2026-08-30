@@ -780,30 +780,30 @@
 
         /* --- CÓDIGO NOVO ENTRA AQUI --- */
         .action-buttons-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            display: flex;
+            flex-wrap: wrap;
             gap: 8px;
             margin-bottom: 16px;
-            width: 100%;
+        }
+
+        /* No mobile: divididos em 2 colunas proporcionais */
+        .action-buttons-grid .btn {
+            flex: 1 1 calc(50% - 8px);
+            border-radius: 20px;
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
        }
 
-       .action-buttons-grid .btn {
-           border-radius: 20px;
-           padding: 8px 12px;
-           font-size: 0.85rem;
-           white-space: nowrap;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           gap: 6px;
-           width: 100%;
-      }
-
-      @media (min-width: 768px) {
-          .action-buttons-grid {
-          grid-template-columns: repeat(4, 1fr);
-      }
-}
+       /* No computador: ajustam-se naturalmente ao tamanho do texto */
+       @media (min-width: 768px) {
+           .action-buttons-grid .btn {
+               flex: 0 0 auto;
+       }
+   }
       /* -------------------------------- */
         .story-banner {
             width: 100%;
@@ -1399,16 +1399,16 @@
                             </div>
                             <div class="action-buttons-grid">
     <button class="btn btn-outline" onclick="generatePublicShareLink()" title="Gerar link de leitura pública">
-        <i class="fa-solid fa-share-nodes" style="color: var(--accent-pink);"></i> Criar Link Leitura
+        <i class="fa-solid fa-share-nodes" style="color: var(--accent-pink);"></i> Link Leitura
     </button>
     <button class="btn btn-outline" onclick="addSharedReader()" title="Conceder acesso de edição para colaboração de escrita">
-        <i class="fa-solid fa-user-plus" style="color: var(--accent-brown);"></i> Adicionar Colaborador
+        <i class="fa-solid fa-user-plus" style="color: var(--accent-brown);"></i> Colaborador
     </button>
-    <button class="btn btn-outline" onclick="exportStoryToTxt()">
-        <i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar TXT
+    <button class="btn btn-outline" onclick="exportStoryToTxt()" title="Exportar história em TXT">
+        <i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar
     </button>
-    <button class="btn btn-primary" onclick="saveCurrentStory()">
-        <i class="fa-solid fa-bookmark"></i> Salvar História
+    <button class="btn btn-primary" onclick="saveCurrentStory()" title="Salvar história atual">
+        <i class="fa-solid fa-bookmark"></i> Salvar
     </button>
 </div>
 </div>
