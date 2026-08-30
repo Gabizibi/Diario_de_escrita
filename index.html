@@ -2531,29 +2531,28 @@ function generatePublicShareLink() {
     });
 }
 
-// Opção 2: Adicionar Leitor / Coautor via E-mail
-async function addSharedReader() {
-    const story = stories.find(x => x.id === activeStoryId);
-    if (!story) {
-        alert('Selecione ou abra uma história primeiro.');
-        return;
-    }
-
-    const readerEmail = prompt('Digite o e-mail cadastrado do amigo que poderá ler esta história:');
-    if (!readerEmail || !readerEmail.trim()) return;
-
-    if (!story.allowed_readers) story.allowed_readers = [];
+    // Opção 2: Adicionar Leitor / Coautor via E-mail
+    async function addSharedReader() {
+        const story = stories.find(x => x.id === activeStoryId);
+        if (!story) {
+            alert('Selecione ou abra uma história primeiro.');
+            return;
+        }
     
-    if (story.allowed_readers.includes(readerEmail.trim())) {
-        alert('Este e-mail já possui acesso a esta história.');
-        return;
+        const readerEmail = prompt('Digite o e-mail cadastrado do amigo que poderá editar esta história:');
+        if (!readerEmail || !readerEmail.trim()) return;
+    
+        if (!story.allowed_readers) story.allowed_readers = [];
+        
+        if (story.allowed_readers.includes(readerEmail.trim())) {
+            alert('Este e-mail já possui acesso a esta história.');
+            return;
+        }
+    
+        story.allowed_readers.push(readerEmail.trim());
+        saveStories();
+        alert(`🎉 Acesso concedido! O colaborador (${readerEmail.trim()}) agora poderá editar esta história no painel dele.`);
     }
-
-    story.allowed_readers.push(readerEmail.trim());
-    saveStories();
-    alert(`🎉 Acesso concedido! O usuário (${readerEmail.trim()}) agora poderá visualizar esta história no painel dele.`);
-}
-
         function saveStories() { localStorage.setItem('diario_historias', JSON.stringify(stories)); }
 
         /* MUNDO & LOCAIS LOGIC */
