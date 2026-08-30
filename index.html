@@ -1598,14 +1598,53 @@ function initSupabase() {
         }
 
         async function checkUserSession() {
-            if (!supabaseClient) return;
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) {
-                document.getElementById('authOverlay').style.display = 'none';
-            } else {
-                document.getElementById('authOverlay').style.display = 'flex';
+    if (!supabaseClient) return;
+
+    // Captura os parâmetros de leitura caso existam na URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const storyToRead = urlParams.get('read_story');
+    const chapterToRead = urlParams.get('chapter');
+
+    if (storyToRead) {
+        sessionStorage.setItem('pending_read_story', storyToRead);
+        if (chapterToRead) {
+            sessionStorage.setItem('pending_read_chapter', chapterToRead);
+        }
+    }
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) {
+        document.getElementById('authOverlay').style.display = 'none';
+        processPendingReadLink();
+    } else {
+        document.getElementById('authOverlay').style.display = 'flex';
+    }
+}
+
+// Redireciona diretamente para o livro ou capítulo após confirmação do login
+function processPendingReadLink() {
+    const pendingStoryId = sessionStorage.getItem('pending_read_story');
+    const pendingChapterNum = sessionStorage.getItem('pending_read_chapter');
+
+    if (pendingStoryId) {
+        sessionStorage.removeItem('pending_read_story');
+        sessionStorage.removeItem('pending_read_chapter');
+
+        switchMenu('chapters');
+        openStoryDetail(pendingStoryId);
+
+        if (pendingChapterNum) {
+            const story = stories.find(x => x.id === pendingStoryId);
+            if (story && story.chapters && story.chapters[pendingChapterNum]) {
+                const selectEl = document.getElementById('chapterSelect');
+                if (selectEl) {
+                    selectEl.value = pendingChapterNum;
+                    loadChapterContent();
+                }
             }
         }
+    }
+}
 
         async function handleLogin() {
             const email = document.getElementById('authEmail').value.trim();
@@ -1629,6 +1668,7 @@ function initSupabase() {
             } else {
                 status.innerText = "";
                 document.getElementById('authOverlay').style.display = 'none';
+                processPendingReadLink();
             }
         }
 
@@ -2513,24 +2553,45 @@ function togglePasswordVisibility() {
     downloadAnchor.remove();
 }
 
-// Opção 1: Gerar Link Público de Leitura
+// Gerar Link Público de Leitura (Com opção de escolha: História ou Capítulo)
 function generatePublicShareLink() {
     const story = stories.find(x => x.id === activeStoryId);
     if (!story) {
         alert('Selecione ou abra uma história primeiro.');
         return;
     }
-    
+
+    const currentChObj = story.chapters[activeChapterNum];
+    const chTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
+
+    // Pergunta o destino ao usuário
+    const choice = prompt(
+        `Você vai compartilhar a história ou o capítulo?\n\nDigite 1 para: História Completa ("${story.title}")\nDigite 2 para: Apenas o Capítulo Atual ("${chTitle}")`,
+        "1"
+    );
+
+    if (!choice) return; // Se cancelar, interrompe a execução
+
     const baseUrl = window.location.href.split('?')[0];
-    const shareUrl = `${baseUrl}?read_story=${story.id}`;
-    
+    let shareUrl = '';
+    let successMessage = '';
+
+    if (choice.trim() === '2') {
+        // Opção Capítulo
+        shareUrl = `${baseUrl}?read_story=${story.id}&chapter=${activeChapterNum}`;
+        successMessage = `✨ Link do "${chTitle}" copiado para a área de transferência!`;
+    } else {
+        // Opção História (Padrão para a opção 1 ou qualquer outra digitação)
+        shareUrl = `${baseUrl}?read_story=${story.id}`;
+        successMessage = `✨ Link da história "${story.title}" copiado para a área de transferência!`;
+    }
+
     navigator.clipboard.writeText(shareUrl).then(() => {
-        alert(`✨ Link de leitura gerado e copiado para a sua área de transferência!\n\nEnvie para quem quiser:\n${shareUrl}`);
+        alert(`${successMessage}\n\nEnvie para quem quiser:\n${shareUrl}`);
     }).catch(() => {
-        prompt('Copie o link público de leitura abaixo:', shareUrl);
+        prompt('Copie o link público abaixo:', shareUrl);
     });
 }
-
     // Opção 2: Adicionar Leitor / Coautor via E-mail
     async function addSharedReader() {
         const story = stories.find(x => x.id === activeStoryId);
