@@ -852,13 +852,20 @@
             background-color: #ffe6eb !important;
         }
         
-        /* Longline do Capítulo */
+        /* Longline do Capítulo (Ajustada para 100% no mobile) */
         .chapter-longline-container {
+            width: 100%;
+            box-sizing: border-box;
             background: #fffdfa;
             border: 2px dashed var(--border-style);
             border-radius: 12px;
             padding: 12px 16px;
             margin-bottom: 16px;
+        }
+        
+        .chapter-longline-container input.form-control {
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .chapter-longline-container label {
@@ -907,6 +914,12 @@
             font-weight: 700;
         }
         
+        .scene-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
         .scene-drag-handle {
             cursor: grab;
             padding: 4px 8px;
@@ -931,11 +944,13 @@
             padding: 4px 0;
         }
         
-        /* Rodapé com Estatísticas */
+        /* Rodapé com Estatísticas (Com espaçamento adequado para mobile) */
         .editor-footer-stats {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
             margin-top: 16px;
             padding: 10px 14px;
             background-color: var(--paper-bg, #ffffff);
@@ -949,7 +964,7 @@
         /* Regras de Adaptação para Desktop */
         @media (min-width: 768px) {
             .chapter-buttons-grid {
-                grid-template-columns: repeat(6, 1fr);
+                grid-template-columns: repeat(7, 1fr);
             }
         }
         /* MUNDO & LOCAIS */
@@ -1524,8 +1539,8 @@
                             <i class="fa-solid fa-bookmark"></i> Salvar
                         </button>
                     
-                        <button type="button" class="btn btn-outline btn-danger-soft" onclick="deleteCurrentChapter()" style="grid-column: span 2;">
-                            <i class="fa-solid fa-trash" style="color:var(--accent-pink);"></i> Excluir Capítulo
+                        <button type="button" class="btn btn-outline btn-danger-soft" onclick="deleteCurrentChapter()">
+                            <i class="fa-solid fa-trash" style="color:var(--accent-pink);"></i> Excluir
                         </button>
                     </div>
             
@@ -2453,8 +2468,8 @@ function togglePasswordVisibility() {
         }
 
         /* ==========================================
-   MÓDULO: GESTÃO DE CAPÍTULOS & CENAS (PÁGINA ÚNICA)
-   ========================================== */
+           MÓDULO: GESTÃO DE CAPÍTULOS & CENAS (PÁGINA ÚNICA)
+           ========================================== */
 
             // Estrutura em memória para as cenas do capítulo atualmente aberto
             let currentScenes = [];
@@ -2508,7 +2523,7 @@ function togglePasswordVisibility() {
             }
             
             /**
-             * Renderiza os cards de cenas reordenáveis
+             * Renderiza os cards de cenas reordenáveis com suporte a botão de mesclagem
              */
             function renderScenes() {
                 const container = document.getElementById('scenesContainer');
@@ -2523,12 +2538,22 @@ function togglePasswordVisibility() {
                     sceneEl.dataset.id = scene.id;
                     sceneEl.dataset.index = index;
             
+                    // O botão de mesclar só aparece a partir da segunda cena (índice > 0)
+                    const mergeBtnHtml = index > 0 
+                        ? `<button type="button" class="btn btn-outline btn-sm" onclick="mergeSceneWithPrevious(${index})" title="Mesclar com a cena anterior">
+                            <i class="fa-solid fa-code-merge" style="color: var(--accent-brown);"></i> Mesclar
+                           </button>` 
+                        : '';
+            
                     sceneEl.innerHTML = `
                         <div class="scene-card-header">
                             <span><i class="fa-solid fa-grip-vertical scene-drag-handle"></i> Cena ${index + 1}</span>
-                            <button type="button" class="btn btn-outline btn-sm" onclick="deleteScene('${scene.id}')" title="Excluir Cena">
-                                <i class="fa-solid fa-xmark" style="color: var(--accent-pink);"></i>
-                            </button>
+                            <div class="scene-card-actions">
+                                ${mergeBtnHtml}
+                                <button type="button" class="btn btn-outline btn-sm" onclick="deleteScene('${scene.id}')" title="Excluir Cena">
+                                    <i class="fa-solid fa-xmark" style="color: var(--accent-pink);"></i>
+                                </button>
+                            </div>
                         </div>
                         <textarea class="scene-textarea" placeholder="Escreva a cena aqui..." oninput="updateSceneContent('${scene.id}', this.value)">${scene.content || ''}</textarea>
                     `;
@@ -2537,6 +2562,24 @@ function togglePasswordVisibility() {
                 });
             
                 initSceneDragAndDrop();
+            }
+            
+            /**
+             * Mescla o texto da cena atual com a cena imediatamente anterior
+             */
+            function mergeSceneWithPrevious(index) {
+                if (index <= 0 || index >= currentScenes.length) return;
+            
+                const previousScene = currentScenes[index - 1];
+                const currentScene = currentScenes[index];
+            
+                if (currentScene.content.trim()) {
+                    previousScene.content = (previousScene.content.trim() + '\n\n' + currentScene.content.trim()).trim();
+                }
+            
+                currentScenes.splice(index, 1);
+                renderScenes();
+                updateChapterWordCount();
             }
             
             /**
