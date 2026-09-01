@@ -729,7 +729,11 @@
             text-align: center;
         }
 
-        /* CAPÍTULOS & HISTÓRIAS */
+        /* ==========================================
+       MÓDULO: GESTÃO DE CAPÍTULOS & CENAS (PÁGINA ÚNICA)
+       ========================================== */
+
+        /* Pastas e Cabeçalho da História */
         .story-folder-card {
             background: var(--paper-bg);
             border: 2px solid var(--border-style);
@@ -738,47 +742,48 @@
             padding: 20px;
             margin-bottom: 20px;
         }
-
+        
         .story-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
         }
-
+        
         .story-title {
             font-family: 'Nunito', sans-serif;
             font-weight: 800;
             font-size: 1.5rem;
             color: var(--accent-brown);
         }
-
-        .longline-box {
-            background: #fff8f0;
-            border-left: 4px solid var(--accent-pink);
-            padding: 12px 16px;
-            margin-top: 12px;
-            border-radius: 8px;
-            font-style: italic;
-        }
-
-        .chapter-longline-container {
-            background: #fffdfa;
-            border: 2px dashed var(--border-style);
+        
+        .story-banner {
+            width: 100%;
+            height: 180px;
             border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
+            border: 2px dashed var(--accent-pink);
+            background-color: #fff0f3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-bottom: 20px;
+            overflow: hidden;
+            position: relative;
+            background-size: cover;
+            background-position: center;
         }
-
-        .chapter-longline-container label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 800;
-            color: var(--accent-pink);
-            margin-bottom: 4px;
+        
+        /* Container do Livro / Editor */
+        .open-book-container {
+            background: #f1e5d1;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--shadow-paper);
+            border: 3px solid var(--border-style);
         }
-
-        /* ESTRUTURA E ALINHAMENTO GEOMÉTRICO DOS BOTÕES */
+        
+        /* Barra Superior de Controles */
         .chapter-controls-container {
             display: flex;
             flex-direction: column;
@@ -786,25 +791,19 @@
             margin-bottom: 20px;
             width: 100%;
         }
-
-        .controls-grid {
-             display: grid;
-             gap: 10px;
-             width: 100%;
-             align-items: center;
+        
+        .chapter-header-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
         }
-
-        .dropdown-wrapper {
+        
+        .chapter-header-top .dropdown-wrapper {
+            flex: 1;
             display: flex;
             align-items: center;
             gap: 8px;
-            width: 100%;
-       }
-
-        .label-text {
-            font-weight: 800;
-            color: var(--accent-brown);
-            white-space: nowrap;
         }
         
         .chapter-dropdown {
@@ -822,11 +821,19 @@
             box-sizing: border-box;
         }
         
-        .chapter-controls-container .btn {
+        /* Grade de Botões Responsiva */
+        .chapter-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .chapter-buttons-grid .btn {
             width: 100%;
             height: 38px;
             border-radius: 20px;
-            padding: 0 12px;
+            padding: 0 10px;
             font-size: 0.85rem;
             display: inline-flex;
             align-items: center;
@@ -836,98 +843,114 @@
             white-space: nowrap;
         }
         
-        /* REGRAS PARA CELULAR: GRID DE 2 COLUNAS IDÊNTICAS */
-        @media (max-width: 767px) {
-            .row-top {
-                grid-template-columns: 1fr 1fr;
-            }
-        
-            /* O seletor de capítulo ocupa a linha superior inteira no mobile */
-            .dropdown-wrapper {
-                grid-column: span 2;
-            }
-        
-            .row-bottom {
-                grid-template-columns: 1fr 1fr;
-            }
+        .btn-danger-soft {
+            border-color: var(--accent-pink) !important;
+            color: var(--accent-pink) !important;
         }
         
-        /* REGRAS PARA COMPUTADOR: GRID DE 4 COLUNAS PERFEITAMENTE ALINHADAS */
-        @media (min-width: 768px) {
-            .controls-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
+        .btn-danger-soft:hover {
+            background-color: #ffe6eb !important;
         }
-        .story-banner {
+        
+        /* Longline do Capítulo */
+        .chapter-longline-container {
+            background: #fffdfa;
+            border: 2px dashed var(--border-style);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+        }
+        
+        .chapter-longline-container label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--accent-pink);
+            margin-bottom: 4px;
+        }
+        
+        /* Workspace de Página Única e Cenas Reordenáveis */
+        .single-page-workspace {
             width: 100%;
-            height: 180px;
-            border-radius: 12px;
-            border: 2px dashed var(--accent-pink);
-            background-color: #fff0f3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin-bottom: 20px;
-            overflow: hidden;
-            position: relative;
-            background-size: cover;
-            background-position: center;
         }
-
-        .open-book-container {
-            background: #f1e5d1;
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: var(--shadow-paper);
-            border: 3px solid var(--border-style);
-        }
-
-        .open-book {
-            background: var(--paper-bg);
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 540px;
-            position: relative;
-            border: 1px solid #e0d0b8;
-            overflow: hidden;
-        }
-
-        .open-book::before {
-            content: "";
-            position: absolute;
-            top: 0; bottom: 0; left: 50%;
-            width: 24px;
-            transform: translateX(-50%);
-            background: linear-gradient(to right, rgba(0,0,0,0.08), rgba(0,0,0,0.01) 40%, rgba(0,0,0,0.01) 60%, rgba(0,0,0,0.08));
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        .book-page {
-            padding: 30px;
+        
+        .scenes-container {
             display: flex;
             flex-direction: column;
+            gap: 16px;
         }
-
-        .book-page.left { border-right: 1px solid #ebdcc5; }
-
-        .book-textarea {
+        
+        .scene-card {
+            background: var(--paper-bg, #ffffff);
+            border: 2px solid var(--border-style);
+            border-left: 5px solid var(--accent-brown);
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: var(--shadow-paper, 0 2px 5px rgba(0,0,0,0.05));
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        
+        .scene-card.dragging {
+            opacity: 0.4;
+            border: 2px dashed var(--accent-brown);
+        }
+        
+        .scene-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed var(--border-style);
+            color: var(--accent-brown);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        
+        .scene-drag-handle {
+            cursor: grab;
+            padding: 4px 8px;
+            color: var(--accent-brown);
+        }
+        
+        .scene-drag-handle:active {
+            cursor: grabbing;
+        }
+        
+        .scene-textarea {
             width: 100%;
-            height: 450px;
-            background: transparent;
+            min-height: 140px;
             border: none;
             outline: none;
-            resize: none;
-            font-size: 1rem;
-            color: var(--text-dark);
-            background-image: linear-gradient(to bottom, transparent 31px, #e8d8c3 32px);
-            background-size: 100% 32px;
-            line-height: 32px !important;
-            padding-top: 4px;
+            resize: vertical;
             font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: transparent;
+            padding: 4px 0;
+        }
+        
+        /* Rodapé com Estatísticas */
+        .editor-footer-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding: 10px 14px;
+            background-color: var(--paper-bg, #ffffff);
+            border: 2px solid var(--border-style);
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-brown);
+        }
+        
+        /* Regras de Adaptação para Desktop */
+        @media (min-width: 768px) {
+            .chapter-buttons-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
         }
         /* MUNDO & LOCAIS */
         .world-grid {
@@ -1409,93 +1432,113 @@
                     <div id="storyFoldersContainer"></div>
                 </div>
 
-                <!-- Open Story Details View -->
-                <div id="storyDetailView" class="hidden">
-                    <div class="story-banner" id="storyBannerDisplay" onclick="triggerStoryBannerUpload()" title="Clique para trocar a capa da história">
-                        <div id="bannerPlaceholder" style="text-align: center; color: var(--accent-pink);">
-                            <i class="fa-solid fa-camera" style="font-size: 2rem;"></i>
-                            <p style="font-weight: 700; margin-top: 6px;">Clique para carregar/trocar o Banner da História</p>
-                        </div>
+            <!-- Open Story Details View -->
+            <div id="storyDetailView" class="hidden">
+                <!-- Banner da História -->
+                <div class="story-banner" id="storyBannerDisplay" onclick="triggerStoryBannerUpload()" title="Clique para trocar o banner da história">
+                    <div id="bannerPlaceholder" style="text-align: center; color: var(--accent-pink);">
+                        <i class="fa-solid fa-camera" style="font-size: 2rem;"></i>
+                        <p style="font-weight: 700; margin-top: 6px;">Clique para carregar/trocar o Banner da História</p>
                     </div>
-
-                    <!-- NEW: Spotify Field for Story -->
-                    <div class="card">
-                        <h3 class="section-title "><i class="fa-brands fa-spotify" style="color: #1db954;"></i> Trilha Sonora / Playlist da História (Spotify)</h3>
-                        <div class="form-group">
-                            <label for="storySpotifyUrl">Link da música ou playlist oficial da história</label>
-                            <input type="text" id="storySpotifyUrl" class="form-control" placeholder="Cole o link do Spotify aqui..." oninput="updateStorySpotifyPlayer()">
+                </div>
+            
+                <!-- Capa Oficial do Livro (Vertical 2:3) -->
+                <div class="card">
+                    <h3 class="section-title"><i class="fa-solid fa-book-cover"></i> Capa Oficial do Livro (Vertical 2:3)</h3>
+                    <div class="book-cover-upload-wrapper" style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                        <div id="bookCoverDisplay" onclick="triggerBookCoverUpload()" style="width: 120px; height: 180px; border: 2px dashed var(--border-style); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: var(--bg-card); text-align: center; padding: 10px; background-size: cover; background-position: center;">
+                            <i class="fa-solid fa-image" style="font-size: 1.8rem; color: var(--accent-pink);"></i>
+                            <span style="font-size: 0.75rem; margin-top: 6px; font-weight: 600;">Carregar Capa</span>
                         </div>
-                        <div class="spotify-container" id="storySpotifyPlayer"></div>
-                    </div>
-
-                    <div class="card">
-                        <h3 class="section-title "><i class="fa-solid fa-pen-to-square"></i> Título & Sinopse da História</h3>
-                        <div class="form-group">
-                            <label for="storyTitleInput">Nome da História / Livro</label>
-                            <input type="text" id="storyTitleInput" class="form-control" placeholder="Ex: O Reino das Sombras" oninput="document.getElementById('headerTitle').innerText = this.value || 'História'">
-                        </div>
-                        <div class="form-group">
-                            <label for="storySynopsisText">Sinopse da História</label>
-                            <textarea id="storySynopsisText" class="form-control" style="min-height: 90px;" placeholder="Escreva a sinopse principal aqui..."></textarea>
-                        </div>
-                    </div>
-
-                    <div class="open-book-container">
-                    <!-- CONTROLES DO CAPÍTULO (CÓDIGO NOVO ENTRA AQUI) -->
-                    <div class="chapter-controls-container">
-                        <!-- Linha 1: Seleção, Renomear, Novo e Excluir -->
-                        <div class="controls-grid row-top">
-                            <div class="dropdown-wrapper">
-                                <span class="label-text">Capítulo:</span>
-                                <select id="chapterSelect" class="chapter-dropdown" onchange="loadChapterContent()"></select>
-                            </div>
-                            <button class="btn btn-outline" onclick="renameCurrentChapter()" title="Renomear Capítulo Atual">
-                                <i class="fa-solid fa-pen" style="color:var(--accent-brown);"></i> Renomear
-                            </button>
-                            <button class="btn btn-outline" onclick="addNewChapterToStory()">
-                                <i class="fa-solid fa-plus"></i> Novo Capítulo
-                            </button>
-                            <button class="btn btn-outline" onclick="deleteCurrentChapter()" title="Excluir Capítulo Atual">
-                                <i class="fa-solid fa-trash" style="color:var(--accent-pink);"></i> Excluir Capítulo
-                            </button>
-                        </div>
-                
-                        <!-- Linha 2: Ações Globais da História -->
-                        <div class="controls-grid row-bottom">
-                            <button class="btn btn-outline" onclick="generatePublicShareLink()" title="Gerar link de leitura pública">
-                                <i class="fa-solid fa-share-nodes" style="color: var(--accent-pink);"></i> Link Leitura
-                            </button>
-                            <button class="btn btn-outline" onclick="addSharedReader()" title="Conceder acesso de edição">
-                                <i class="fa-solid fa-user-plus" style="color: var(--accent-brown);"></i> Colaborador
-                            </button>
-                            <button class="btn btn-outline" onclick="exportStoryToTxt()" title="Exportar história em TXT">
-                                <i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar
-                            </button>
-                            <button class="btn btn-primary" onclick="saveCurrentStory()" title="Salvar história atual">
-                                <i class="fa-solid fa-bookmark"></i> Salvar
-                            </button>
-                        </div>
-                    </div>
-                        <!-- Campo para Longline do Capítulo -->
-                        <div class="chapter-longline-container">
-                            <label for="chapterLonglineText"><i class="fa-solid fa-feather"></i> Longline do Capítulo:</label>
-                            <input type="text" id="chapterLonglineText" class="form-control" placeholder="Escreva o objetivo/acontecimento central deste capítulo em uma frase..." style="background: transparent; border-color: var(--border-style);">
-                        </div>
-
-                        <div class="open-book">
-                            <div class="book-page left">
-                                <span style="font-size: 1.8rem; color: var(--accent-brown);" id="leftPageTitle">Capítulo 1</span>
-                                <textarea id="chapterLeftText" class="book-textarea" placeholder="Comece a escrever o capítulo aqui..."></textarea>
-                            </div>
-                            <div class="book-page right">
-                                <span style="font-size: 1.8rem; color: var(--accent-brown);">Página Direita</span>
-                                <textarea id="chapterRightText" class="book-textarea" placeholder="Continue sua história na página seguinte..."></textarea>
-                            </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Adicione a capa oficial na proporção 2:3. Ela será utilizada na geração e exportação dos arquivos em PDF e EPUB.</p>
+                            <input type="file" id="bookCoverInput" accept="image/*" style="display: none;" onchange="handleBookCoverSelect(event)">
+                            <button type="button" class="btn btn-outline" onclick="triggerBookCoverUpload()"><i class="fa-solid fa-upload"></i> Escolher Imagem</button>
                         </div>
                     </div>
                 </div>
+            
+                <!-- Trilha Sonora / Playlist (Spotify) -->
+                <div class="card">
+                    <h3 class="section-title"><i class="fa-brands fa-spotify" style="color: #1db954;"></i> Trilha Sonora / Playlist da História (Spotify)</h3>
+                    <div class="form-group">
+                        <label for="storySpotifyUrl">Link da música ou playlist oficial da história</label>
+                        <input type="text" id="storySpotifyUrl" class="form-control" placeholder="Cole o link do Spotify aqui..." oninput="updateStorySpotifyPlayer()">
+                    </div>
+                    <div class="spotify-container" id="storySpotifyPlayer"></div>
+                </div>
+            
+                <!-- Título & Sinopse -->
+                <div class="card">
+                    <h3 class="section-title"><i class="fa-solid fa-pen-to-square"></i> Título & Sinopse da História</h3>
+                    <div class="form-group">
+                        <label for="storyTitleInput">Nome da História / Livro</label>
+                        <input type="text" id="storyTitleInput" class="form-control" placeholder="Ex: O Reino das Sombras" oninput="document.getElementById('headerTitle').innerText = this.value || 'História'">
+                    </div>
+                    <div class="form-group">
+                        <label for="storySynopsisText">Sinopse da História</label>
+                        <textarea id="storySynopsisText" class="form-control" style="min-height: 90px;" placeholder="Escreva a sinopse principal aqui..."></textarea>
+                    </div>
+                </div>
+            
+                <!-- CONTAINER DO EDITOR DE PÁGINA ÚNICA E CAPÍTULOS -->
+                <div class="open-book-container">
+                    <!-- BARRA SUPERIOR DE CONTROLES REORGANIZADA -->
+                    <div class="chapter-controls-container">
+                        <!-- Linha Superior: Seletor ao lado de Renomear -->
+                        <div class="chapter-header-top">
+                            <div class="dropdown-wrapper">
+                                <span class="label-text"><i class="fa-solid fa-book-bookmark"></i> Capítulo:</span>
+                                <select id="chapterSelect" class="chapter-dropdown" onchange="loadChapterContent()"></select>
+                            </div>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="renameCurrentChapter()" title="Renomear Capítulo Atual">
+                                <i class="fa-solid fa-pen" style="color:var(--accent-brown);"></i> Renomear
+                            </button>
+                        </div>
+            
+                        <!-- Linha Inferior: 2 colunas no mobile / 6 botões no desktop -->
+                        <div class="chapter-buttons-grid">
+                            <button type="button" class="btn btn-outline" onclick="addNewSceneToChapter()">
+                                <i class="fa-solid fa-plus"></i> Nova Cena
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="addNewChapterToStory()">
+                                <i class="fa-solid fa-folder-plus"></i> Novo Cap.
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="exportStoryToTxt()">
+                                <i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="generatePublicShareLink()">
+                                <i class="fa-solid fa-share-nodes" style="color: var(--accent-pink);"></i> Link
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="saveCurrentStory()">
+                                <i class="fa-solid fa-bookmark"></i> Salvar
+                            </button>
+                            <button type="button" class="btn btn-outline btn-danger-soft" onclick="deleteCurrentChapter()">
+                                <i class="fa-solid fa-trash" style="color:var(--accent-pink);"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+            
+                    <!-- Longline do Capítulo -->
+                    <div class="chapter-longline-container">
+                        <label for="chapterLonglineText"><i class="fa-solid fa-feather"></i> Longline do Capítulo:</label>
+                        <input type="text" id="chapterLonglineText" class="form-control" placeholder="Escreva o objetivo ou acontecimento central deste capítulo..." style="background: transparent; border-color: var(--border-style);">
+                    </div>
+            
+                    <!-- WORKSPACE DE PÁGINA ÚNICA COM CENAS REORDENÁVEIS -->
+                    <div class="single-page-workspace">
+                        <div id="scenesContainer" class="scenes-container">
+                            <!-- As cenas serão injetadas dinamicamente via JS -->
+                        </div>
+                    </div>
+            
+                    <!-- Rodapé do Editor com Contador em Tempo Real -->
+                    <div class="editor-footer-stats">
+                        <span id="chapterWordCount"><i class="fa-solid fa-pen-nib"></i> 0 palavras</span>
+                        <span id="chapterCharCount">0 caracteres</span>
+                    </div>
+                </div>
             </div>
-
             <!-- SECTION 6: MUNDO & LOCAIS -->
             <div id="worldSection" class="hidden">
                 <div id="worldListView">
@@ -2399,223 +2442,447 @@ function togglePasswordVisibility() {
             }
         }
 
-        function loadChapterContent() {
-            const story = stories.find(x => x.id === activeStoryId);
-            if (!story) return;
-            activeChapterNum = document.getElementById('chapterSelect').value;
-            const content = story.chapters[activeChapterNum] || { title: 'Capítulo ' + activeChapterNum, longline: '', left: '', right: '' };
+        /* ==========================================
+   MÓDULO: GESTÃO DE CAPÍTULOS & CENAS (PÁGINA ÚNICA)
+   ========================================== */
+
+            // Estrutura em memória para as cenas do capítulo atualmente aberto
+            let currentScenes = [];
             
-            const displayTitle = (typeof content === 'object' && content.title) ? content.title : ('Capítulo ' + activeChapterNum);
-            document.getElementById('leftPageTitle').innerText = displayTitle;
+            /**
+             * Carrega o conteúdo do capítulo atual convertendo em cenas reordenáveis
+             */
+            function loadChapterContent() {
+                const story = stories.find(x => x.id === activeStoryId);
+                if (!story) return;
             
-            if (typeof content === 'object') {
-                document.getElementById('chapterLonglineText').value = content.longline || '';
-                document.getElementById('chapterLeftText').value = content.left || '';
-                document.getElementById('chapterRightText').value = content.right || '';
-            } else {
-                document.getElementById('chapterLonglineText').value = '';
-                document.getElementById('chapterLeftText').value = content || '';
-                document.getElementById('chapterRightText').value = '';
+                activeChapterNum = document.getElementById('chapterSelect').value;
+                const content = story.chapters ? story.chapters[activeChapterNum] : null;
+            
+                if (!content) {
+                    currentScenes = [{ id: 'scene-' + Date.now(), content: '' }];
+                    document.getElementById('chapterLonglineText').value = '';
+                } else {
+                    document.getElementById('chapterLonglineText').value = content.longline || '';
+            
+                    // 1. Se já existirem cenas salvas no capítulo, usa-as
+                    if (content.scenes && Array.isArray(content.scenes) && content.scenes.length > 0) {
+                        currentScenes = JSON.parse(JSON.stringify(content.scenes));
+                    } 
+                    // 2. Se for um capítulo antigo (migração das páginas left/right para cenas)
+                    else {
+                        let combinedText = '';
+                        if (typeof content === 'object') {
+                            const left = content.left || '';
+                            const right = content.right || '';
+                            combinedText = (left + (left && right ? '\n\n' : '') + right).trim();
+                        } else if (typeof content === 'string') {
+                            combinedText = content.trim();
+                        }
+            
+                        // Separa por divisor de cena (---) se existir, ou cria uma cena única
+                        const blocks = combinedText.split(/\n\s*---\s*\n/).filter(b => b.trim() !== '');
+                        if (blocks.length > 0) {
+                            currentScenes = blocks.map((txt, idx) => ({
+                                id: 'scene-' + Date.now() + '-' + idx,
+                                content: txt
+                            }));
+                        } else {
+                            currentScenes = [{ id: 'scene-' + Date.now(), content: combinedText }];
+                        }
+                    }
+                }
+            
+                renderScenes();
+                updateChapterWordCount();
             }
-        }
-
-        function addNewChapterToStory() {
-            const story = stories.find(x => x.id === activeStoryId);
-            if (!story) return;
-            const nextNum = (Object.keys(story.chapters).length + 1).toString();
-            story.chapters[nextNum] = { title: 'Capítulo ' + nextNum, longline: '', left: '', right: '' };
-            saveStories();
-            renderChapterOptions(story);
-            document.getElementById('chapterSelect').value = nextNum;
-            loadChapterContent();
-        }
-
-        function saveCurrentStory() {
-            const story = stories.find(x => x.id === activeStoryId);
-            if (!story) return;
-            const newTitle = document.getElementById('storyTitleInput').value.trim();
-            if (newTitle) {
-                story.title = newTitle;
-            }
-            story.synopsis = document.getElementById('storySynopsisText').value;
-            story.spotifyUrl = document.getElementById('storySpotifyUrl').value;
             
-            const currentChObj = story.chapters[activeChapterNum];
-            const currentTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
-
-            story.chapters[activeChapterNum] = {
-                title: currentTitle,
-                longline: document.getElementById('chapterLonglineText').value,
-                left: document.getElementById('chapterLeftText').value,
-                right: document.getElementById('chapterRightText').value
-            };
-            saveStories();
-            alert('História e capítulo salvos com sucesso! 📖');
-        }
-
-        function triggerStoryBannerUpload() { document.getElementById('storyBannerInput').click(); }
-        function handleStoryBannerUpload(e) {
-            const file = e.target.files[0];
-            const story = stories.find(x => x.id === activeStoryId);
-            if (file && story) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    story.banner = evt.target.result;
+            /**
+             * Renderiza os cards de cenas reordenáveis
+             */
+            function renderScenes() {
+                const container = document.getElementById('scenesContainer');
+                if (!container) return;
+            
+                container.innerHTML = '';
+            
+                currentScenes.forEach((scene, index) => {
+                    const sceneEl = document.createElement('div');
+                    sceneEl.className = 'scene-card';
+                    sceneEl.draggable = true;
+                    sceneEl.dataset.id = scene.id;
+                    sceneEl.dataset.index = index;
+            
+                    sceneEl.innerHTML = `
+                        <div class="scene-card-header">
+                            <span><i class="fa-solid fa-grip-vertical scene-drag-handle"></i> Cena ${index + 1}</span>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="deleteScene('${scene.id}')" title="Excluir Cena">
+                                <i class="fa-solid fa-xmark" style="color: var(--accent-pink);"></i>
+                            </button>
+                        </div>
+                        <textarea class="scene-textarea" placeholder="Escreva a cena aqui..." oninput="updateSceneContent('${scene.id}', this.value)">${scene.content || ''}</textarea>
+                    `;
+            
+                    container.appendChild(sceneEl);
+                });
+            
+                initSceneDragAndDrop();
+            }
+            
+            /**
+             * Atualiza o texto da cena em tempo real
+             */
+            function updateSceneContent(id, value) {
+                const scene = currentScenes.find(s => s.id === id);
+                if (scene) {
+                    scene.content = value;
+                }
+                updateChapterWordCount();
+            }
+            
+            /**
+             * Adiciona uma nova cena ao capítulo
+             */
+            function addNewSceneToChapter() {
+                const newScene = {
+                    id: 'scene-' + Date.now(),
+                    content: ''
+                };
+                currentScenes.push(newScene);
+                renderScenes();
+            
+                setTimeout(() => {
+                    const textareas = document.querySelectorAll('.scene-textarea');
+                    if (textareas.length > 0) {
+                        textareas[textareas.length - 1].focus();
+                    }
+                }, 50);
+            }
+            
+            /**
+             * Remove uma cena pelo ID
+             */
+            function deleteScene(id) {
+                if (currentScenes.length <= 1) {
+                    currentScenes[0].content = '';
+                    renderScenes();
+                    updateChapterWordCount();
+                    return;
+                }
+            
+                currentScenes = currentScenes.filter(s => s.id !== id);
+                renderScenes();
+                updateChapterWordCount();
+            }
+            
+            /**
+             * Calcula e exibe a contagem de palavras e caracteres do capítulo em tempo real
+             */
+            function updateChapterWordCount() {
+                const fullText = currentScenes.map(s => s.content || '').join('\n\n');
+                const words = fullText.trim() ? fullText.trim().split(/\s+/).length : 0;
+                const chars = fullText.length;
+            
+                const wordEl = document.getElementById('chapterWordCount');
+                const charEl = document.getElementById('chapterCharCount');
+            
+                if (wordEl) wordEl.innerHTML = `<i class="fa-solid fa-pen-nib"></i> ${words} palavras`;
+                if (charEl) charEl.textContent = `${chars} caracteres`;
+            }
+            
+            /**
+             * Configura o Drag & Drop nativo HTML5
+             */
+            function initSceneDragAndDrop() {
+                const container = document.getElementById('scenesContainer');
+                if (!container) return;
+            
+                const cards = container.querySelectorAll('.scene-card');
+            
+                cards.forEach(card => {
+                    card.addEventListener('dragstart', (e) => {
+                        card.classList.add('dragging');
+                        e.dataTransfer.setData('text/plain', card.dataset.index);
+                    });
+            
+                    card.addEventListener('dragend', () => {
+                        card.classList.remove('dragging');
+                    });
+                });
+            
+                container.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    const draggingCard = container.querySelector('.dragging');
+                    if (!draggingCard) return;
+            
+                    const siblings = [...container.querySelectorAll('.scene-card:not(.dragging)')];
+                    const nextSibling = siblings.find(sibling => {
+                        const box = sibling.getBoundingClientRect();
+                        return e.clientY <= box.top + box.height / 2;
+                    });
+            
+                    if (nextSibling) {
+                        container.insertBefore(draggingCard, nextSibling);
+                    } else {
+                        container.appendChild(draggingCard);
+                    }
+                });
+            
+                container.addEventListener('drop', () => {
+                    const newOrder = [];
+                    container.querySelectorAll('.scene-card').forEach(card => {
+                        const id = card.dataset.id;
+                        const scene = currentScenes.find(s => s.id === id);
+                        if (scene) newOrder.push(scene);
+                    });
+                    currentScenes = newOrder;
+                    renderScenes();
+                });
+            }
+            
+            function addNewChapterToStory() {
+                const story = stories.find(x => x.id === activeStoryId);
+                if (!story) return;
+                const nextNum = (Object.keys(story.chapters).length + 1).toString();
+                story.chapters[nextNum] = { 
+                    title: 'Capítulo ' + nextNum, 
+                    longline: '', 
+                    scenes: [{ id: 'scene-' + Date.now(), content: '' }] 
+                };
+                saveStories();
+                renderChapterOptions(story);
+                document.getElementById('chapterSelect').value = nextNum;
+                loadChapterContent();
+            }
+            
+            /**
+             * Salva a história, o capítulo atual e suas cenas
+             */
+            function saveCurrentStory() {
+                const story = stories.find(x => x.id === activeStoryId);
+                if (!story) return;
+            
+                const newTitle = document.getElementById('storyTitleInput').value.trim();
+                if (newTitle) {
+                    story.title = newTitle;
+                }
+                story.synopsis = document.getElementById('storySynopsisText').value;
+                story.spotifyUrl = document.getElementById('storySpotifyUrl').value;
+            
+                const currentChObj = story.chapters[activeChapterNum];
+                const currentTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
+            
+                // Texto consolidado para manter compatibilidade
+                const fullText = currentScenes.map(s => s.content || '').join('\n\n---\n\n');
+            
+                story.chapters[activeChapterNum] = {
+                    title: currentTitle,
+                    longline: document.getElementById('chapterLonglineText').value,
+                    scenes: currentScenes,
+                    text: fullText
+                };
+            
+                saveStories();
+                alert('História e capítulo salvos com sucesso! 📖');
+            }
+            
+            function triggerStoryBannerUpload() { 
+                document.getElementById('storyBannerInput').click(); 
+            }
+            
+            function handleStoryBannerUpload(e) {
+                const file = e.target.files[0];
+                const story = stories.find(x => x.id === activeStoryId);
+                if (file && story) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        story.banner = evt.target.result;
+                        saveStories();
+                        document.getElementById('storyBannerDisplay').style.backgroundImage = `url(${story.banner})`;
+                        document.getElementById('bannerPlaceholder').classList.add('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            function deleteStory(id, e) {
+                if (e) e.stopPropagation();
+                if (confirm('Tem certeza que deseja excluir esta história e todos os seus capítulos?')) {
+                    stories = stories.filter(s => s.id !== id);
                     saveStories();
-                    document.getElementById('storyBannerDisplay').style.backgroundImage = `url(${story.banner})`;
-                    document.getElementById('bannerPlaceholder').classList.add('hidden');
+                    showStoryFoldersList();
+                }
+            }
+            
+            function deleteCurrentChapter() {
+                const story = stories.find(x => x.id === activeStoryId);
+                if (!story) return;
+                const keys = Object.keys(story.chapters);
+                if (keys.length <= 1) {
+                    alert('A história precisa ter pelo menos 1 capítulo!');
+                    return;
+                }
+                if (confirm(`Deseja excluir o capítulo atual?`)) {
+                    delete story.chapters[activeChapterNum];
+                    saveStories();
+                    renderChapterOptions(story);
+                    loadChapterContent();
+                }
+            }
+            
+            /**
+             * Exporta a história completa para TXT respeitando a estrutura de cenas
+             */
+            function exportStoryToTxt() {
+                const story = stories.find(x => x.id === activeStoryId);
+                if (!story) return;
+            
+                let txtContent = "========================================\n";
+                txtContent += `${story.title.toUpperCase()}\n`;
+                txtContent += "========================================\n\n";
+            
+                if (story.longline && story.longline.trim()) {
+                    txtContent += `LONGLINE DA HISTÓRIA:\n${story.longline.trim()}\n\n`;
+                }
+            
+                const synopsis = document.getElementById('storySynopsisText').value;
+                if (synopsis && synopsis.trim()) {
+                    txtContent += `SINOPSE:\n${synopsis.trim()}\n\n`;
+                }
+            
+                txtContent += "----------------------------------------\n\n";
+            
+                // Garante salvamento antes de exportar
+                saveCurrentStory();
+            
+                const sortedChapterKeys = Object.keys(story.chapters).sort((a, b) => parseInt(a) - parseInt(b));
+            
+                sortedChapterKeys.forEach(chNum => {
+                    const ch = story.chapters[chNum];
+                    const chTitle = (typeof ch === 'object' && ch.title) ? ch.title : `CAPÍTULO ${chNum}`;
+                    txtContent += `=== ${chTitle.toUpperCase()} ===\n`;
+                    if (typeof ch === 'object' && ch.longline && ch.longline.trim()) {
+                        txtContent += `Longline do Capítulo: ${ch.longline.trim()}\n`;
+                    }
+                    txtContent += `\n`;
+            
+                    if (typeof ch === 'object') {
+                        if (ch.scenes && Array.isArray(ch.scenes) && ch.scenes.length > 0) {
+                            ch.scenes.forEach((sc, idx) => {
+                                if (sc.content && sc.content.trim()) {
+                                    txtContent += `[Cena ${idx + 1}]\n${sc.content.trim()}\n\n`;
+                                }
+                            });
+                        } else if (ch.text) {
+                            txtContent += `${ch.text.trim()}\n\n`;
+                        } else {
+                            if (ch.left && ch.left.trim()) txtContent += `${ch.left.trim()}\n\n`;
+                            if (ch.right && ch.right.trim()) txtContent += `${ch.right.trim()}\n\n`;
+                        }
+                    } else if (typeof ch === 'string') {
+                        txtContent += `${ch.trim()}\n\n`;
+                    }
+                    txtContent += "\n";
+                });
+            
+                const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
+                const downloadAnchor = document.createElement('a');
+                const fileName = story.title.replace(/[^a-zA-Z0-9_ -]/g, '').trim().replace(/\s+/g, '_') || 'historia';
+            
+                downloadAnchor.href = URL.createObjectURL(blob);
+                downloadAnchor.download = `${fileName}.txt`;
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                downloadAnchor.remove();
+            }
+            
+            function generatePublicShareLink() {
+                const story = stories.find(x => x.id === activeStoryId);
+                if (!story) {
+                    alert('Selecione ou abra uma história primeiro.');
+                    return;
+                }
+            
+                const currentChObj = story.chapters[activeChapterNum];
+                const chTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
+            
+                const choice = prompt(
+                    `Você vai compartilhar a história ou o capítulo?\n\nDigite 1 para: História Completa ("${story.title}")\nDigite 2 para: Apenas o Capítulo Atual ("${chTitle}")`,
+                    "1"
+                );
+            
+                if (!choice) return;
+            
+                const baseUrl = window.location.href.split('?')[0];
+                let shareUrl = '';
+                let successMessage = '';
+            
+                if (choice.trim() === '2') {
+                    shareUrl = `${baseUrl}?read_story=${story.id}&chapter=${activeChapterNum}`;
+                    successMessage = `✨ Link do "${chTitle}" copiado para a área de transferência!`;
+                } else {
+                    shareUrl = `${baseUrl}?read_story=${story.id}`;
+                    successMessage = `✨ Link da história "${story.title}" copiado para a área de transferência!`;
+                }
+            
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert(`${successMessage}\n\nEnvie para quem quiser:\n${shareUrl}`);
+                }).catch(() => {
+                    prompt('Copie o link público abaixo:', shareUrl);
+                });
+            }
+            
+            async function addSharedReader() {
+                const story = stories.find(x => x.id === activeStoryId);
+                if (!story) {
+                    alert('Selecione ou abra uma história primeiro.');
+                    return;
+                }
+            
+                const readerEmail = prompt('Digite o e-mail cadastrado do amigo que poderá editar esta história:');
+                if (!readerEmail || !readerEmail.trim()) return;
+            
+                if (!story.allowed_readers) story.allowed_readers = [];
+            
+                if (story.allowed_readers.includes(readerEmail.trim())) {
+                    alert('Este e-mail já possui acesso a esta história.');
+                    return;
+                }
+            
+                story.allowed_readers.push(readerEmail.trim());
+                saveStories();
+                alert(`🎉 Acesso concedido! O colaborador (${readerEmail.trim()}) agora poderá editar esta história no painel dele.`);
+            }
+            
+            /* --- SUPORTE À CAPA OFICIAL DO LIVRO (2:3) --- */
+            
+            function triggerBookCoverUpload() {
+                const input = document.getElementById('bookCoverInput');
+                if (input) input.click();
+            }
+            
+            function handleBookCoverSelect(event) {
+                const file = event.target.files[0];
+                const story = stories.find(x => x.id === activeStoryId);
+                if (!file || !story) return;
+            
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const coverDataUrl = e.target.result;
+                    const display = document.getElementById('bookCoverDisplay');
+                    if (display) {
+                        display.style.backgroundImage = `url('${coverDataUrl}')`;
+                        display.innerHTML = '';
+                    }
+                    story.bookCover = coverDataUrl;
+                    saveStories();
                 };
                 reader.readAsDataURL(file);
             }
-        }
-
-        function deleteStory(id, e) {
-            if (e) e.stopPropagation();
-            if (confirm('Tem certeza que deseja excluir esta história e todos os seus capítulos?')) {
-                stories = stories.filter(s => s.id !== id);
-                saveStories();
-                showStoryFoldersList();
+            
+            function saveStories() { 
+                localStorage.setItem('diario_historias', JSON.stringify(stories)); 
             }
-        }
-
-        function deleteCurrentChapter() {
-            const story = stories.find(x => x.id === activeStoryId);
-            if (!story) return;
-            const keys = Object.keys(story.chapters);
-            if (keys.length <= 1) {
-                alert('A história precisa ter pelo menos 1 capítulo!');
-                return;
-            }
-            if (confirm(`Deseja excluir o capítulo atual?`)) {
-                delete story.chapters[activeChapterNum];
-                saveStories();
-                renderChapterOptions(story);
-                loadChapterContent();
-            }
-        }
-
-        function exportStoryToTxt() {
-    const story = stories.find(x => x.id === activeStoryId);
-    if (!story) return;
-
-    let txtContent = "========================================\n";
-    txtContent += `${story.title.toUpperCase()}\n`;
-    txtContent += "========================================\n\n";
-
-    if (story.longline && story.longline.trim()) {
-        txtContent += `LONGLINE DA HISTÓRIA:\n${story.longline.trim()}\n\n`;
-    }
-
-    const synopsis = document.getElementById('storySynopsisText').value;
-    if (synopsis && synopsis.trim()) {
-        txtContent += `SINOPSE:\n${synopsis.trim()}\n\n`;
-    }
-
-    txtContent += "----------------------------------------\n\n";
-
-    const currentChObj = story.chapters[activeChapterNum];
-    const currentTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
-
-    story.chapters[activeChapterNum] = {
-        title: currentTitle,
-        longline: document.getElementById('chapterLonglineText').value,
-        left: document.getElementById('chapterLeftText').value,
-        right: document.getElementById('chapterRightText').value
-    };
-
-    const sortedChapterKeys = Object.keys(story.chapters).sort((a, b) => parseInt(a) - parseInt(b));
-
-    sortedChapterKeys.forEach(chNum => {
-        const ch = story.chapters[chNum];
-        const chTitle = (typeof ch === 'object' && ch.title) ? ch.title : `CAPÍTULO ${chNum}`;
-        txtContent += `=== ${chTitle.toUpperCase()} ===\n`;
-        if (typeof ch === 'object' && ch.longline && ch.longline.trim()) {
-            txtContent += `Longline do Capítulo: ${ch.longline.trim()}\n`;
-        }
-        txtContent += `\n`;
-        if (typeof ch === 'object') {
-            if (ch.left && ch.left.trim()) txtContent += `${ch.left.trim()}\n\n`;
-            if (ch.right && ch.right.trim()) txtContent += `${ch.right.trim()}\n\n`;
-        } else if (typeof ch === 'string') {
-            txtContent += `${ch.trim()}\n\n`;
-        }
-        txtContent += "\n";
-    });
-
-    const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
-    const downloadAnchor = document.createElement('a');
-    const fileName = story.title.replace(/[^a-zA-Z0-9_ -]/g, '').trim().replace(/\s+/g, '_') || 'historia';
-    
-    downloadAnchor.href = URL.createObjectURL(blob);
-    downloadAnchor.download = `${fileName}.txt`;
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-}
-
-// Gerar Link Público de Leitura (Com opção de escolha: História ou Capítulo)
-function generatePublicShareLink() {
-    const story = stories.find(x => x.id === activeStoryId);
-    if (!story) {
-        alert('Selecione ou abra uma história primeiro.');
-        return;
-    }
-
-    const currentChObj = story.chapters[activeChapterNum];
-    const chTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
-
-    // Pergunta o destino ao usuário
-    const choice = prompt(
-        `Você vai compartilhar a história ou o capítulo?\n\nDigite 1 para: História Completa ("${story.title}")\nDigite 2 para: Apenas o Capítulo Atual ("${chTitle}")`,
-        "1"
-    );
-
-    if (!choice) return; // Se cancelar, interrompe a execução
-
-    const baseUrl = window.location.href.split('?')[0];
-    let shareUrl = '';
-    let successMessage = '';
-
-    if (choice.trim() === '2') {
-        // Opção Capítulo
-        shareUrl = `${baseUrl}?read_story=${story.id}&chapter=${activeChapterNum}`;
-        successMessage = `✨ Link do "${chTitle}" copiado para a área de transferência!`;
-    } else {
-        // Opção História (Padrão para a opção 1 ou qualquer outra digitação)
-        shareUrl = `${baseUrl}?read_story=${story.id}`;
-        successMessage = `✨ Link da história "${story.title}" copiado para a área de transferência!`;
-    }
-
-    navigator.clipboard.writeText(shareUrl).then(() => {
-        alert(`${successMessage}\n\nEnvie para quem quiser:\n${shareUrl}`);
-    }).catch(() => {
-        prompt('Copie o link público abaixo:', shareUrl);
-    });
-}
-    // Opção 2: Adicionar Leitor / Coautor via E-mail
-    async function addSharedReader() {
-        const story = stories.find(x => x.id === activeStoryId);
-        if (!story) {
-            alert('Selecione ou abra uma história primeiro.');
-            return;
-        }
-    
-        const readerEmail = prompt('Digite o e-mail cadastrado do amigo que poderá editar esta história:');
-        if (!readerEmail || !readerEmail.trim()) return;
-    
-        if (!story.allowed_readers) story.allowed_readers = [];
-        
-        if (story.allowed_readers.includes(readerEmail.trim())) {
-            alert('Este e-mail já possui acesso a esta história.');
-            return;
-        }
-    
-        story.allowed_readers.push(readerEmail.trim());
-        saveStories();
-        alert(`🎉 Acesso concedido! O colaborador (${readerEmail.trim()}) agora poderá editar esta história no painel dele.`);
-    }
-        function saveStories() { localStorage.setItem('diario_historias', JSON.stringify(stories)); }
-
         /* MUNDO & LOCAIS LOGIC */
         function showWorldList() {
             document.getElementById('worldListView').classList.remove('hidden');
