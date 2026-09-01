@@ -1451,7 +1451,9 @@
                             <span style="font-size: 0.75rem; margin-top: 6px; font-weight: 600;">Carregar Capa</span>
                         </div>
                         <div style="flex: 1; min-width: 200px;">
-                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">Adicione a capa oficial na proporção 2:3. Ela será utilizada na geração e exportação dos arquivos em PDF e EPUB.</p>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">
+    Adicione a capa oficial na proporção <strong>2:3</strong> (Tamanho recomendado: <strong>1600 x 2400 px</strong> ou mínimo de <strong>1000 x 1500 px</strong>). Ela será utilizada na exportação e geração dos arquivos em PDF e EPUB.
+</p>
                             <input type="file" id="bookCoverInput" accept="image/*" style="display: none;" onchange="handleBookCoverSelect(event)">
                             <button type="button" class="btn btn-outline" onclick="triggerBookCoverUpload()"><i class="fa-solid fa-upload"></i> Escolher Imagem</button>
                         </div>
@@ -1496,27 +1498,35 @@
                             </button>
                         </div>
             
-                        <!-- Linha Inferior: 2 colunas no mobile / 6 botões no desktop -->
-                        <div class="chapter-buttons-grid">
-                            <button type="button" class="btn btn-outline" onclick="addNewSceneToChapter()">
-                                <i class="fa-solid fa-plus"></i> Nova Cena
-                            </button>
-                            <button type="button" class="btn btn-outline" onclick="addNewChapterToStory()">
-                                <i class="fa-solid fa-folder-plus"></i> Novo Cap.
-                            </button>
-                            <button type="button" class="btn btn-outline" onclick="exportStoryToTxt()">
-                                <i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar
-                            </button>
-                            <button type="button" class="btn btn-outline" onclick="generatePublicShareLink()">
-                                <i class="fa-solid fa-share-nodes" style="color: var(--accent-pink);"></i> Link
-                            </button>
-                            <button type="button" class="btn btn-primary" onclick="saveCurrentStory()">
-                                <i class="fa-solid fa-bookmark"></i> Salvar
-                            </button>
-                            <button type="button" class="btn btn-outline btn-danger-soft" onclick="deleteCurrentChapter()">
-                                <i class="fa-solid fa-trash" style="color:var(--accent-pink);"></i> Excluir
-                            </button>
-                        </div>
+                        <!-- Grade de Botões do Capítulo (Incluindo o botão Colaborador) -->
+                    <div class="chapter-buttons-grid">
+                        <button type="button" class="btn btn-outline" onclick="addNewSceneToChapter()">
+                            <i class="fa-solid fa-plus"></i> Nova Cena
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="addNewChapterToStory()">
+                            <i class="fa-solid fa-folder-plus"></i> Novo Cap.
+                        </button>
+                    
+                        <!-- BOTÃO COLABORADOR RESTAURADO -->
+                        <button type="button" class="btn btn-outline" onclick="addSharedReader()" title="Conceder acesso de edição a um coautor">
+                            <i class="fa-solid fa-user-plus" style="color: var(--accent-brown);"></i> Colaborador
+                        </button>
+                    
+                        <button type="button" class="btn btn-outline" onclick="generatePublicShareLink()" title="Gerar link de leitura pública">
+                            <i class="fa-solid fa-share-nodes" style="color: var(--accent-pink);"></i> Link
+                        </button>
+                    
+                        <button type="button" class="btn btn-outline" onclick="exportStoryToTxt()">
+                            <i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar
+                        </button>
+                    
+                        <button type="button" class="btn btn-primary" onclick="saveCurrentStory()">
+                            <i class="fa-solid fa-bookmark"></i> Salvar
+                        </button>
+                    
+                        <button type="button" class="btn btn-outline btn-danger-soft" onclick="deleteCurrentChapter()" style="grid-column: span 2;">
+                            <i class="fa-solid fa-trash" style="color:var(--accent-pink);"></i> Excluir Capítulo
+                        </button>
                     </div>
             
                     <!-- Longline do Capítulo -->
