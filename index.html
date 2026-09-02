@@ -880,72 +880,129 @@
             margin-bottom: 4px;
         }
         
-        /* Workspace de Página Única e Cenas Reordenáveis */
-        .single-page-workspace {
+        /* ==========================================
+           WORKSPACE ESTILO NOTION (PARÁGRAFOS REORDENÁVEIS)
+           ========================================== */
+
+        .notion-workspace {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .notion-blocks-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             width: 100%;
         }
         
-        .scenes-container {
+        /* Bloco de Parágrafo Flutuante */
+        .notion-block {
+            position: relative;
             display: flex;
-            flex-direction: column;
-            gap: 16px;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            background: transparent;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
         }
         
-        .scene-card {
-            background: var(--paper-bg, #ffffff);
-            border: 2px solid var(--border-style);
-            border-left: 5px solid var(--accent-brown);
-            border-radius: 12px;
-            padding: 14px;
-            box-shadow: var(--shadow-paper, 0 2px 5px rgba(0,0,0,0.05));
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        .notion-block:hover {
+            background-color: rgba(0, 0, 0, 0.02);
         }
         
-        .scene-card.dragging {
+        .notion-block.dragging {
             opacity: 0.4;
-            border: 2px dashed var(--accent-brown);
+            background-color: var(--paper-bg, #ffffff);
+            border: 1px dashed var(--accent-brown, #8b5a2b);
         }
         
-        .scene-card-header {
+        /* Alça Discreta de Arrastar (⋮⋮) e Ações */
+        .notion-block-handle {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 6px;
-            border-bottom: 1px dashed var(--border-style);
-            color: var(--accent-brown);
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-        
-        .scene-card-actions {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .scene-drag-handle {
+            gap: 4px;
+            opacity: 0.3;
             cursor: grab;
-            padding: 4px 8px;
-            color: var(--accent-brown);
+            padding-top: 8px;
+            user-select: none;
+            transition: opacity 0.2s ease;
         }
         
-        .scene-drag-handle:active {
+        .notion-block:hover .notion-block-handle {
+            opacity: 1;
+        }
+        
+        .notion-block-handle:active {
             cursor: grabbing;
         }
         
-        .scene-textarea {
+        .btn-delete-block {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 2px 4px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .notion-block:hover .btn-delete-block {
+            opacity: 0.7;
+        }
+        
+        .btn-delete-block:hover {
+            opacity: 1 !important;
+        }
+        
+        /* Caixa de Texto Contínua do Parágrafo */
+        .notion-textarea {
+            flex: 1;
             width: 100%;
-            min-height: 140px;
+            min-height: 40px;
             border: none;
             outline: none;
-            resize: vertical;
+            resize: none;
             font-family: 'Nunito', sans-serif;
-            font-size: 1rem;
-            line-height: 1.6;
-            color: var(--text-dark);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text-dark, #2c2523);
             background: transparent;
             padding: 4px 0;
+            overflow: hidden;
+        }
+        
+        .notion-textarea::placeholder {
+            color: var(--text-muted, #a09385);
+            font-style: italic;
+        }
+        
+        /* Botão Discreto Adicionar Parágrafo */
+        .btn-add-block {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: 1px dashed var(--border-style, #dcd3c1);
+            border-radius: 8px;
+            padding: 10px 16px;
+            color: var(--accent-brown, #8b5a2b);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .btn-add-block:hover {
+            background-color: rgba(255, 255, 255, 0.6);
+            border-color: var(--accent-brown, #8b5a2b);
         }
         
         /* Rodapé com Estatísticas (Com espaçamento adequado para mobile) */
@@ -1554,11 +1611,16 @@
                         <input type="text" id="chapterLonglineText" class="form-control" placeholder="Escreva o objetivo ou acontecimento central deste capítulo..." style="background: transparent; border-color: var(--border-style);">
                     </div>
             
-                    <!-- WORKSPACE DE PÁGINA ÚNICA COM CENAS REORDENÁVEIS -->
-                    <div class="single-page-workspace">
-                        <div id="scenesContainer" class="scenes-container">
-                            <!-- As cenas serão injetadas dinamicamente via JS -->
+                    <!-- WORKSPACE ESTILO NOTION (PARÁGRAFOS REORDENÁVEIS) -->
+                    <div class="notion-workspace">
+                        <div id="notionBlocksContainer" class="notion-blocks-container">
+                            <!-- Os blocos de parágrafos serão injetados dinamicamente via JS -->
                         </div>
+                    
+                        <!-- Botão discreto para adicionar novo parágrafo ao final -->
+                        <button type="button" class="btn-add-block" onclick="addNewBlockToChapter()">
+                            <i class="fa-solid fa-plus"></i> Adicionar parágrafo
+                        </button>
                     </div>
             
                     <!-- Rodapé do Editor com Contador em Tempo Real -->
@@ -2472,276 +2534,279 @@ function togglePasswordVisibility() {
         }
 
         /* ==========================================
-           MÓDULO: GESTÃO DE CAPÍTULOS & CENAS (PÁGINA ÚNICA)
+           MÓDULO: GESTÃO DE CAPÍTULOS ESTILO NOTION (PARÁGRAFOS REORDENÁVEIS)
            ========================================== */
 
-            // Estrutura em memória para as cenas do capítulo atualmente aberto
-            let currentScenes = [];
-            
-            /**
-             * Carrega o conteúdo do capítulo atual convertendo em cenas reordenáveis
-             */
-            function loadChapterContent() {
-                const story = stories.find(x => x.id === activeStoryId);
-                if (!story) return;
-            
-                activeChapterNum = document.getElementById('chapterSelect').value;
-                const content = story.chapters ? story.chapters[activeChapterNum] : null;
-            
-                if (!content) {
-                    currentScenes = [{ id: 'scene-' + Date.now(), content: '' }];
-                    document.getElementById('chapterLonglineText').value = '';
-                } else {
-                    document.getElementById('chapterLonglineText').value = content.longline || '';
-            
-                    // 1. Se já existirem cenas salvas no capítulo, usa-as
-                    if (content.scenes && Array.isArray(content.scenes) && content.scenes.length > 0) {
-                        currentScenes = JSON.parse(JSON.stringify(content.scenes));
-                    } 
-                    // 2. Se for um capítulo antigo (migração das páginas left/right para cenas)
-                    else {
-                        let combinedText = '';
-                        if (typeof content === 'object') {
-                            const left = content.left || '';
-                            const right = content.right || '';
-                            combinedText = (left + (left && right ? '\n\n' : '') + right).trim();
-                        } else if (typeof content === 'string') {
-                            combinedText = content.trim();
-                        }
-            
-                        // Separa por divisor de cena (---) se existir, ou cria uma cena única
-                        const blocks = combinedText.split(/\n\s*---\s*\n/).filter(b => b.trim() !== '');
-                        if (blocks.length > 0) {
-                            currentScenes = blocks.map((txt, idx) => ({
-                                id: 'scene-' + Date.now() + '-' + idx,
-                                content: txt
-                            }));
-                        } else {
-                            currentScenes = [{ id: 'scene-' + Date.now(), content: combinedText }];
-                        }
+        // Estrutura em memória para os blocos/parágrafos do capítulo aberto
+        let currentBlocks = [];
+        
+        /**
+         * Carrega o capítulo e converte o texto em blocos de parágrafo estilo Notion
+         */
+        function loadChapterContent() {
+            const story = stories.find(x => x.id === activeStoryId);
+            if (!story) return;
+        
+            activeChapterNum = document.getElementById('chapterSelect').value;
+            const content = story.chapters ? story.chapters[activeChapterNum] : null;
+        
+            if (!content) {
+                currentBlocks = [{ id: 'block-' + Date.now(), text: '' }];
+                document.getElementById('chapterLonglineText').value = '';
+            } else {
+                document.getElementById('chapterLonglineText').value = content.longline || '';
+        
+                // 1. Se já existirem blocos salvos no capítulo
+                if (content.blocks && Array.isArray(content.blocks) && content.blocks.length > 0) {
+                    currentBlocks = JSON.parse(JSON.stringify(content.blocks));
+                } 
+                // 2. Se houver cenas ou texto legado (migração automática para parágrafos)
+                else {
+                    let rawText = '';
+                    if (content.scenes && Array.isArray(content.scenes)) {
+                        rawText = content.scenes.map(s => s.content || '').join('\n\n');
+                    } else if (content.text) {
+                        rawText = content.text;
+                    } else {
+                        const left = content.left || '';
+                        const right = content.right || '';
+                        rawText = (left + (left && right ? '\n\n' : '') + right).trim();
+                    }
+        
+                    // Quebra o texto por parágrafos/quebras de linha
+                    const paragraphs = rawText.split(/\n\s*\n/).filter(p => p.trim() !== '');
+                    if (paragraphs.length > 0) {
+                        currentBlocks = paragraphs.map((pText, idx) => ({
+                            id: 'block-' + Date.now() + '-' + idx,
+                            text: pText.trim()
+                        }));
+                    } else {
+                        currentBlocks = [{ id: 'block-' + Date.now(), text: rawText }];
                     }
                 }
-            
-                renderScenes();
-                updateChapterWordCount();
             }
-            
-            /**
-             * Renderiza os cards de cenas reordenáveis com suporte a botão de mesclagem
-             */
-            function renderScenes() {
-                const container = document.getElementById('scenesContainer');
-                if (!container) return;
-            
-                container.innerHTML = '';
-            
-                currentScenes.forEach((scene, index) => {
-                    const sceneEl = document.createElement('div');
-                    sceneEl.className = 'scene-card';
-                    sceneEl.draggable = true;
-                    sceneEl.dataset.id = scene.id;
-                    sceneEl.dataset.index = index;
-            
-                    // O botão de mesclar só aparece a partir da segunda cena (índice > 0)
-                    const mergeBtnHtml = index > 0 
-                        ? `<button type="button" class="btn btn-outline btn-sm" onclick="mergeSceneWithPrevious(${index})" title="Mesclar com a cena anterior">
-                            <i class="fa-solid fa-code-merge" style="color: var(--accent-brown);"></i> Mesclar
-                           </button>` 
-                        : '';
-            
-                    sceneEl.innerHTML = `
-                        <div class="scene-card-header">
-                            <span><i class="fa-solid fa-grip-vertical scene-drag-handle"></i> Cena ${index + 1}</span>
-                            <div class="scene-card-actions">
-                                ${mergeBtnHtml}
-                                <button type="button" class="btn btn-outline btn-sm" onclick="deleteScene('${scene.id}')" title="Excluir Cena">
-                                    <i class="fa-solid fa-xmark" style="color: var(--accent-pink);"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <textarea class="scene-textarea" placeholder="Escreva a cena aqui..." oninput="updateSceneContent('${scene.id}', this.value)">${scene.content || ''}</textarea>
-                    `;
-            
-                    container.appendChild(sceneEl);
-                });
-            
-                initSceneDragAndDrop();
+        
+            renderNotionBlocks();
+            updateChapterWordCount();
+        }
+        
+        /**
+         * Renderiza os blocos de parágrafo na tela
+         */
+        function renderNotionBlocks() {
+            const container = document.getElementById('notionBlocksContainer');
+            if (!container) return;
+        
+            container.innerHTML = '';
+        
+            currentBlocks.forEach((block, index) => {
+                const blockEl = document.createElement('div');
+                blockEl.className = 'notion-block';
+                blockEl.draggable = true;
+                blockEl.dataset.id = block.id;
+                blockEl.dataset.index = index;
+        
+                blockEl.innerHTML = `
+                    <div class="notion-block-handle" title="Arraste para reordenar">
+                        <i class="fa-solid fa-grip-vertical"></i>
+                        <button type="button" class="btn-delete-block" onclick="deleteBlock('${block.id}')" title="Excluir parágrafo">
+                            <i class="fa-solid fa-xmark" style="color: var(--accent-pink);"></i>
+                        </button>
+                    </div>
+                    <textarea class="notion-textarea" placeholder="Digite seu parágrafo..." oninput="updateBlockContent('${block.id}', this)" onkeydown="handleBlockKeyDown(event, ${index})">${block.text || ''}</textarea>
+                `;
+        
+                container.appendChild(blockEl);
+        
+                // Ajusta a altura da caixa de texto conforme o conteúdo digita
+                const textarea = blockEl.querySelector('.notion-textarea');
+                autoResizeTextarea(textarea);
+            });
+        
+            initBlockDragAndDrop();
+        }
+        
+        /**
+         * Atualiza o texto do bloco e expande a caixa se necessário
+         */
+        function updateBlockContent(id, textarea) {
+            const block = currentBlocks.find(b => b.id === id);
+            if (block) {
+                block.text = textarea.value;
             }
-            
-            /**
-             * Mescla o texto da cena atual com a cena imediatamente anterior
-             */
-            function mergeSceneWithPrevious(index) {
-                if (index <= 0 || index >= currentScenes.length) return;
-            
-                const previousScene = currentScenes[index - 1];
-                const currentScene = currentScenes[index];
-            
-                if (currentScene.content.trim()) {
-                    previousScene.content = (previousScene.content.trim() + '\n\n' + currentScene.content.trim()).trim();
-                }
-            
-                currentScenes.splice(index, 1);
-                renderScenes();
-                updateChapterWordCount();
-            }
-            
-            /**
-             * Atualiza o texto da cena em tempo real
-             */
-            function updateSceneContent(id, value) {
-                const scene = currentScenes.find(s => s.id === id);
-                if (scene) {
-                    scene.content = value;
-                }
-                updateChapterWordCount();
-            }
-            
-            /**
-             * Adiciona uma nova cena ao capítulo
-             */
-            function addNewSceneToChapter() {
-                const newScene = {
-                    id: 'scene-' + Date.now(),
-                    content: ''
-                };
-                currentScenes.push(newScene);
-                renderScenes();
-            
+            autoResizeTextarea(textarea);
+            updateChapterWordCount();
+        }
+        
+        /**
+         * Ajusta a altura do textarea automaticamente conforme a autora digita
+         */
+        function autoResizeTextarea(textarea) {
+            if (!textarea) return;
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+        
+        /**
+         * Permite criar novo parágrafo ao apertar Enter
+         */
+        function handleBlockKeyDown(e, index) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const newBlock = { id: 'block-' + Date.now(), text: '' };
+                currentBlocks.splice(index + 1, 0, newBlock);
+                renderNotionBlocks();
+        
                 setTimeout(() => {
-                    const textareas = document.querySelectorAll('.scene-textarea');
-                    if (textareas.length > 0) {
-                        textareas[textareas.length - 1].focus();
+                    const textareas = document.querySelectorAll('.notion-textarea');
+                    if (textareas[index + 1]) {
+                        textareas[index + 1].focus();
                     }
                 }, 50);
             }
-            
-            /**
-             * Remove uma cena pelo ID
-             */
-            function deleteScene(id) {
-                if (currentScenes.length <= 1) {
-                    currentScenes[0].content = '';
-                    renderScenes();
-                    updateChapterWordCount();
-                    return;
+        }
+        
+        /**
+         * Adiciona um novo parágrafo ao final
+         */
+        function addNewBlockToChapter() {
+            const newBlock = { id: 'block-' + Date.now(), text: '' };
+            currentBlocks.push(newBlock);
+            renderNotionBlocks();
+        
+            setTimeout(() => {
+                const textareas = document.querySelectorAll('.notion-textarea');
+                if (textareas.length > 0) {
+                    textareas[textareas.length - 1].focus();
                 }
-            
-                currentScenes = currentScenes.filter(s => s.id !== id);
-                renderScenes();
+            }, 50);
+        }
+        
+        /**
+         * Exclui um parágrafo
+         */
+        function deleteBlock(id) {
+            if (currentBlocks.length <= 1) {
+                currentBlocks[0].text = '';
+                renderNotionBlocks();
                 updateChapterWordCount();
+                return;
             }
-            
-            /**
-             * Calcula e exibe a contagem de palavras e caracteres do capítulo em tempo real
-             */
-            function updateChapterWordCount() {
-                const fullText = currentScenes.map(s => s.content || '').join('\n\n');
-                const words = fullText.trim() ? fullText.trim().split(/\s+/).length : 0;
-                const chars = fullText.length;
-            
-                const wordEl = document.getElementById('chapterWordCount');
-                const charEl = document.getElementById('chapterCharCount');
-            
-                if (wordEl) wordEl.innerHTML = `<i class="fa-solid fa-pen-nib"></i> ${words} palavras`;
-                if (charEl) charEl.textContent = `${chars} caracteres`;
-            }
-            
-            /**
-             * Configura o Drag & Drop nativo HTML5
-             */
-            function initSceneDragAndDrop() {
-                const container = document.getElementById('scenesContainer');
-                if (!container) return;
-            
-                const cards = container.querySelectorAll('.scene-card');
-            
-                cards.forEach(card => {
-                    card.addEventListener('dragstart', (e) => {
-                        card.classList.add('dragging');
-                        e.dataTransfer.setData('text/plain', card.dataset.index);
-                    });
-            
-                    card.addEventListener('dragend', () => {
-                        card.classList.remove('dragging');
-                    });
+        
+            currentBlocks = currentBlocks.filter(b => b.id !== id);
+            renderNotionBlocks();
+            updateChapterWordCount();
+        }
+        
+        /**
+         * Calcula o total de palavras e caracteres em tempo real
+         */
+        function updateChapterWordCount() {
+            const fullText = currentBlocks.map(b => b.text || '').join('\n\n');
+            const words = fullText.trim() ? fullText.trim().split(/\s+/).length : 0;
+            const chars = fullText.length;
+        
+            const wordEl = document.getElementById('chapterWordCount');
+            const charEl = document.getElementById('chapterCharCount');
+        
+            if (wordEl) wordEl.innerHTML = `<i class="fa-solid fa-pen-nib"></i> ${words} palavras`;
+            if (charEl) charEl.textContent = `${chars} caracteres`;
+        }
+        
+        /**
+         * Drag & Drop para os blocos estilo Notion
+         */
+        function initBlockDragAndDrop() {
+            const container = document.getElementById('notionBlocksContainer');
+            if (!container) return;
+        
+            const blocks = container.querySelectorAll('.notion-block');
+        
+            blocks.forEach(block => {
+                block.addEventListener('dragstart', (e) => {
+                    block.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', block.dataset.index);
                 });
-            
-                container.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    const draggingCard = container.querySelector('.dragging');
-                    if (!draggingCard) return;
-            
-                    const siblings = [...container.querySelectorAll('.scene-card:not(.dragging)')];
-                    const nextSibling = siblings.find(sibling => {
-                        const box = sibling.getBoundingClientRect();
-                        return e.clientY <= box.top + box.height / 2;
-                    });
-            
-                    if (nextSibling) {
-                        container.insertBefore(draggingCard, nextSibling);
-                    } else {
-                        container.appendChild(draggingCard);
-                    }
+        
+                block.addEventListener('dragend', () => {
+                    block.classList.remove('dragging');
                 });
-            
-                container.addEventListener('drop', () => {
-                    const newOrder = [];
-                    container.querySelectorAll('.scene-card').forEach(card => {
-                        const id = card.dataset.id;
-                        const scene = currentScenes.find(s => s.id === id);
-                        if (scene) newOrder.push(scene);
-                    });
-                    currentScenes = newOrder;
-                    renderScenes();
+            });
+        
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const draggingBlock = container.querySelector('.dragging');
+                if (!draggingBlock) return;
+        
+                const siblings = [...container.querySelectorAll('.notion-block:not(.dragging)')];
+                const nextSibling = siblings.find(sibling => {
+                    const box = sibling.getBoundingClientRect();
+                    return e.clientY <= box.top + box.height / 2;
                 });
-            }
-            
-            function addNewChapterToStory() {
-                const story = stories.find(x => x.id === activeStoryId);
-                if (!story) return;
-                const nextNum = (Object.keys(story.chapters).length + 1).toString();
-                story.chapters[nextNum] = { 
-                    title: 'Capítulo ' + nextNum, 
-                    longline: '', 
-                    scenes: [{ id: 'scene-' + Date.now(), content: '' }] 
-                };
-                saveStories();
-                renderChapterOptions(story);
-                document.getElementById('chapterSelect').value = nextNum;
-                loadChapterContent();
-            }
-            
-            /**
-             * Salva a história, o capítulo atual e suas cenas
-             */
-            function saveCurrentStory() {
-                const story = stories.find(x => x.id === activeStoryId);
-                if (!story) return;
-            
-                const newTitle = document.getElementById('storyTitleInput').value.trim();
-                if (newTitle) {
-                    story.title = newTitle;
+        
+                if (nextSibling) {
+                    container.insertBefore(draggingBlock, nextSibling);
+                } else {
+                    container.appendChild(draggingBlock);
                 }
-                story.synopsis = document.getElementById('storySynopsisText').value;
-                story.spotifyUrl = document.getElementById('storySpotifyUrl').value;
-            
-                const currentChObj = story.chapters[activeChapterNum];
-                const currentTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
-            
-                // Texto consolidado para manter compatibilidade
-                const fullText = currentScenes.map(s => s.content || '').join('\n\n---\n\n');
-            
-                story.chapters[activeChapterNum] = {
-                    title: currentTitle,
-                    longline: document.getElementById('chapterLonglineText').value,
-                    scenes: currentScenes,
-                    text: fullText
-                };
-            
-                saveStories();
-                alert('História e capítulo salvos com sucesso! 📖');
+            });
+        
+            container.addEventListener('drop', () => {
+                const newOrder = [];
+                container.querySelectorAll('.notion-block').forEach(block => {
+                    const id = block.dataset.id;
+                    const item = currentBlocks.find(b => b.id === id);
+                    if (item) newOrder.push(item);
+                });
+                currentBlocks = newOrder;
+                renderNotionBlocks();
+            });
+        }
+        
+        function addNewChapterToStory() {
+            const story = stories.find(x => x.id === activeStoryId);
+            if (!story) return;
+            const nextNum = (Object.keys(story.chapters).length + 1).toString();
+            story.chapters[nextNum] = { 
+                title: 'Capítulo ' + nextNum, 
+                longline: '', 
+                blocks: [{ id: 'block-' + Date.now(), text: '' }] 
+            };
+            saveStories();
+            renderChapterOptions(story);
+            document.getElementById('chapterSelect').value = nextNum;
+            loadChapterContent();
+        }
+        
+        /**
+         * Salva a história e os blocos de parágrafo
+         */
+        function saveCurrentStory() {
+            const story = stories.find(x => x.id === activeStoryId);
+            if (!story) return;
+        
+            const newTitle = document.getElementById('storyTitleInput').value.trim();
+            if (newTitle) {
+                story.title = newTitle;
             }
+            story.synopsis = document.getElementById('storySynopsisText').value;
+            story.spotifyUrl = document.getElementById('storySpotifyUrl').value;
+        
+            const currentChObj = story.chapters[activeChapterNum];
+            const currentTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
+        
+            const fullText = currentBlocks.map(b => b.text || '').join('\n\n');
+        
+            story.chapters[activeChapterNum] = {
+                title: currentTitle,
+                longline: document.getElementById('chapterLonglineText').value,
+                blocks: currentBlocks,
+                text: fullText
+            };
+        
+            saveStories();
+            alert('História e capítulo salvos com sucesso! 📖');
+        }
             
             function triggerStoryBannerUpload() { 
                 document.getElementById('storyBannerInput').click(); 
