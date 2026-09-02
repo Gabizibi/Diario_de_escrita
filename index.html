@@ -1644,15 +1644,15 @@
                 </div>
             </div>
             <!-- SECTION 4: MUNDO & LOCAIS (ATLAS DO UNIVERSO) -->
-            <div id="locationsSection" class="hidden">
+            <div id="worldSection" class="hidden">
                 <!-- Cabeçalho do Módulo -->
                 <div class="card" style="margin-bottom: 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                         <div>
-                            <h2 style="font-family: 'Nunito', sans-serif; font-weight: 800; color: var(--accent-brown); font-size: 1.6rem;">
+                            <h2 style="font-family: 'Nunito', sans-serif; font-weight: 800; color: var(--accent-brown); font-size: 1.6rem; margin: 0;">
                                 Mundo & Locais
                             </h2>
-                            <p style="color: var(--text-muted); font-size: 0.9rem;">
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 4px 0 0 0;">
                                 Atlas do seu universo e galerias de fotos dos cenários.
                             </p>
                         </div>
@@ -1675,9 +1675,9 @@
                 </div>
             
                 <!-- Visão 1: Lista de Cards do Atlas -->
-                <div id="locationListView">
+                <div id="worldListView">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <p style="color: var(--text-muted); font-size: 0.95rem;">
+                        <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
                             Atlas do seu mundo. Clique num card para ver fotos e editar detalhes!
                         </p>
                         <button type="button" class="btn btn-primary" onclick="createNewLocation()">
@@ -1686,20 +1686,20 @@
                     </div>
             
                     <!-- Container onde os Cards dos Locais serão renderizados -->
-                    <div id="locationsGridContainer" class="locations-grid">
+                    <div id="worldGridContainer" class="locations-grid">
                         <!-- Os cards com o Carimbo Estético serão injetados dinamicamente via JS -->
                     </div>
                 </div>
             
                 <!-- Visão 2: Formulario de Detalhes do Local -->
-                <div id="locationDetailView" class="hidden">
+                <div id="worldDetailView" class="hidden">
                     <div class="card" style="margin-bottom: 16px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                             <h3 class="section-title" style="margin: 0;">
                                 <i class="fa-solid fa-map-location-dot" style="color: var(--accent-pink);"></i> Detalhes do Local
                             </h3>
                             <div style="display: flex; gap: 8px;">
-                                <button type="button" class="btn btn-outline" onclick="showLocationListView()">
+                                <button type="button" class="btn btn-outline" onclick="showWorldList()">
                                     <i class="fa-solid fa-arrow-left"></i> Voltar
                                 </button>
                                 <button type="button" class="btn btn-primary" onclick="saveCurrentLocation()">
