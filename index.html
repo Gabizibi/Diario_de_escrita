@@ -1495,33 +1495,6 @@
 
             <!-- SECTION 6: MUNDO & LOCAIS (ATLAS) -->
             <div id="worldSection" class="hidden">
-                <div class="card" style="margin-bottom: 20px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                        <div>
-                            <h2 style="font-family: 'Nunito', sans-serif; font-weight: 800; color: var(--accent-brown); font-size: 1.6rem; margin: 0;">
-                                Mundo & Locais
-                            </h2>
-                            <p style="color: var(--text-muted); font-size: 0.9rem; margin: 4px 0 0 0;">
-                                Atlas do seu universo e galerias de fotos dos cenários.
-                            </p>
-                        </div>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <button type="button" class="btn btn-outline btn-sm" onclick="connectToGoogleDrive()">
-                                <i class="fa-brands fa-google-drive" style="color: #4285F4;"></i> Conectar ao Google Drive
-                            </button>
-                            <button type="button" class="btn btn-outline btn-sm" onclick="exportDataBackup()">
-                                <i class="fa-solid fa-cloud-arrow-down" style="color: #34A853;"></i> Exportar Backup
-                            </button>
-                            <button type="button" class="btn btn-outline btn-sm" onclick="triggerImportBackup()">
-                                <i class="fa-solid fa-cloud-arrow-up" style="color: #EA4335;"></i> Importar Backup
-                            </button>
-                            <button type="button" class="btn btn-outline btn-sm btn-danger-soft" onclick="handleLogout()">
-                                <i class="fa-solid fa-right-from-bracket"></i> Sair
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
                 <div id="worldListView">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
@@ -1531,10 +1504,10 @@
                             <i class="fa-solid fa-compass"></i> Cadastrar Novo Local
                         </button>
                     </div>
-
+            
                     <div id="worldGridContainer" class="locations-grid"></div>
                 </div>
-
+            
                 <div id="worldDetailView" class="hidden">
                     <div class="card" style="margin-bottom: 16px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -1550,12 +1523,12 @@
                                 </button>
                             </div>
                         </div>
-
+            
                         <div class="form-group">
                             <label for="locationNameInput">Nome do Local</label>
                             <input type="text" id="locationNameInput" class="form-control" placeholder="Ex: Cidade de Aethelgard">
                         </div>
-
+            
                         <div class="form-group">
                             <label for="locationStampSelect"><i class="fa-solid fa-stamp"></i> Carimbo Estético do Passaporte</label>
                             <select id="locationStampSelect" class="form-control" onchange="handleStampSelectChange(this)">
@@ -1568,17 +1541,17 @@
                                 <option value="CUSTOM">+ Criar Carimbo Personalizado...</option>
                             </select>
                         </div>
-
+            
                         <div class="form-group">
                             <label for="locationCategoryInput">Categoria / Clima</label>
                             <input type="text" id="locationCategoryInput" class="form-control" placeholder="Ex: Capital Real • Clima Frio">
                         </div>
-
+            
                         <div class="form-group">
                             <label for="locationDescriptionText">Descrição Completa</label>
                             <textarea id="locationDescriptionText" class="form-control" style="min-height: 120px;" placeholder="Escreva a descrição detalhada..."></textarea>
                         </div>
-
+            
                         <div class="form-group" style="margin-top: 20px;">
                             <label><i class="fa-solid fa-images"></i> Galeria de Fotos / Concept Arts do Cenário</label>
                             <div id="locationPhotosGallery" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px;"></div>
@@ -1589,7 +1562,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </main>
 
     <script>
@@ -2342,15 +2314,30 @@
             activeStoryId = id;
             const s = stories.find(x => x.id === id);
             if (!s) return;
-
+        
             document.getElementById('storyFoldersListView').classList.add('hidden');
             document.getElementById('storyDetailView').classList.remove('hidden');
             document.getElementById('btnBack').classList.remove('hidden');
             document.getElementById('btnSave').classList.remove('hidden');
-
+        
             document.getElementById('headerTitle').innerText = s.title;
             document.getElementById('headerSubtitle').innerText = 'Edite a sinopse e escreva os capítulos no seu livro.';
-
+        
+            // Atualização da Capa do Livro e dimensões
+            const coverDisplay = document.getElementById('bookCoverDisplay');
+            if (coverDisplay) {
+                if (s.bookCover) {
+                    coverDisplay.style.backgroundImage = `url('${s.bookCover}')`;
+                    coverDisplay.innerHTML = '';
+                } else {
+                    coverDisplay.style.backgroundImage = 'none';
+                    coverDisplay.innerHTML = `
+                        <i class="fa-solid fa-image" style="font-size: 1.8rem; color: var(--accent-pink);"></i>
+                        <span style="font-size: 0.75rem; margin-top: 6px; font-weight: 600;">Carregar Capa</span>
+                    `;
+                }
+            }
+        
             const banner = document.getElementById('storyBannerDisplay');
             if (s.banner) {
                 banner.style.backgroundImage = `url(${s.banner})`;
@@ -2359,16 +2346,15 @@
                 banner.style.backgroundImage = 'none';
                 document.getElementById('bannerPlaceholder').classList.remove('hidden');
             }
-
+        
             document.getElementById('storyTitleInput').value = s.title || '';
             document.getElementById('storySynopsisText').value = s.synopsis || '';
             document.getElementById('storySpotifyUrl').value = s.spotifyUrl || '';
-
+        
             updateStorySpotifyPlayer();
             renderChapterOptions(s);
             loadChapterContent();
         }
-
         function updateStorySpotifyPlayer() {
             const url = document.getElementById('storySpotifyUrl').value;
             document.getElementById('storySpotifyPlayer').innerHTML = getSpotifyEmbed(url);
@@ -2770,7 +2756,7 @@
             const file = event.target.files[0];
             const story = stories.find(x => x.id === activeStoryId);
             if (!file || !story) return;
-
+        
             const reader = new FileReader();
             reader.onload = function(e) {
                 const coverDataUrl = e.target.result;
@@ -2784,7 +2770,6 @@
             };
             reader.readAsDataURL(file);
         }
-
         function saveStories() { localStorage.setItem('diario_historias', JSON.stringify(stories)); }
 
         /* MUNDO & LOCAIS (ATLAS) */
