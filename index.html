@@ -1495,6 +1495,7 @@
 
             <!-- SECTION 6: MUNDO & LOCAIS (ATLAS) -->
             <div id="worldSection" class="hidden">
+                <!-- VISÃO 1: LISTA DO ATLAS (Aparece primeiro) -->
                 <div id="worldListView">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
@@ -1508,49 +1509,12 @@
                     <div id="worldGridContainer" class="locations-grid"></div>
                 </div>
             
+                <!-- VISÃO 2: DETALHES DO LOCAL (Escondida por padrão, só abre ao clicar no card ou em cadastrar) -->
                 <div id="worldDetailView" class="hidden">
-    <div class="card" style="margin-bottom: 16px;">
-        <h3 class="section-title" style="margin-bottom: 16px;">
-            <i class="fa-solid fa-map-location-dot" style="color: var(--accent-pink);"></i> Detalhes do Local
-        </h3>
-
-        <div class="form-group">
-            <label for="locationNameInput">Nome do Local</label>
-            <input type="text" id="locationNameInput" class="form-control" placeholder="Ex: Cidade de Aethelgard">
-        </div>
-
-        <div class="form-group">
-            <label for="locationStampSelect"><i class="fa-solid fa-stamp"></i> Carimbo Estético do Passaporte</label>
-            <select id="locationStampSelect" class="form-control" onchange="handleStampSelectChange(this)">
-                <option value="📜 EXPLORADO">📜 EXPLORADO</option>
-                <option value="🔮 MISTERIOSO">🔮 MISTERIOSO</option>
-                <option value="⚠️ PERIGOSO">⚠️ PERIGOSO</option>
-                <option value="✨ SAGRADO">✨ SAGRADO</option>
-                <option value="🚫 PROIBIDO">🚫 PROIBIDO</option>
-                <option value="👑 REINO ANCESTRAL">👑 REINO ANCESTRAL</option>
-                <option value="CUSTOM">+ Criar Carimbo Personalizado...</option>
-            </select>
-        </div>
-
-                <div class="form-group">
-                    <label for="locationCategoryInput">Categoria / Clima</label>
-                    <input type="text" id="locationCategoryInput" class="form-control" placeholder="Ex: Capital Real • Clima Frio">
-                </div>
-        
-                <div class="form-group">
-                    <label for="locationDescriptionText">Descrição Completa</label>
-                    <textarea id="locationDescriptionText" class="form-control" style="min-height: 120px;" placeholder="Escreva a descrição detalhada..."></textarea>
-                </div>
-        
-                <div class="form-group" style="margin-top: 20px;">
-                    <label><i class="fa-solid fa-images"></i> Galeria de Fotos / Concept Arts do Cenário</label>
-                    <div id="locationPhotosGallery" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px;"></div>
-                    <button type="button" class="btn btn-outline" style="margin-top: 10px;" onclick="triggerLocationPhotoUpload()">
-                        <i class="fa-solid fa-plus"></i> Adicionar Foto
-                    </button>
-                </div>
-            </div>
-        </div>
+                    <div class="card" style="margin-bottom: 16px;">
+                        <h3 class="section-title" style="margin-bottom: 16px;">
+                            <i class="fa-solid fa-map-location-dot" style="color: var(--accent-pink);"></i> Detalhes do Local
+                        </h3>
             
                         <div class="form-group">
                             <label for="locationNameInput">Nome do Local</label>
@@ -2803,13 +2767,17 @@
 
         /* MUNDO & LOCAIS (ATLAS) */
         function showWorldList() {
-            document.getElementById('worldListView').classList.remove('hidden');
-            document.getElementById('worldDetailView').classList.add('hidden');
-            document.getElementById('btnBack').classList.add('hidden');
-            document.getElementById('btnSave').classList.add('hidden');
+    document.getElementById('worldListView').classList.remove('hidden');
+    document.getElementById('worldDetailView').classList.add('hidden');
+    document.getElementById('btnBack').classList.add('hidden');
+    document.getElementById('btnSave').classList.add('hidden');
 
-            renderWorldLocations();
-        }
+    // Atualiza o cabeçalho superior global
+    document.getElementById('headerTitle').innerText = 'Mundo & Locais';
+    document.getElementById('headerSubtitle').innerText = 'Atlas do seu universo e galerias de fotos dos cenários.';
+
+    renderWorldLocations();
+}
 
         function renderWorldLocations() {
             const container = document.getElementById('worldGridContainer');
@@ -2874,20 +2842,36 @@
             activeLocationId = id;
             const loc = locations.find(l => l.id === id);
             if (!loc) return;
-
+        
             document.getElementById('locationNameInput').value = loc.name || '';
-            document.getElementById('locationStampSelect').value = loc.stamp || '📜 EXPLORADO';
+            
+            // Tratamento para garantir que carimbos personalizados continuem selecionados
+            const stampSelect = document.getElementById('locationStampSelect');
+            const stampValue = loc.stamp || '📜 EXPLORADO';
+            let optionExists = Array.from(stampSelect.options).some(opt => opt.value === stampValue);
+            
+            if (!optionExists && stampValue) {
+                const newOption = document.createElement('option');
+                newOption.value = stampValue;
+                newOption.textContent = stampValue;
+                stampSelect.insertBefore(newOption, stampSelect.lastElementChild);
+            }
+            stampSelect.value = stampValue;
+        
             document.getElementById('locationCategoryInput').value = loc.category || loc.tag || '';
             document.getElementById('locationDescriptionText').value = loc.description || loc.desc || '';
-
+        
             renderLocationPhotosGallery(loc.photos || []);
-
+        
             document.getElementById('worldListView').classList.add('hidden');
             document.getElementById('worldDetailView').classList.remove('hidden');
             document.getElementById('btnBack').classList.remove('hidden');
             document.getElementById('btnSave').classList.remove('hidden');
+        
+            // Atualiza o cabeçalho superior global com o nome do local
+            document.getElementById('headerTitle').innerText = loc.name || 'Detalhes do Local';
+            document.getElementById('headerSubtitle').innerText = 'Edite as informações e a galeria de fotos do cenário.';
         }
-
         function handleStampSelectChange(selectEl) {
             if (selectEl.value === 'CUSTOM') {
                 const customStamp = prompt('Nome do carimbo personalizado (Ex: 🏕️ ACAMPAMENTO):');
