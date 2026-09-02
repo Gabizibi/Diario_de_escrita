@@ -881,9 +881,9 @@
         }
         
         /* ==========================================
-           WORKSPACE ESTILO NOTION (PARÁGRAFOS REORDENÁVEIS)
+           WORKSPACE ESTILO NOTION (FOLHA DE ESCRITA BRANCA)
            ========================================== */
-
+        
         .notion-workspace {
             width: 100%;
             display: flex;
@@ -891,11 +891,18 @@
             gap: 12px;
         }
         
+        /* Container que simula a folha de papel de carta branca */
         .notion-blocks-container {
             display: flex;
             flex-direction: column;
             gap: 8px;
             width: 100%;
+            background-color: #ffffff;
+            border: 2px solid var(--border-style, #dcd3c1);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02), 0 2px 6px rgba(0, 0, 0, 0.04);
+            box-sizing: border-box;
         }
         
         /* Bloco de Parágrafo Flutuante */
@@ -907,16 +914,16 @@
             padding: 6px 8px;
             border-radius: 6px;
             background: transparent;
-            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            transition: background-color 0.2s ease;
         }
         
         .notion-block:hover {
-            background-color: rgba(0, 0, 0, 0.02);
+            background-color: #fcf9f2;
         }
         
         .notion-block.dragging {
             opacity: 0.4;
-            background-color: var(--paper-bg, #ffffff);
+            background-color: #ffffff;
             border: 1px dashed var(--accent-brown, #8b5a2b);
         }
         
@@ -985,7 +992,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: transparent;
+            background: #ffffff;
             border: 1px dashed var(--border-style, #dcd3c1);
             border-radius: 8px;
             padding: 10px 16px;
@@ -1001,7 +1008,7 @@
         }
         
         .btn-add-block:hover {
-            background-color: rgba(255, 255, 255, 0.6);
+            background-color: #fbf8f1;
             border-color: var(--accent-brown, #8b5a2b);
         }
         
@@ -1574,36 +1581,27 @@
                             </button>
                         </div>
             
-                        <!-- Grade de Botões do Capítulo (Incluindo o botão Colaborador) -->
-                    <div class="chapter-buttons-grid">
-                        <button type="button" class="btn btn-outline" onclick="addNewSceneToChapter()">
-                            <i class="fa-solid fa-plus"></i> Nova Cena
-                        </button>
-                        <button type="button" class="btn btn-outline" onclick="addNewChapterToStory()">
-                            <i class="fa-solid fa-folder-plus"></i> Novo Cap.
-                        </button>
-                    
-                        <!-- BOTÃO COLABORADOR RESTAURADO -->
-                        <button type="button" class="btn btn-outline" onclick="addSharedReader()" title="Conceder acesso de edição a um coautor">
-                            <i class="fa-solid fa-user-plus" style="color: var(--accent-brown);"></i> Colaborador
-                        </button>
-                    
-                        <button type="button" class="btn btn-outline" onclick="generatePublicShareLink()" title="Gerar link de leitura pública">
-                            <i class="fa-solid fa-share-nodes" style="color: var(--accent-pink);"></i> Link
-                        </button>
-                    
-                        <button type="button" class="btn btn-outline" onclick="exportStoryToTxt()">
-                            <i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar
-                        </button>
-                    
-                        <button type="button" class="btn btn-primary" onclick="saveCurrentStory()">
-                            <i class="fa-solid fa-bookmark"></i> Salvar
-                        </button>
-                    
-                        <button type="button" class="btn btn-outline btn-danger-soft" onclick="deleteCurrentChapter()">
-                            <i class="fa-solid fa-trash" style="color:var(--accent-pink);"></i> Excluir
-                        </button>
-                    </div>
+                        <!-- Grade de 6 Botões do Capítulo (Sem o botão Nova Cena) -->
+                        <div class="chapter-buttons-grid">
+                            <button type="button" class="btn btn-outline" onclick="addNewChapterToStory()">
+                                <i class="fa-solid fa-folder-plus"></i> Novo Cap.
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="addSharedReader()" title="Conceder acesso de edição a um coautor">
+                                <i class="fa-solid fa-user-plus" style="color: var(--accent-brown);"></i> Colaborador
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="generatePublicShareLink()" title="Gerar link de leitura pública">
+                                <i class="fa-solid fa-share-nodes" style="color: var(--accent-pink);"></i> Link
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="exportStoryToTxt()">
+                                <i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="saveCurrentStory()">
+                                <i class="fa-solid fa-bookmark"></i> Salvar
+                            </button>
+                            <button type="button" class="btn btn-outline btn-danger-soft" onclick="deleteCurrentChapter()">
+                                <i class="fa-solid fa-trash" style="color:var(--accent-pink);"></i> Excluir
+                            </button>
+                        </div>
             
                     <!-- Longline do Capítulo -->
                     <div class="chapter-longline-container">
