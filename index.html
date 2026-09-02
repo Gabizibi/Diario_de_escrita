@@ -1402,22 +1402,22 @@
                     </div>
 
                     <div class="card">
-                        <h3 class="section-title"><i class="fa-solid fa-book-cover"></i> Capa Oficial do Livro (Vertical 2:3)</h3>
+                        <h3 class="section-title"><i class="fa-solid fa-book-cover"></i> Capa Oficial do Livro (Vertical 2:3 - Mín. 1000 x 1500 px)</h3>
                         <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
                             <div id="bookCoverDisplay" onclick="triggerBookCoverUpload()" style="width: 120px; height: 180px; border: 2px dashed var(--border-style); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: var(--bg-card); text-align: center; padding: 10px; background-size: cover; background-position: center;">
                                 <i class="fa-solid fa-image" style="font-size: 1.8rem; color: var(--accent-pink);"></i>
                                 <span style="font-size: 0.75rem; margin-top: 6px; font-weight: 600;">Carregar Capa</span>
+                                <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 2px;">Vertical 2:3</span>
                             </div>
                             <div style="flex: 1; min-width: 200px;">
                                 <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">
-                                    Adicione a capa oficial na proporção <strong>2:3</strong> (Mínimo de 1000 x 1500 px).
+                                    Adicione a capa oficial na proporção <strong>Vertical 2:3 (Mínimo recomendado de 1000 x 1500 px)</strong>.
                                 </p>
                                 <input type="file" id="bookCoverInput" accept="image/*" style="display: none;" onchange="handleBookCoverSelect(event)">
                                 <button type="button" class="btn btn-outline" onclick="triggerBookCoverUpload()"><i class="fa-solid fa-upload"></i> Escolher Imagem</button>
                             </div>
                         </div>
                     </div>
-
                     <div class="card">
                         <h3 class="section-title"><i class="fa-brands fa-spotify" style="color: #1db954;"></i> Trilha Sonora / Playlist (Spotify)</h3>
                         <div class="form-group">
@@ -1509,20 +1509,48 @@
                 </div>
             
                 <div id="worldDetailView" class="hidden">
-                    <div class="card" style="margin-bottom: 16px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <h3 class="section-title" style="margin: 0;">
-                                <i class="fa-solid fa-map-location-dot" style="color: var(--accent-pink);"></i> Detalhes do Local
-                            </h3>
-                            <div style="display: flex; gap: 8px;">
-                                <button type="button" class="btn btn-outline" onclick="showWorldList()">
-                                    <i class="fa-solid fa-arrow-left"></i> Voltar
-                                </button>
-                                <button type="button" class="btn btn-primary" onclick="saveCurrentLocation()">
-                                    <i class="fa-solid fa-heart"></i> Salvar
-                                </button>
-                            </div>
-                        </div>
+    <div class="card" style="margin-bottom: 16px;">
+        <h3 class="section-title" style="margin-bottom: 16px;">
+            <i class="fa-solid fa-map-location-dot" style="color: var(--accent-pink);"></i> Detalhes do Local
+        </h3>
+
+        <div class="form-group">
+            <label for="locationNameInput">Nome do Local</label>
+            <input type="text" id="locationNameInput" class="form-control" placeholder="Ex: Cidade de Aethelgard">
+        </div>
+
+        <div class="form-group">
+            <label for="locationStampSelect"><i class="fa-solid fa-stamp"></i> Carimbo Estético do Passaporte</label>
+            <select id="locationStampSelect" class="form-control" onchange="handleStampSelectChange(this)">
+                <option value="📜 EXPLORADO">📜 EXPLORADO</option>
+                <option value="🔮 MISTERIOSO">🔮 MISTERIOSO</option>
+                <option value="⚠️ PERIGOSO">⚠️ PERIGOSO</option>
+                <option value="✨ SAGRADO">✨ SAGRADO</option>
+                <option value="🚫 PROIBIDO">🚫 PROIBIDO</option>
+                <option value="👑 REINO ANCESTRAL">👑 REINO ANCESTRAL</option>
+                <option value="CUSTOM">+ Criar Carimbo Personalizado...</option>
+            </select>
+        </div>
+
+                <div class="form-group">
+                    <label for="locationCategoryInput">Categoria / Clima</label>
+                    <input type="text" id="locationCategoryInput" class="form-control" placeholder="Ex: Capital Real • Clima Frio">
+                </div>
+        
+                <div class="form-group">
+                    <label for="locationDescriptionText">Descrição Completa</label>
+                    <textarea id="locationDescriptionText" class="form-control" style="min-height: 120px;" placeholder="Escreva a descrição detalhada..."></textarea>
+                </div>
+        
+                <div class="form-group" style="margin-top: 20px;">
+                    <label><i class="fa-solid fa-images"></i> Galeria de Fotos / Concept Arts do Cenário</label>
+                    <div id="locationPhotosGallery" style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px;"></div>
+                    <button type="button" class="btn btn-outline" style="margin-top: 10px;" onclick="triggerLocationPhotoUpload()">
+                        <i class="fa-solid fa-plus"></i> Adicionar Foto
+                    </button>
+                </div>
+            </div>
+        </div>
             
                         <div class="form-group">
                             <label for="locationNameInput">Nome do Local</label>
@@ -2323,7 +2351,7 @@
             document.getElementById('headerTitle').innerText = s.title;
             document.getElementById('headerSubtitle').innerText = 'Edite a sinopse e escreva os capítulos no seu livro.';
         
-            // Atualização da Capa do Livro e dimensões
+            // Atualização da Capa do Livro e dimensões visíveis
             const coverDisplay = document.getElementById('bookCoverDisplay');
             if (coverDisplay) {
                 if (s.bookCover) {
@@ -2334,6 +2362,7 @@
                     coverDisplay.innerHTML = `
                         <i class="fa-solid fa-image" style="font-size: 1.8rem; color: var(--accent-pink);"></i>
                         <span style="font-size: 0.75rem; margin-top: 6px; font-weight: 600;">Carregar Capa</span>
+                        <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 2px;">Vertical 2:3 (1000x1500)</span>
                     `;
                 }
             }
