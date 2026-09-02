@@ -1977,54 +1977,90 @@ function togglePasswordVisibility() {
             }
         }
 
-        /* MENU SWITCHING */
+        /* ==========================================
+           NAVEGAÇÃO OFICIAL DA SIDEBAR (SINCRONIZADA)
+           ========================================== */
+        
         function switchMenu(menuName) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-
+            // 1. Remove a classe 'active' de todos os itens <li> da lista
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+        
+            // 2. Oculta todas as seções do painel principal
             const sections = ['overviewSection', 'characterSection', 'ideasSection', 'moodboardSection', 'chaptersSection', 'worldSection'];
-            sections.forEach(s => document.getElementById(s).classList.add('hidden'));
-
-            document.getElementById('btnBack').classList.add('hidden');
-            document.getElementById('btnSave').classList.add('hidden');
-
+            sections.forEach(s => {
+                const el = document.getElementById(s);
+                if (el) el.classList.add('hidden');
+            });
+        
+            // 3. Oculta botões auxiliares do cabeçalho caso existam
+            const btnBack = document.getElementById('btnBack');
+            const btnSave = document.getElementById('btnSave');
+            if (btnBack) btnBack.classList.add('hidden');
+            if (btnSave) btnSave.classList.add('hidden');
+        
+            // 4. Ativa o item do menu correto e exibe a seção solicitada
             if (menuName === 'overview') {
-                document.getElementById('navOverview').classList.add('active');
-                document.getElementById('overviewSection').classList.remove('hidden');
+                const nav = document.getElementById('navOverview');
+                if (nav) nav.classList.add('active');
+                const sec = document.getElementById('overviewSection');
+                if (sec) sec.classList.remove('hidden');
+        
                 document.getElementById('headerTitle').innerText = 'Bem-vinda ao seu Diário de Escrita';
                 document.getElementById('headerSubtitle').innerText = 'Seu espaço especial para criar histórias inesquecíveis.';
-                renderOverviewBanner();
-                updateOverviewStats();
+                if (typeof renderOverviewBanner === 'function') renderOverviewBanner();
+                if (typeof updateOverviewStats === 'function') updateOverviewStats();
+        
             } else if (menuName === 'characters') {
-                document.getElementById('navCharacters').classList.add('active');
-                document.getElementById('characterSection').classList.remove('hidden');
-                showGroupView();
+                const nav = document.getElementById('navCharacters');
+                if (nav) nav.classList.add('active');
+                const sec = document.getElementById('characterSection');
+                if (sec) sec.classList.remove('hidden');
+        
+                if (typeof showGroupView === 'function') showGroupView();
+        
             } else if (menuName === 'ideas') {
-                document.getElementById('navIdeas').classList.add('active');
-                document.getElementById('ideasSection').classList.remove('hidden');
+                const nav = document.getElementById('navIdeas');
+                if (nav) nav.classList.add('active');
+                const sec = document.getElementById('ideasSection');
+                if (sec) sec.classList.remove('hidden');
+        
                 document.getElementById('headerTitle').innerText = 'Mural de Ideias';
-                document.getElementById('headerSubtitle').innerText = 'Fixe bilhetes. Arraste as bordas para redimensionar!';
-                renderIdeas();
+                document.getElementById('headerSubtitle').innerText = 'Fixe bilhetes, organize ideias e conecte relacionamentos!';
+                if (typeof renderIdeas === 'function') renderIdeas();
+        
             } else if (menuName === 'moodboard') {
-                document.getElementById('navMoodboard').classList.add('active');
-                document.getElementById('moodboardSection').classList.remove('hidden');
+                const nav = document.getElementById('navMoodboard');
+                if (nav) nav.classList.add('active');
+                const sec = document.getElementById('moodboardSection');
+                if (sec) sec.classList.remove('hidden');
+        
                 document.getElementById('headerTitle').innerText = 'Moodboard';
                 document.getElementById('headerSubtitle').innerText = 'Galerias visuais organizadas por história.';
-                updateMoodboardStorySelect();
+                if (typeof updateMoodboardStorySelect === 'function') updateMoodboardStorySelect();
+        
             } else if (menuName === 'chapters') {
-                document.getElementById('navChapters').classList.add('active');
-                document.getElementById('chaptersSection').classList.remove('hidden');
+                const nav = document.getElementById('navChapters');
+                if (nav) nav.classList.add('active');
+                const sec = document.getElementById('chaptersSection');
+                if (sec) sec.classList.remove('hidden');
+        
                 document.getElementById('headerTitle').innerText = 'Capítulos & Histórias';
                 document.getElementById('headerSubtitle').innerText = 'Gerencie suas histórias e escreva no livro.';
-                showStoryFoldersList();
+                if (typeof showStoryFoldersList === 'function') showStoryFoldersList();
+        
             } else if (menuName === 'world') {
-                document.getElementById('navWorld').classList.add('active');
-                document.getElementById('worldSection').classList.remove('hidden');
+                const nav = document.getElementById('navWorld');
+                if (nav) nav.classList.add('active');
+                const sec = document.getElementById('worldSection');
+                if (sec) sec.classList.remove('hidden');
+        
                 document.getElementById('headerTitle').innerText = 'Mundo & Locais';
                 document.getElementById('headerSubtitle').innerText = 'Atlas do seu universo e galerias de fotos dos cenários.';
-                showWorldList();
+                if (typeof showWorldList === 'function') showWorldList();
             }
         }
-
         function updateOverviewStats() {
             document.getElementById('statCharCount').innerText = characters.length + ' Ficha(s)';
             document.getElementById('statStoryCount').innerText = stories.length + ' História(s)';
