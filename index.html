@@ -1531,9 +1531,33 @@
                                 <span id="chapterCharCount">0 caracteres</span>
                             </div>
                         </div>
+                    </div> <!-- Fechamento do open-book-container -->
+
+                    <!-- COLI AQUI A TABELA DE RESUMO E LONGLINES DOS CAPÍTULOS -->
+                    <div class="card" style="margin-top: 24px;">
+                        <h3 class="section-title">
+                            <i class="fa-solid fa-list-check" style="color: var(--accent-pink);"></i> Resumo & Longlines dos Capítulos
+                        </h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+                            Visão geral da estrutura narrativa e objetivos de cada capítulo do livro:
+                        </p>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; background: #fffdfa; border-radius: 12px; overflow: hidden; border: 2px solid var(--border-style);">
+                                <thead>
+                                    <tr style="background-color: #f3e9d2; color: var(--accent-brown); text-align: left; font-weight: 800; font-size: 0.9rem;">
+                                        <th style="padding: 12px; border-bottom: 2px solid var(--border-style); width: 25%;">Capítulo</th>
+                                        <th style="padding: 12px; border-bottom: 2px solid var(--border-style);">Longline / Objetivo Central</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="chaptersSummaryTableBody">
+                                    <!-- Preenchido dinamicamente via JS -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </div>
+
+                </div> <!-- Fechamento do storyDetailView -->
+            </div> <!-- Fechamento do chaptersSection -->
 
             <!-- SECTION 6: MUNDO & LOCAIS (ATLAS) -->
             <div id="worldSection" class="hidden">
@@ -2395,7 +2419,7 @@
                 `;
             }
         }
-    
+        //Banner da História 
         const banner = document.getElementById('storyBannerDisplay');
         if (s.banner) {
             banner.style.backgroundImage = `url(${s.banner})`;
@@ -2412,6 +2436,8 @@
         updateStorySpotifyPlayer();
         renderChapterOptions(s);
         loadChapterContent();
+        // Renderiza a tabela de resumo dos capítulos
+        renderChaptersSummaryTable();        
     }
         // Atualiza a propriedade do local vinculado na história ativa
         function vincularLocalAHistoria(localId) {
@@ -2687,6 +2713,10 @@
             };
         
             saveStories();
+        
+            // Atualiza dinamicamente a tabela de resumo de longlines dos capítulos
+            renderChaptersSummaryTable();
+        
             alert('História e capítulo salvos com sucesso! 📖');
         }
         function triggerStoryBannerUpload() { document.getElementById('storyBannerInput').click(); }
@@ -3035,6 +3065,40 @@
                 localStorage.setItem('diario_locais', JSON.stringify(locations));
                 renderLocationPhotosGallery(loc.photos);
             }
+        }
+        // Preenche a tabela de resumo de longlines dos capítulos da história ativa
+        function renderChaptersSummaryTable() {
+            const tbody = document.getElementById('chaptersSummaryTableBody');
+            if (!tbody) return;
+        
+            tbody.innerHTML = '';
+        
+            const story = stories.find(x => x.id === activeStoryId);
+            if (!story || !story.chapters) {
+                tbody.innerHTML = '<tr><td colspan="2" style="padding:12px; text-align:center; color:var(--text-muted);">Nenhum capítulo encontrado.</td></tr>';
+                return;
+            }
+        
+            const chapterKeys = Object.keys(story.chapters).sort((a, b) => parseInt(a) - parseInt(b));
+        
+            if (chapterKeys.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" style="padding:12px; text-align:center; color:var(--text-muted);">Nenhum capítulo cadastrado.</td></tr>';
+                return;
+            }
+        
+            chapterKeys.forEach(chNum => {
+                const ch = story.chapters[chNum];
+                const chTitle = (typeof ch === 'object' && ch.title) ? ch.title : (`Capítulo ${chNum}`);
+                const chLongline = (typeof ch === 'object' && ch.longline) ? ch.longline : '-';
+        
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid var(--border-style)';
+                tr.innerHTML = `
+                    <td style="padding: 10px 12px; font-weight: 700; color: var(--accent-brown);">${chTitle}</td>
+                    <td style="padding: 10px 12px; color: var(--text-dark);">${chLongline || '<span style="color:var(--text-muted); italic;">(Sem longline definida)</span>'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
         /* BACKUP E INTEGRATIVIDADE GOOGLE DRIVE */
