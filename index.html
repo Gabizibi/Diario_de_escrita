@@ -1481,8 +1481,6 @@
                             </select>
                         </div>
                     </div>
-                    </div>
-
                     <div class="open-book-container">
                         <div class="chapter-controls-container">
                             <div class="chapter-header-top">
@@ -2663,35 +2661,34 @@
         }
 
         function saveCurrentStory() {
-        const story = stories.find(x => x.id === activeStoryId);
-        if (!story) return;
-    
-        const newTitle = document.getElementById('storyTitleInput').value.trim();
-        if (newTitle) story.title = newTitle;
-        story.synopsis = document.getElementById('storySynopsisText').value;
-        story.spotifyUrl = document.getElementById('storySpotifyUrl').value;
-    
-        // Salva o local selecionado
-        const locationSelect = document.getElementById('storyLocationSelect');
-        if (locationSelect) {
-            story.locationId = locationSelect.value;
+            const story = stories.find(x => x.id === activeStoryId);
+            if (!story) return;
+        
+            const newTitle = document.getElementById('storyTitleInput').value.trim();
+            if (newTitle) story.title = newTitle;
+            story.synopsis = document.getElementById('storySynopsisText').value;
+            story.spotifyUrl = document.getElementById('storySpotifyUrl').value;
+        
+            // Salva o ID do local vinculado selecionado na lista suspensa
+            const locationSelect = document.getElementById('storyLocationSelect');
+            if (locationSelect) {
+                story.locationId = locationSelect.value;
+            }
+        
+            const currentChObj = story.chapters[activeChapterNum];
+            const currentTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
+            const fullText = currentBlocks.map(b => b.text || '').join('\n\n');
+        
+            story.chapters[activeChapterNum] = {
+                title: currentTitle,
+                longline: document.getElementById('chapterLonglineText').value,
+                blocks: currentBlocks,
+                text: fullText
+            };
+        
+            saveStories();
+            alert('História e capítulo salvos com sucesso! 📖');
         }
-    
-        const currentChObj = story.chapters[activeChapterNum];
-        const currentTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
-        const fullText = currentBlocks.map(b => b.text || '').join('\n\n');
-    
-        story.chapters[activeChapterNum] = {
-            title: currentTitle,
-            longline: document.getElementById('chapterLonglineText').value,
-            blocks: currentBlocks,
-            text: fullText
-        };
-    
-        saveStories();
-        alert('História e capítulo salvos com sucesso! 📖');
-    }
-
         function triggerStoryBannerUpload() { document.getElementById('storyBannerInput').click(); }
         function handleStoryBannerUpload(e) {
             const file = e.target.files[0];
