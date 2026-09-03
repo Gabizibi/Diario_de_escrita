@@ -1043,6 +1043,39 @@
             .btn { padding: 6px 10px !important; font-size: 0.8rem !important; gap: 4px !important; }
             .change-banner-btn { padding: 4px 8px !important; font-size: 0.75rem !important; }
         }
+        /* VINCULAÇÃO DE MUNDO & LOCAIS NA HISTÓRIA */
+        .story-location-link {
+            margin-top: 15px;
+        }
+
+        .story-location-link label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-brown);
+            margin-bottom: 6px;
+        }
+
+        .story-location-link select.form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border-style);
+            border-radius: 12px;
+            background-color: #fffdfa;
+            color: var(--text-dark);
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .story-location-link select.form-control:focus {
+            border-color: var(--accent-pink);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(231, 127, 141, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -1437,6 +1470,17 @@
                             <label for="storySynopsisText">Sinopse da História</label>
                             <textarea id="storySynopsisText" class="form-control" style="min-height: 90px;" placeholder="Escreva a sinopse principal aqui..."></textarea>
                         </div>
+                        <!-- Bloco de Vinculação: Mundo & Locais -->
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label for="storyLocationSelect">
+                                <i class="fa-solid fa-earth-americas" style="color: var(--accent-pink);"></i> Mundo & Locais
+                            </label>
+                            <select id="storyLocationSelect" class="form-control" onchange="vincularLocalAHistoria(this.value)">
+                                <option value="">-- Selecione um Local / Mundo --</option>
+                                <!-- Preenchido dinamicamente via JS -->
+                            </select>
+                        </div>
+                    </div>
                     </div>
 
                     <div class="open-book-container">
@@ -2301,52 +2345,82 @@
                 showStoryFoldersList();
             }
         }
+        // Preenche a lista suspensa "Mundo & Locais" com os dados salvos no Atlas
+        function populateStoryLocationOptions() {
+            const select = document.getElementById('storyLocationSelect');
+            if (!select) return;
+        
+            select.innerHTML = '<option value="">-- Selecione um Local / Mundo --</option>';
+        
+            const savedLocations = locations || [];
+        
+            savedLocations.forEach(loc => {
+                const option = document.createElement('option');
+                option.value = loc.id || loc.name;
+                option.textContent = loc.name || 'Local sem nome';
+                select.appendChild(option);
+            });
+        }
 
-        function openStoryDetail(id) {
-            activeStoryId = id;
-            const s = stories.find(x => x.id === id);
-            if (!s) return;
-        
-            document.getElementById('storyFoldersListView').classList.add('hidden');
-            document.getElementById('storyDetailView').classList.remove('hidden');
-            document.getElementById('btnBack').classList.remove('hidden');
-            document.getElementById('btnSave').classList.remove('hidden');
-        
-            document.getElementById('headerTitle').innerText = s.title;
-            document.getElementById('headerSubtitle').innerText = 'Edite a sinopse e escreva os capítulos no seu livro.';
-        
-            // Atualização da Capa do Livro e dimensões visíveis
-            const coverDisplay = document.getElementById('bookCoverDisplay');
-            if (coverDisplay) {
-                if (s.bookCover) {
-                    coverDisplay.style.backgroundImage = `url('${s.bookCover}')`;
-                    coverDisplay.innerHTML = '';
-                } else {
-                    coverDisplay.style.backgroundImage = 'none';
-                    coverDisplay.innerHTML = `
-                        <i class="fa-solid fa-image" style="font-size: 1.8rem; color: var(--accent-pink);"></i>
-                        <span style="font-size: 0.75rem; margin-top: 6px; font-weight: 600;">Carregar Capa</span>
-                        <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 2px;">Vertical 2:3 (1000x1500)</span>
-                    `;
-                }
-            }
-        
-            const banner = document.getElementById('storyBannerDisplay');
-            if (s.banner) {
-                banner.style.backgroundImage = `url(${s.banner})`;
-                document.getElementById('bannerPlaceholder').classList.add('hidden');
+            function openStoryDetail(id) {
+        activeStoryId = id;
+        const s = stories.find(x => x.id === id);
+        if (!s) return;
+    
+        document.getElementById('storyFoldersListView').classList.add('hidden');
+        document.getElementById('storyDetailView').classList.remove('hidden');
+        document.getElementById('btnBack').classList.remove('hidden');
+        document.getElementById('btnSave').classList.remove('hidden');
+    
+        document.getElementById('headerTitle').innerText = s.title;
+        document.getElementById('headerSubtitle').innerText = 'Edite a sinopse e escreva os capítulos no seu livro.';
+    
+        // Preenche as opções de Mundo & Locais e seleciona o local vinculado (se houver)
+        populateStoryLocationOptions();
+        const locationSelect = document.getElementById('storyLocationSelect');
+        if (locationSelect) {
+            locationSelect.value = s.locationId || '';
+        }
+    
+        // Atualização da Capa do Livro e dimensões visíveis
+        const coverDisplay = document.getElementById('bookCoverDisplay');
+        if (coverDisplay) {
+            if (s.bookCover) {
+                coverDisplay.style.backgroundImage = `url('${s.bookCover}')`;
+                coverDisplay.innerHTML = '';
             } else {
-                banner.style.backgroundImage = 'none';
-                document.getElementById('bannerPlaceholder').classList.remove('hidden');
+                coverDisplay.style.backgroundImage = 'none';
+                coverDisplay.innerHTML = `
+                    <i class="fa-solid fa-image" style="font-size: 1.8rem; color: var(--accent-pink);"></i>
+                    <span style="font-size: 0.75rem; margin-top: 6px; font-weight: 600;">Carregar Capa</span>
+                    <span style="font-size: 0.65rem; color: var(--text-muted); margin-top: 2px;">Vertical 2:3 (1000x1500)</span>
+                `;
             }
-        
-            document.getElementById('storyTitleInput').value = s.title || '';
-            document.getElementById('storySynopsisText').value = s.synopsis || '';
-            document.getElementById('storySpotifyUrl').value = s.spotifyUrl || '';
-        
-            updateStorySpotifyPlayer();
-            renderChapterOptions(s);
-            loadChapterContent();
+        }
+    
+        const banner = document.getElementById('storyBannerDisplay');
+        if (s.banner) {
+            banner.style.backgroundImage = `url(${s.banner})`;
+            document.getElementById('bannerPlaceholder').classList.add('hidden');
+        } else {
+            banner.style.backgroundImage = 'none';
+            document.getElementById('bannerPlaceholder').classList.remove('hidden');
+        }
+    
+        document.getElementById('storyTitleInput').value = s.title || '';
+        document.getElementById('storySynopsisText').value = s.synopsis || '';
+        document.getElementById('storySpotifyUrl').value = s.spotifyUrl || '';
+    
+        updateStorySpotifyPlayer();
+        renderChapterOptions(s);
+        loadChapterContent();
+    }
+        // Atualiza a propriedade do local vinculado na história ativa
+        function vincularLocalAHistoria(localId) {
+            const story = stories.find(x => x.id === activeStoryId);
+            if (story) {
+                story.locationId = localId;
+            }
         }
         function updateStorySpotifyPlayer() {
             const url = document.getElementById('storySpotifyUrl').value;
@@ -2589,28 +2663,34 @@
         }
 
         function saveCurrentStory() {
-            const story = stories.find(x => x.id === activeStoryId);
-            if (!story) return;
-
-            const newTitle = document.getElementById('storyTitleInput').value.trim();
-            if (newTitle) story.title = newTitle;
-            story.synopsis = document.getElementById('storySynopsisText').value;
-            story.spotifyUrl = document.getElementById('storySpotifyUrl').value;
-
-            const currentChObj = story.chapters[activeChapterNum];
-            const currentTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
-            const fullText = currentBlocks.map(b => b.text || '').join('\n\n');
-
-            story.chapters[activeChapterNum] = {
-                title: currentTitle,
-                longline: document.getElementById('chapterLonglineText').value,
-                blocks: currentBlocks,
-                text: fullText
-            };
-
-            saveStories();
-            alert('História e capítulo salvos com sucesso! 📖');
+        const story = stories.find(x => x.id === activeStoryId);
+        if (!story) return;
+    
+        const newTitle = document.getElementById('storyTitleInput').value.trim();
+        if (newTitle) story.title = newTitle;
+        story.synopsis = document.getElementById('storySynopsisText').value;
+        story.spotifyUrl = document.getElementById('storySpotifyUrl').value;
+    
+        // Salva o local selecionado
+        const locationSelect = document.getElementById('storyLocationSelect');
+        if (locationSelect) {
+            story.locationId = locationSelect.value;
         }
+    
+        const currentChObj = story.chapters[activeChapterNum];
+        const currentTitle = (typeof currentChObj === 'object' && currentChObj.title) ? currentChObj.title : ('Capítulo ' + activeChapterNum);
+        const fullText = currentBlocks.map(b => b.text || '').join('\n\n');
+    
+        story.chapters[activeChapterNum] = {
+            title: currentTitle,
+            longline: document.getElementById('chapterLonglineText').value,
+            blocks: currentBlocks,
+            text: fullText
+        };
+    
+        saveStories();
+        alert('História e capítulo salvos com sucesso! 📖');
+    }
 
         function triggerStoryBannerUpload() { document.getElementById('storyBannerInput').click(); }
         function handleStoryBannerUpload(e) {
