@@ -429,7 +429,7 @@
             justify-content: space-between;
             width: 240px;
             height: 220px;
-            resize: both; /* Habilita a alça no canto inferior direito */
+            resize: both !important; /* Habilita a alça no canto inferior direito */
             overflow: visible !important; /* Mantém os fixadores no topo e esconde barras de rolagem */
             min-width: 180px;
             min-height: 160px;
@@ -446,12 +446,12 @@
             display: none;
         }
         
-        /* PALETA DE CORES DOS POST-ITS */
-        .sticky-note.color-yellow { background: #fff8a6 !important; }
-        .sticky-note.color-pink   { background: #ffcfdf !important; }
-        .sticky-note.color-blue   { background: #d0e8ff !important; }
-        .sticky-note.color-green  { background: #c3f5d3 !important; }
-        .sticky-note.color-purple { background: #e8d0ff !important; }
+        /* PALETA DE CORES (Força a cor de fundo diretamente no card principal) */
+        .sticky-note.color-yellow { background-color: #fff8a6 !important; }
+        .sticky-note.color-pink   { background-color: #ffcfdf !important; }
+        .sticky-note.color-blue   { background-color: #d0e8ff !important; }
+        .sticky-note.color-green  { background-color: #c3f5d3 !important; }
+        .sticky-note.color-purple { background-color: #e8d0ff !important; }
         
         /* Maço de folhas desalinhadas no fundo (Aparência realista) */
         .sticky-note::before {
@@ -523,6 +523,37 @@
             font-family: inherit;
             margin-top: 8px;
             overflow: hidden;
+        }
+        
+        /* RODAPÉ: REMOÇÃO DA BORDA E FUNDO FEIO DOS BOTÕES E SELECT */
+        .sticky-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #666;
+            border-top: 1px dashed rgba(0, 0, 0, 0.15);
+            padding-top: 6px;
+            margin-top: 4px;
+            z-index: 5;
+        }
+        
+        .sticky-footer button,
+        .sticky-footer select,
+        .sticky-pin-btn {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+            padding: 0 4px !important;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-muted, #8c7365);
+        }
+        
+        .sticky-footer button:hover,
+        .sticky-pin-btn:hover {
+            color: var(--accent-pink, #e77f8d);
         }
         /* FICHA DE PERSONAGEM */
         .filter-bar-container {
