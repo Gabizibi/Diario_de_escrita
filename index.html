@@ -2432,21 +2432,25 @@
             });
         }
         
-        /**
+                /**
          * Atualiza a cor no array e altera a classe do elemento no DOM em tempo real
          */
         function updateNoteColor(index, newColor) {
             if (!ideas[index]) return;
         
+            // 1. Atualiza no array e grava
             ideas[index].color = newColor;
             saveIdeas();
         
-            const noteEl = document.querySelector(`.sticky-note[data-index="${index}"]`);
-            if (noteEl) {
-                noteEl.classList.remove('color-yellow', 'color-pink', 'color-blue', 'color-green', 'color-purple');
-                noteEl.classList.add(`color-${newColor}`);
-            } else {
-                renderIdeas();
+            // 2. Aplica a nova cor diretamente no elemento selecionado
+            const corkboard = document.getElementById('corkboardContainer');
+            if (corkboard) {
+                const notes = corkboard.querySelectorAll('.sticky-note');
+                if (notes[index]) {
+                    // Remove qualquer cor anterior e aplica a nova
+                    notes[index].classList.remove('color-yellow', 'color-pink', 'color-blue', 'color-green', 'color-purple');
+                    notes[index].classList.add(`color-${newColor}`);
+                }
             }
         }
         
