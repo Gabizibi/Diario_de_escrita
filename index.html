@@ -479,7 +479,6 @@
         }
         
         /* PALETA DA FOLHA PRINCIPAL DA FRENTE */
-        .sticky-note,
         .sticky-note.color-yellow { background-color: #fff8a6 !important; }
         .sticky-note.color-pink   { background-color: #ffcfdf !important; }
         .sticky-note.color-blue   { background-color: #d0e8ff !important; }
@@ -2437,18 +2436,23 @@
         }
         
         /**
-         * Atualiza a cor no estado global e no DOM em tempo real pelo ID único
+         * Atualiza a cor no array global e troca a classe CSS diretamente no elemento do DOM
          */
         function updateNoteColor(index, newColor) {
             if (!ideas[index]) return;
         
+            // 1. Salva no estado e no localStorage
             ideas[index].color = newColor;
             saveIdeas();
         
-            const noteEl = document.querySelector(`.sticky-note[data-id="${index}"]`);
-            if (noteEl) {
-                noteEl.classList.remove('color-yellow', 'color-pink', 'color-blue', 'color-green', 'color-purple');
-                noteEl.classList.add(`color-${newColor}`);
+            // 2. Localiza os cards no container e atualiza as classes visuais do post-it selecionado
+            const container = document.getElementById('corkboardContainer');
+            if (container) {
+                const notes = container.querySelectorAll('.sticky-note');
+                if (notes[index]) {
+                    notes[index].classList.remove('color-yellow', 'color-pink', 'color-blue', 'color-green', 'color-purple');
+                    notes[index].classList.add(`color-${newColor}`);
+                }
             }
         }
         
