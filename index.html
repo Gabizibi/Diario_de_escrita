@@ -415,10 +415,11 @@
         }
 
         /* ==========================================
-           POST-ITS: APARÊNCIA LIMPA, MAÇO E REDIMENSIONAMENTO
+           POST-ITS: APARÊNCIA, CORES E REDIMENSIONAMENTO
            ========================================== */
         
         .sticky-note {
+            background-color: #fff8a6; /* Cor padrão amarelo */
             padding: 24px 14px 10px 14px;
             border-radius: 4px;
             box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.18);
@@ -428,8 +429,11 @@
             justify-content: space-between;
             width: 240px;
             height: 220px;
-            resize: both !important; /* Habilita a alça de redimensionar */
-            overflow: auto !important; /* Permite que a alça seja clicável */
+            
+            /* Permite o redimensionamento mantendo a alça visível */
+            resize: both !important;
+            overflow: auto !important;
+            
             min-width: 180px;
             min-height: 160px;
             margin: 16px;
@@ -440,15 +444,15 @@
         .sticky-note:nth-child(even) { transform: rotate(1.5deg); }
         .sticky-note:nth-child(3n) { transform: rotate(-2deg); }
         
-        /* Oculta barras de rolagem cinzas indesejadas */
+        /* Oculta as barras de rolagem cinzas para manter o visual limpo */
         .sticky-note::-webkit-scrollbar {
             display: none;
             width: 0;
             height: 0;
         }
         
-        /* PALETA DE CORES (Garante sobreposição prioritária) */
-        .sticky-note, .sticky-note.color-yellow { background-color: #fff8a6 !important; }
+        /* CLASSES DE CORES COM SOBREPOSIÇÃO PRIORITÁRIA */
+        .sticky-note.color-yellow { background-color: #fff8a6 !important; }
         .sticky-note.color-pink   { background-color: #ffcfdf !important; }
         .sticky-note.color-blue   { background-color: #d0e8ff !important; }
         .sticky-note.color-green  { background-color: #c3f5d3 !important; }
@@ -2391,6 +2395,9 @@
            BANCO DE IDEIAS: RENDERIZAÇÃO E TROCA DE CORES
            ========================================== */
         
+                /**
+         * Renderiza os post-its atribuindo um atributo data-index real para cada elemento
+         */
         function renderIdeas() {
             const container = document.getElementById('corkboardContainer');
             if (!container) return;
@@ -2398,24 +2405,24 @@
             loadIdeasStoryOptions();
             container.innerHTML = '';
         
-            const filteredIdeas = ideas.filter(item => {
-                if (currentIdeasStoryId === 'global') return true;
-                return (item.storyId || 'global') === currentIdeasStoryId;
-            });
+            ideas.forEach((item, realIndex) => {
+                // Aplica o filtro da história ativa
+                if (currentIdeasStoryId !== 'global' && (item.storyId || 'global') !== currentIdeasStoryId) {
+                    return;
+                }
         
-            filteredIdeas.forEach((item, realIndex) => {
                 const colorClass = `color-${item.color || 'yellow'}`;
                 const pinIcon = item.pinType === 'clip' ? 'fa-paperclip' : 'fa-thumbtack';
         
                 const note = document.createElement('div');
                 note.className = `sticky-note ${colorClass}`;
-                note.dataset.index = realIndex;
+                note.setAttribute('data-id', realIndex); // Identificador preciso
         
                 note.innerHTML = `
                     <i class="fa-solid ${pinIcon} sticky-pin-element"></i>
                     <textarea oninput="ideas[${realIndex}].text = this.value; saveIdeas();" placeholder="Escreva sua ideia...">${item.text || ''}</textarea>
                     <div class="sticky-footer">
-                        <select onchange="updateNoteColor(${realIndex}, this.value)" style="font-size:0.8rem; border:none; background:transparent; cursor:pointer;">
+                        <select onchange="updateNoteColor(${realIndex}, this.value)">
                             <option value="yellow" ${item.color === 'yellow' ? 'selected' : ''}>🟡 Amarelo</option>
                             <option value="pink" ${item.color === 'pink' ? 'selected' : ''}>🌸 Rosa</option>
                             <option value="blue" ${item.color === 'blue' ? 'selected' : ''}>🔹 Azul</option>
@@ -2432,25 +2439,19 @@
             });
         }
         
-                /**
-         * Atualiza a cor no array e altera a classe do elemento no DOM em tempo real
+        /**
+         * Atualiza a cor no estado global e no DOM em tempo real pelo ID único
          */
         function updateNoteColor(index, newColor) {
             if (!ideas[index]) return;
         
-            // 1. Atualiza no array e grava
             ideas[index].color = newColor;
             saveIdeas();
         
-            // 2. Aplica a nova cor diretamente no elemento selecionado
-            const corkboard = document.getElementById('corkboardContainer');
-            if (corkboard) {
-                const notes = corkboard.querySelectorAll('.sticky-note');
-                if (notes[index]) {
-                    // Remove qualquer cor anterior e aplica a nova
-                    notes[index].classList.remove('color-yellow', 'color-pink', 'color-blue', 'color-green', 'color-purple');
-                    notes[index].classList.add(`color-${newColor}`);
-                }
+            const noteEl = document.querySelector(`.sticky-note[data-id="${index}"]`);
+            if (noteEl) {
+                noteEl.classList.remove('color-yellow', 'color-pink', 'color-blue', 'color-green', 'color-purple');
+                noteEl.classList.add(`color-${newColor}`);
             }
         }
         
