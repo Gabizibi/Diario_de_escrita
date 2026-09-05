@@ -1043,23 +1043,27 @@
             .btn { padding: 6px 10px !important; font-size: 0.8rem !important; gap: 4px !important; }
             .change-banner-btn { padding: 4px 8px !important; font-size: 0.75rem !important; }
         
-            /* Empilhamento vertical da Ficha no celular */
+            /* Transforma a grid do formulário em um contêiner flexível único no mobile */
             .sheet-grid {
                 display: flex !important;
                 flex-direction: column !important;
                 gap: 16px !important;
             }
-            
+        
+            /* Remove a interferência das divs das colunas no fluxo flex */
             .left-col, 
             .right-col {
-                width: 100% !important;
-                display: flex !important;
-                flex-direction: column !important;
+                display: contents !important;
             }
         
-            /* Reordenação no celular: Coloca o card do Spotify (1º da coluna direita) no topo */
-            .right-col .card:first-child {
-                order: -1 !important;
+            /* Define a ordem explícita dos cards no mobile */
+            #spotifyCard {
+                order: 1 !important;
+            }
+        
+            /* Todos os outros cards entram na sequência natural abaixo do Spotify */
+            .sheet-grid .card {
+                order: 2 !important;
             }
         }
         /* VINCULAÇÃO DE MUNDO & LOCAIS NA HISTÓRIA */
@@ -1377,13 +1381,15 @@
                         </div>
 
                         <div class="right-col">
-                            <div class="card">
+                            <!-- Card do Spotify com id="spotifyCard" adicionado para reordenação no mobile -->
+                            <div class="card" id="spotifyCard">
                                 <h3 class="section-title"><i class="fa-brands fa-spotify" style="color: #1db954;"></i> Música Tema (Spotify)</h3>
                                 <div class="form-group">
                                     <label for="charSpotifyUrl">Link no Spotify</label>
                                     <input type="text" id="charSpotifyUrl" class="form-control" placeholder="Cole o link do Spotify aqui..." oninput="updateCharSpotifyPlayer()">
                                 </div>
                                 <div class="spotify-container" id="charSpotifyPlayer"></div>
+                            </div>
                             </div>
 
                             <div class="card">
