@@ -415,13 +415,13 @@
         }
 
         /* ==========================================
-           POST-ITS HIPER-REALISTAS COM MAÇO E TEXTAREA TRANSPARENTE
+           POST-ITS: APARÊNCIA LIMPA, MAÇO E REDIMENSIONAMENTO
            ========================================== */
         
         .sticky-note {
             background: #fff8a6;
-            padding: 24px 14px 14px 14px;
-            border-radius: 2px 2px 2px 18px; /* Canto inferior arredondado para a dobra */
+            padding: 24px 14px 10px 14px;
+            border-radius: 4px;
             box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.18);
             position: relative;
             display: flex;
@@ -429,26 +429,31 @@
             justify-content: space-between;
             width: 240px;
             height: 220px;
-            resize: both; /* Ativa a alça no canto inferior direito */
-            overflow: auto; /* Necessário para o navegador exibir o controle de redimensionamento */
+            resize: both; /* Habilita a alça no canto inferior direito */
+            overflow: visible !important; /* Mantém os fixadores no topo e esconde barras de rolagem */
             min-width: 180px;
             min-height: 160px;
             margin: 16px;
             transform: rotate(-1.5deg);
-            transition: box-shadow 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         
         .sticky-note:nth-child(even) { transform: rotate(1.5deg); }
         .sticky-note:nth-child(3n) { transform: rotate(-2deg); }
         
-        /* PALETA DE CORES */
+        /* Remove barras de rolagem indesejadas */
+        .sticky-note::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* PALETA DE CORES DOS POST-ITS */
         .sticky-note.color-yellow { background: #fff8a6 !important; }
         .sticky-note.color-pink   { background: #ffcfdf !important; }
         .sticky-note.color-blue   { background: #d0e8ff !important; }
         .sticky-note.color-green  { background: #c3f5d3 !important; }
         .sticky-note.color-purple { background: #e8d0ff !important; }
         
-        /* Maço de folhas desalinhadas no fundo */
+        /* Maço de folhas desalinhadas no fundo (Aparência realista) */
         .sticky-note::before {
             content: "";
             position: absolute;
@@ -457,29 +462,29 @@
             width: 100%;
             height: 100%;
             background: #e8d0ff;
-            border-radius: 2px;
+            border-radius: 4px;
             transform: rotate(-3.5deg);
             box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.1);
             z-index: -2;
             pointer-events: none;
         }
         
-        /* Efeito de Borda Dobrada (Paper Curl) no canto inferior direito */
         .sticky-note::after {
             content: "";
             position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 0 18px 18px;
-            border-color: transparent transparent rgba(0, 0, 0, 0.15) transparent;
+            top: 2px;
+            right: -5px;
+            width: 100%;
+            height: 100%;
+            background: #c3f5d3;
+            border-radius: 4px;
+            transform: rotate(3deg);
+            box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.08);
+            z-index: -1;
             pointer-events: none;
-            z-index: 4;
         }
         
-        /* FIXADORES SUPERIORES (Sem cortes) */
+        /* FIXADORES SUPERIORES SEM CORTE */
         .sticky-pin-element {
             position: absolute;
             top: -14px;
@@ -503,46 +508,21 @@
             transform: translateX(-50%) rotate(-25deg);
         }
         
-        /* ÁREA DE TEXTO INTEGRADA AO PAPEL (Sem caixas brancas) */
+        /* ÁREA DE TEXTO TRANSPARENTE SEM BORDAS */
         .sticky-note textarea {
             width: 100%;
             height: 100%;
             flex-grow: 1;
-            background: transparent !important; /* Remove o fundo branco */
-            border: none !important;            /* Remove a borda cinza retangular */
+            background: transparent !important;
+            border: none !important;
             outline: none !important;
-            resize: none !important;            /* Impede o textarea de redimensionar sozinho */
+            resize: none !important;
             font-size: 0.95rem;
             color: #333;
             font-weight: 600;
             font-family: inherit;
             margin-top: 8px;
-        }
-        
-        /* RODAPÉ DO POST-IT */
-        .sticky-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: #666;
-            border-top: 1px dashed rgba(0, 0, 0, 0.15);
-            padding-top: 6px;
-            margin-top: 4px;
-            z-index: 5;
-        }
-        
-        .sticky-pin-btn {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 0.85rem;
-            color: var(--text-muted, #8c7365);
-            transition: color 0.2s ease;
-        }
-        
-        .sticky-pin-btn:hover {
-            color: var(--accent-pink, #e77f8d);
+            overflow: hidden;
         }
         /* FICHA DE PERSONAGEM */
         .filter-bar-container {
