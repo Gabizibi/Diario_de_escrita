@@ -400,7 +400,7 @@
             margin-top: 2px;
         }
 
-        /* BANCO DE IDEIAS */
+        /* BANCO DE IDEIAS: POST-ITS AVANÇADOS */
         .corkboard {
             background: #d8a47f linear-gradient(135deg, #d8a47f 0%, #bd8760 100%);
             border: 6px solid #8c5a3c;
@@ -416,36 +416,72 @@
 
         .sticky-note {
             background: #fff8a6;
-            padding: 18px;
-            border-radius: 4px;
-            box-shadow: 5px 5px 12px rgba(0,0,0,0.2);
+            padding: 18px 18px 12px 18px;
+            border-radius: 2px 2px 2px 16px;
+            box-shadow: 4px 5px 12px rgba(0,0,0,0.18);
             position: relative;
             transform: rotate(-1deg);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             width: 240px;
             height: 220px;
             resize: both;
-            overflow: auto;
+            overflow: hidden;
             min-width: 180px;
             min-height: 160px;
         }
 
         .sticky-note:nth-child(even) { background: #ffcfdf; transform: rotate(1.5deg); }
         .sticky-note:nth-child(3n) { background: #c3f5d3; transform: rotate(-2deg); }
+        .sticky-note:nth-child(5n) { background: #d0e8ff; transform: rotate(1deg); }
 
-        .sticky-note::before {
+        /* Borda Inferior Dobrada (Efeito Paper Curl) */
+        .sticky-note::after {
             content: "";
             position: absolute;
-            top: 6px;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 0 16px 16px;
+            border-color: transparent transparent #c8b79d transparent;
+            box-shadow: -2px -2px 3px rgba(0,0,0,0.12);
+            pointer-events: none;
+        }
+
+        /* Fixador Padrão: Tachinha (fa-thumbtack) */
+        .sticky-note.pin-tack::before,
+        .sticky-note:not(.pin-clip)::before {
+            content: "\f08d";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 4px;
             left: 50%;
             transform: translateX(-50%);
-            width: 14px;
-            height: 14px;
-            background: #e74c3c;
-            border-radius: 50%;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+            font-size: 1.1rem;
+            color: #e74c3c;
+            text-shadow: 1px 2px 3px rgba(0,0,0,0.3);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Fixador Alternativo: Clipe de Papel (fa-paperclip) */
+        .sticky-note.pin-clip::before {
+            content: "\f0c6";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%) rotate(15deg);
+            font-size: 1.3rem;
+            color: var(--accent-brown, #a86b4a);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            z-index: 2;
             pointer-events: none;
         }
 
@@ -459,7 +495,7 @@
             font-size: 0.95rem;
             color: #333;
             font-weight: 600;
-            margin-top: 8px;
+            margin-top: 10px;
         }
 
         .sticky-footer {
@@ -473,6 +509,18 @@
             margin-top: 6px;
         }
 
+        .sticky-pin-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-muted, #8c7365);
+            transition: color 0.2s ease;
+        }
+
+        .sticky-pin-btn:hover {
+            color: var(--accent-pink, #e77f8d);
+        }
         /* FICHA DE PERSONAGEM */
         .filter-bar-container {
             display: flex;
@@ -1416,13 +1464,42 @@
                 </div>
             </div>
 
-            <!-- SECTION 3: BANCO DE IDEIAS -->
+            <!-- SECTION 3: BANCO DE IDEIAS E FLUXOGRAMA -->
             <div id="ideasSection" class="hidden">
-                <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
-                    <p style="color: var(--text-muted);">Clique e arraste no canto inferior do post-it para ajustar o tamanho!</p>
-                    <button class="btn btn-primary" onclick="addStickyNote()"><i class="fa-solid fa-thumbtack"></i> Pregar Nova Ideia</button>
+                <!-- Abas Internas de Navegação -->
+                <div style="display: flex; gap: 12px; margin-bottom: 20px; border-bottom: 2px dashed var(--border-style); padding-bottom: 12px;">
+                    <button type="button" id="tabBtnPostits" class="group-tab active" onclick="switchIdeasTab('postits')">
+                        <i class="fa-solid fa-note-sticky"></i> Mural de Post-its
+                    </button>
+                    <button type="button" id="tabBtnFlowchart" class="group-tab" onclick="switchIdeasTab('flowchart')">
+                        <i class="fa-solid fa-diagram-project"></i> Fluxograma de Relacionamentos
+                    </button>
                 </div>
-                <div class="corkboard" id="corkboardContainer"></div>
+            
+                <!-- Visão 1: Mural de Post-its -->
+                <div id="ideasPostitsView">
+                    <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <p style="color: var(--text-muted); margin: 0;">Clique em 'Alternar' para mudar entre tachinha e clipe de papel!</p>
+                        <button type="button" class="btn btn-primary" onclick="addStickyNote()"><i class="fa-solid fa-thumbtack"></i> Pregar Nova Ideia</button>
+                    </div>
+                    <div class="corkboard" id="corkboardContainer"></div>
+                </div>
+            
+                <!-- Visão 2: Fluxograma Visual de Relacionamentos -->
+                <div id="ideasFlowchartView" class="hidden">
+                    <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <p style="color: var(--text-muted); margin: 0;">Conecte personagens e locais para visualizar os laços do seu universo literário.</p>
+                        <button type="button" class="btn btn-primary" onclick="addRelationshipConnection()"><i class="fa-solid fa-link"></i> Nova Conexão</button>
+                    </div>
+            
+                    <div class="card" style="position: relative; min-height: 520px; background: #fffdfa; overflow: auto; border: 3px solid var(--border-style);">
+                        <!-- Canvas/SVG de Linhas Conectoras -->
+                        <svg id="relationshipSvgCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></svg>
+                        
+                        <!-- Container onde os Cards dos Personagens/Locais Conectados serão Renderizados -->
+                        <div id="flowchartNodesContainer" style="position: relative; z-index: 2; width: 100%; height: 100%; min-height: 500px;"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- SECTION 4: MOODBOARD -->
@@ -2250,31 +2327,118 @@
             }
         }
 
-        /* BANCO DE IDEIAS */
+        /* ==========================================
+           BANCO DE IDEIAS: LÓGICA DE POST-ITS E FIXADORES
+           ========================================== */
+        
+        /**
+         * Renderiza os post-its no mural de cortiça com suporte a tachinha/clipe
+         */
         function renderIdeas() {
             const container = document.getElementById('corkboardContainer');
+            if (!container) return;
+        
             container.innerHTML = '';
-            ideas.forEach((text, idx) => {
+        
+            ideas.forEach((item, idx) => {
+                // Suporte para migração: se o item for texto antigo, converte para objeto
+                const noteData = (typeof item === 'string') 
+                    ? { text: item, pinType: 'tack' } 
+                    : item;
+        
+                // Garante que a estrutura global fique em formato de objeto
+                ideas[idx] = noteData;
+        
                 const note = document.createElement('div');
-                note.className = 'sticky-note';
+                const pinClass = noteData.pinType === 'clip' ? 'pin-clip' : 'pin-tack';
+                note.className = `sticky-note ${pinClass}`;
+        
                 note.innerHTML = `
-                    <textarea onchange="ideas[${idx}]=this.value; saveIdeas();">${text}</textarea>
+                    <textarea onchange="ideas[${idx}].text = this.value; saveIdeas();" placeholder="Escreva sua ideia...">${noteData.text || ''}</textarea>
                     <div class="sticky-footer">
-                        <span>#${idx+1}</span>
-                        <i class="fa-solid fa-trash" style="cursor:pointer;" onclick="ideas.splice(${idx},1); saveIdeas(); renderIdeas();"></i>
+                        <span>#${idx + 1}</span>
+                        <button type="button" class="sticky-pin-btn" onclick="toggleStickyPin(${idx})" title="Alternar entre Tachinha e Clipe">
+                            <i class="fa-solid ${noteData.pinType === 'clip' ? 'fa-paperclip' : 'fa-thumbtack'}"></i> Alternar
+                        </button>
+                        <i class="fa-solid fa-trash" style="cursor:pointer; color: var(--accent-pink);" onclick="deleteStickyNote(${idx})" title="Excluir bilhete"></i>
                     </div>
                 `;
+        
                 container.appendChild(note);
             });
         }
-
-        function addStickyNote() {
-            ideas.push('Nova ideia...');
+        
+        /**
+         * Alterna a fixação do post-it entre 'tack' (tachinha) e 'clip' (clipe)
+         */
+        function toggleStickyPin(index) {
+            if (!ideas[index]) return;
+        
+            if (typeof ideas[index] === 'string') {
+                ideas[index] = { text: ideas[index], pinType: 'tack' };
+            }
+        
+            ideas[index].pinType = (ideas[index].pinType === 'clip') ? 'tack' : 'clip';
             saveIdeas();
             renderIdeas();
         }
+        
+        /**
+         * Adiciona um novo bilhete ao mural
+         */
+        function addStickyNote() {
+            ideas.push({
+                text: 'Nova ideia...',
+                pinType: 'tack'
+            });
+            saveIdeas();
+            renderIdeas();
+        }
+        
+        /**
+         * Exclui um bilhete
+         */
+        function deleteStickyNote(index) {
+            ideas.splice(index, 1);
+            saveIdeas();
+            renderIdeas();
+        }
+        
+        /**
+         * Salva a lista de ideias no localStorage
+         */
+        function saveIdeas() {
+            localStorage.setItem('diario_ideias', JSON.stringify(ideas));
+        }
+        /**
+ * Alterna a visualização entre o Mural de Post-its e o Fluxograma de Relacionamentos
+ */
+function switchIdeasTab(tabName) {
+    const btnPostits = document.getElementById('tabBtnPostits');
+    const btnFlowchart = document.getElementById('tabBtnFlowchart');
+    const viewPostits = document.getElementById('ideasPostitsView');
+    const viewFlowchart = document.getElementById('ideasFlowchartView');
 
-        function saveIdeas() { localStorage.setItem('diario_ideias', JSON.stringify(ideas)); }
+    if (tabName === 'postits') {
+        if (btnPostits) btnPostits.classList.add('active');
+        if (btnFlowchart) btnFlowchart.classList.remove('active');
+
+        if (viewPostits) viewPostits.classList.remove('hidden');
+        if (viewFlowchart) viewFlowchart.classList.add('hidden');
+
+        renderIdeas(); // Garante que os post-its fiquem atualizados
+    } else if (tabName === 'flowchart') {
+        if (btnFlowchart) btnFlowchart.classList.add('active');
+        if (btnPostits) btnPostits.classList.remove('active');
+
+        if (viewFlowchart) viewFlowchart.classList.remove('hidden');
+        if (viewPostits) viewPostits.classList.add('hidden');
+
+        if (typeof renderFlowchart === 'function') {
+            renderFlowchart(); // Prepara a renderização dos nós e conexões do fluxograma
+        }
+    }
+}
 
         /* MOODBOARD */
         function updateMoodboardStorySelect() {
