@@ -414,77 +414,119 @@
             align-items: flex-start;
         }
 
+        /* ==========================================
+           POST-ITS HIPER-REALISTAS: TACHINHA 3D E CLIPE COM MAÇO DESALINHADO
+           ========================================== */
+        
         .sticky-note {
             background: #fff8a6;
-            padding: 18px 18px 12px 18px;
-            border-radius: 2px 2px 2px 16px;
-            box-shadow: 4px 5px 12px rgba(0,0,0,0.18);
+            padding: 22px 18px 14px 18px;
+            border-radius: 2px 2px 2px 18px;
+            box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.15);
             position: relative;
-            transform: rotate(-1deg);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             width: 240px;
             height: 220px;
             resize: both;
-            overflow: hidden;
+            overflow: visible;
             min-width: 180px;
             min-height: 160px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-
-        .sticky-note:nth-child(even) { background: #ffcfdf; transform: rotate(1.5deg); }
-        .sticky-note:nth-child(3n) { background: #c3f5d3; transform: rotate(-2deg); }
-        .sticky-note:nth-child(5n) { background: #d0e8ff; transform: rotate(1deg); }
-
-        /* Borda Inferior Dobrada (Efeito Paper Curl) */
-        .sticky-note::after {
+        
+        /* PALETA DE CORES DOS POST-ITS */
+        .sticky-note.color-yellow { background: #fff8a6 !important; }
+        .sticky-note.color-pink   { background: #ffcfdf !important; }
+        .sticky-note.color-blue   { background: #d0e8ff !important; }
+        .sticky-note.color-green  { background: #c3f5d3 !important; }
+        .sticky-note.color-purple { background: #e8d0ff !important; }
+        
+        /* 1. VISUAL COM TACHINHA (Borda inferior direita levantada) */
+        .sticky-note.pin-tack {
+            transform: rotate(-1.5deg);
+        }
+        
+        .sticky-note.pin-tack::after {
             content: "";
             position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 0 16px 16px;
-            border-color: transparent transparent #c8b79d transparent;
-            box-shadow: -2px -2px 3px rgba(0,0,0,0.12);
+            bottom: 2px;
+            right: 2px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, transparent 45%, rgba(0, 0, 0, 0.18) 50%, rgba(200, 180, 150, 0.8) 100%);
+            border-radius: 0 0 12px 0;
+            box-shadow: -3px -3px 5px rgba(0, 0, 0, 0.1);
             pointer-events: none;
         }
-
-        /* Fixador Padrão: Tachinha (fa-thumbtack) */
-        .sticky-note.pin-tack::before,
-        .sticky-note:not(.pin-clip)::before {
+        
+        .sticky-note.pin-tack::before {
             content: "\f08d";
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
             position: absolute;
-            top: 4px;
+            top: -8px;
             left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.1rem;
-            color: #e74c3c;
-            text-shadow: 1px 2px 3px rgba(0,0,0,0.3);
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        /* Fixador Alternativo: Clipe de Papel (fa-paperclip) */
-        .sticky-note.pin-clip::before {
-            content: "\f0c6";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            position: absolute;
-            top: -5px;
-            left: 50%;
-            transform: translateX(-50%) rotate(15deg);
+            transform: translateX(-50%) rotate(12deg);
             font-size: 1.3rem;
-            color: var(--accent-brown, #a86b4a);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-            z-index: 2;
+            color: #e74c3c;
+            text-shadow: 2px 3px 4px rgba(0, 0, 0, 0.35);
+            z-index: 5;
             pointer-events: none;
         }
-
+        
+        /* 2. VISUAL COM CLIPE (Maço de folhas empilhadas e desalinhadas) */
+        .sticky-note.pin-clip {
+            transform: rotate(0.5deg);
+            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.12);
+        }
+        
+        /* Folha Roxa/Rosa desalinhada atrás */
+        .sticky-note.pin-clip::before {
+            content: "";
+            position: absolute;
+            top: -4px;
+            left: -6px;
+            width: 100%;
+            height: 100%;
+            background: #e8d0ff;
+            border-radius: 2px;
+            transform: rotate(-4deg);
+            box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.1);
+            z-index: -2;
+            pointer-events: none;
+        }
+        
+        /* Folha Verde desalinhada atrás */
+        .sticky-note.pin-clip::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            right: -6px;
+            width: 100%;
+            height: 100%;
+            background: #c3f5d3;
+            border-radius: 2px;
+            transform: rotate(3deg);
+            box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.08);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* Clipe Metálico Prateado */
+        .sticky-clip-element {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-25deg);
+            font-size: 1.8rem;
+            color: #555;
+            text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
+            z-index: 10;
+            pointer-events: none;
+        }
+        
         .sticky-note textarea {
             width: 100%;
             flex-grow: 1;
@@ -497,18 +539,18 @@
             font-weight: 600;
             margin-top: 10px;
         }
-
+        
         .sticky-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 0.8rem;
             color: #666;
-            border-top: 1px dashed rgba(0,0,0,0.15);
+            border-top: 1px dashed rgba(0, 0, 0, 0.15);
             padding-top: 6px;
             margin-top: 6px;
         }
-
+        
         .sticky-pin-btn {
             background: transparent;
             border: none;
@@ -517,7 +559,7 @@
             color: var(--text-muted, #8c7365);
             transition: color 0.2s ease;
         }
-
+        
         .sticky-pin-btn:hover {
             color: var(--accent-pink, #e77f8d);
         }
@@ -2328,118 +2370,341 @@
         }
 
         /* ==========================================
-           BANCO DE IDEIAS: LÓGICA DE POST-ITS E FIXADORES
+           BANCO DE IDEIAS: LÓGICA DE POST-ITS E ABAS
            ========================================== */
         
-        /**
-         * Renderiza os post-its no mural de cortiça com suporte a tachinha/clipe
-         */
+        let currentIdeasStoryId = 'global';
+        
+        function loadIdeasStoryOptions() {
+            const select = document.getElementById('ideasStorySelect');
+            if (!select) return;
+        
+            select.innerHTML = '<option value="global">🌐 Ideias Gerais (Todas as Histórias)</option>';
+            if (Array.isArray(stories)) {
+                stories.forEach(s => {
+                    select.innerHTML += `<option value="${s.id}">📖 ${s.title}</option>`;
+                });
+            }
+            select.value = currentIdeasStoryId;
+        }
+        
+        function onIdeasStoryChange(storyId) {
+            currentIdeasStoryId = storyId;
+            renderIdeas();
+            renderFlowchart();
+        }
+        
         function renderIdeas() {
             const container = document.getElementById('corkboardContainer');
             if (!container) return;
         
+            loadIdeasStoryOptions();
             container.innerHTML = '';
         
-            ideas.forEach((item, idx) => {
-                // Suporte para migração: se o item for texto antigo, converte para objeto
-                const noteData = (typeof item === 'string') 
-                    ? { text: item, pinType: 'tack' } 
-                    : item;
+            const filteredIdeas = ideas.filter(item => {
+                if (currentIdeasStoryId === 'global') return true;
+                return (item.storyId || 'global') === currentIdeasStoryId;
+            });
         
-                // Garante que a estrutura global fique em formato de objeto
-                ideas[idx] = noteData;
+            filteredIdeas.forEach((item) => {
+                const realIndex = ideas.indexOf(item);
+                const colorClass = `color-${item.color || 'yellow'}`;
+                const pinClass = item.pinType === 'clip' ? 'pin-clip' : 'pin-tack';
+        
+                const clipHtml = item.pinType === 'clip' 
+                    ? `<i class="fa-solid fa-paperclip sticky-clip-element"></i>` 
+                    : '';
         
                 const note = document.createElement('div');
-                const pinClass = noteData.pinType === 'clip' ? 'pin-clip' : 'pin-tack';
-                note.className = `sticky-note ${pinClass}`;
+                note.className = `sticky-note ${colorClass} ${pinClass}`;
         
                 note.innerHTML = `
-                    <textarea onchange="ideas[${idx}].text = this.value; saveIdeas();" placeholder="Escreva sua ideia...">${noteData.text || ''}</textarea>
+                    ${clipHtml}
+                    <textarea onchange="ideas[${realIndex}].text = this.value; saveIdeas();" placeholder="Escreva sua ideia...">${item.text || ''}</textarea>
                     <div class="sticky-footer">
-                        <span>#${idx + 1}</span>
-                        <button type="button" class="sticky-pin-btn" onclick="toggleStickyPin(${idx})" title="Alternar entre Tachinha e Clipe">
-                            <i class="fa-solid ${noteData.pinType === 'clip' ? 'fa-paperclip' : 'fa-thumbtack'}"></i> Alternar
+                        <select onchange="ideas[${realIndex}].color = this.value; saveIdeas(); renderIdeas();" style="font-size:0.75rem; border:none; background:transparent; cursor:pointer;">
+                            <option value="yellow" ${item.color === 'yellow' ? 'selected' : ''}>🟡 Amarelo</option>
+                            <option value="pink" ${item.color === 'pink' ? 'selected' : ''}>🌸 Rosa</option>
+                            <option value="blue" ${item.color === 'blue' ? 'selected' : ''}>🔹 Azul</option>
+                            <option value="green" ${item.color === 'green' ? 'selected' : ''}>🌿 Verde</option>
+                            <option value="purple" ${item.color === 'purple' ? 'selected' : ''}>🦄 Roxo</option>
+                        </select>
+                        <button type="button" class="sticky-pin-btn" onclick="toggleStickyPin(${realIndex})" title="Alternar Fixador">
+                            <i class="fa-solid ${item.pinType === 'clip' ? 'fa-paperclip' : 'fa-thumbtack'}"></i>
                         </button>
-                        <i class="fa-solid fa-trash" style="cursor:pointer; color: var(--accent-pink);" onclick="deleteStickyNote(${idx})" title="Excluir bilhete"></i>
+                        <i class="fa-solid fa-trash" style="cursor:pointer; color: var(--accent-pink);" onclick="deleteStickyNote(${realIndex})"></i>
                     </div>
                 `;
-        
                 container.appendChild(note);
             });
         }
         
-        /**
-         * Alterna a fixação do post-it entre 'tack' (tachinha) e 'clip' (clipe)
-         */
         function toggleStickyPin(index) {
             if (!ideas[index]) return;
-        
-            if (typeof ideas[index] === 'string') {
-                ideas[index] = { text: ideas[index], pinType: 'tack' };
-            }
-        
             ideas[index].pinType = (ideas[index].pinType === 'clip') ? 'tack' : 'clip';
             saveIdeas();
             renderIdeas();
         }
         
-        /**
-         * Adiciona um novo bilhete ao mural
-         */
         function addStickyNote() {
             ideas.push({
                 text: 'Nova ideia...',
-                pinType: 'tack'
+                pinType: 'tack',
+                color: 'yellow',
+                storyId: currentIdeasStoryId
             });
             saveIdeas();
             renderIdeas();
         }
         
-        /**
-         * Exclui um bilhete
-         */
         function deleteStickyNote(index) {
             ideas.splice(index, 1);
             saveIdeas();
             renderIdeas();
         }
         
-        /**
-         * Salva a lista de ideias no localStorage
-         */
         function saveIdeas() {
             localStorage.setItem('diario_ideias', JSON.stringify(ideas));
         }
-        /**
- * Alterna a visualização entre o Mural de Post-its e o Fluxograma de Relacionamentos
- */
-function switchIdeasTab(tabName) {
-    const btnPostits = document.getElementById('tabBtnPostits');
-    const btnFlowchart = document.getElementById('tabBtnFlowchart');
-    const viewPostits = document.getElementById('ideasPostitsView');
-    const viewFlowchart = document.getElementById('ideasFlowchartView');
-
-    if (tabName === 'postits') {
-        if (btnPostits) btnPostits.classList.add('active');
-        if (btnFlowchart) btnFlowchart.classList.remove('active');
-
-        if (viewPostits) viewPostits.classList.remove('hidden');
-        if (viewFlowchart) viewFlowchart.classList.add('hidden');
-
-        renderIdeas(); // Garante que os post-its fiquem atualizados
-    } else if (tabName === 'flowchart') {
-        if (btnFlowchart) btnFlowchart.classList.add('active');
-        if (btnPostits) btnPostits.classList.remove('active');
-
-        if (viewFlowchart) viewFlowchart.classList.remove('hidden');
-        if (viewPostits) viewPostits.classList.add('hidden');
-
-        if (typeof renderFlowchart === 'function') {
-            renderFlowchart(); // Prepara a renderização dos nós e conexões do fluxograma
+        
+        function switchIdeasTab(tabName) {
+            const btnPostits = document.getElementById('tabBtnPostits');
+            const btnFlowchart = document.getElementById('tabBtnFlowchart');
+            const viewPostits = document.getElementById('ideasPostitsView');
+            const viewFlowchart = document.getElementById('ideasFlowchartView');
+        
+            if (tabName === 'postits') {
+                if (btnPostits) btnPostits.classList.add('active');
+                if (btnFlowchart) btnFlowchart.classList.remove('active');
+        
+                if (viewPostits) viewPostits.classList.remove('hidden');
+                if (viewFlowchart) viewFlowchart.classList.add('hidden');
+        
+                renderIdeas();
+            } else if (tabName === 'flowchart') {
+                if (btnFlowchart) btnFlowchart.classList.add('active');
+                if (btnPostits) btnPostits.classList.remove('active');
+        
+                if (viewFlowchart) viewFlowchart.classList.remove('hidden');
+                if (viewPostits) viewPostits.classList.add('hidden');
+        
+                renderFlowchart();
+            }
         }
-    }
-}
-
+        /* ==========================================
+           BANCO DE IDEIAS: MURAL DE RELACIONAMENTOS (FLUXOGRAMA)
+           ========================================== */
+        
+        let relationships = [];
+        
+        /**
+         * Renderiza o Canvas SVG, Cards dos Personagens/Locais e as Linhas de Conexão
+         */
+        function renderFlowchart() {
+            const container = document.getElementById('flowchartNodesContainer');
+            const svgCanvas = document.getElementById('relationshipSvgCanvas');
+            if (!container || !svgCanvas) return;
+        
+            container.innerHTML = '';
+            svgCanvas.innerHTML = '';
+        
+            // Carrega relacionamentos salvos no localStorage
+            const savedRel = localStorage.getItem('diario_relacionamentos');
+            relationships = savedRel ? JSON.parse(savedRel) : [];
+        
+            // Filtra personagens e locais associados à história selecionada
+            const filteredChars = characters.filter(c => currentIdeasStoryId === 'global' || c.storyId === currentIdeasStoryId);
+            const filteredLocs = locations.filter(l => currentIdeasStoryId === 'global' || l.storyId === currentIdeasStoryId);
+        
+            const allNodes = [
+                ...filteredChars.map(c => ({ id: c.id, name: c.name, img: c.avatar, type: 'person' })),
+                ...filteredLocs.map(l => ({ id: l.id, name: l.name, img: (l.photos && l.photos[0]) || '', type: 'location' }))
+            ];
+        
+            if (allNodes.length === 0) {
+                container.innerHTML = `
+                    <p style="text-align:center; padding: 40px; color: var(--text-muted); width: 100%;">
+                        Cadastre personagens ou locais nesta história para visualizá-los no mural de relacionamentos!
+                    </p>`;
+                return;
+            }
+        
+            // Renderiza cada card arrastável
+            allNodes.forEach((node, idx) => {
+                const nodeEl = document.createElement('div');
+                nodeEl.className = 'flowchart-node-card';
+                nodeEl.style.cssText = `
+                    position: absolute;
+                    left: ${40 + (idx % 3) * 180}px;
+                    top: ${30 + Math.floor(idx / 3) * 190}px;
+                    width: 130px;
+                    background: #ffffff;
+                    border-radius: 16px;
+                    padding: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    cursor: move;
+                    user-select: none;
+                    text-align: center;
+                    border: 2px solid var(--border-style, #e2d9cc);
+                `;
+        
+                const imgPlaceholder = node.img 
+                    ? `<img src="${node.img}" style="width: 100%; height: 110px; object-fit: cover; border-radius: 12px; pointer-events: none;">` 
+                    : `<div style="width: 100%; height: 110px; background: #f5f0eb; border-radius: 12px; display:flex; align-items:center; justify-content:center; color:#b0a090;">
+                         <i class="fa-solid fa-${node.type === 'person' ? 'user' : 'map-pin'} fa-2x"></i>
+                       </div>`;
+        
+                nodeEl.innerHTML = `
+                    <div style="font-weight: 700; font-size: 0.8rem; background: #f0ebe5; padding: 2px 6px; border-radius: 10px; margin-bottom: 6px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
+                        ${node.name}
+                    </div>
+                    ${imgPlaceholder}
+                `;
+        
+                // Torna o card arrastável por Touch e Mouse
+                makeElementDraggable(nodeEl, () => drawRelationshipLines());
+                container.appendChild(nodeEl);
+            });
+        
+            drawRelationshipLines();
+        }
+        
+        /**
+         * Habilita evento de Drag & Drop nos cards (Suporte a Desktop e Celular/Touch)
+         */
+        function makeElementDraggable(elmnt, onDragCallback) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        
+            elmnt.onmousedown = dragMouseDown;
+            elmnt.ontouchstart = dragTouchStart;
+        
+            function dragMouseDown(e) {
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            }
+        
+            function elementDrag(e) {
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+                if (onDragCallback) onDragCallback();
+            }
+        
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        
+            function dragTouchStart(e) {
+                const touch = e.touches[0];
+                pos3 = touch.clientX;
+                pos4 = touch.clientY;
+                document.ontouchend = closeTouchElement;
+                document.ontouchmove = touchDrag;
+            }
+        
+            function touchDrag(e) {
+                const touch = e.touches[0];
+                pos1 = pos3 - touch.clientX;
+                pos2 = pos4 - touch.clientY;
+                pos3 = touch.clientX;
+                pos4 = touch.clientY;
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+                if (onDragCallback) onDragCallback();
+            }
+        
+            function closeTouchElement() {
+                document.ontouchend = null;
+                document.ontouchmove = null;
+            }
+        }
+        
+        /**
+         * Traça as linhas SVG e posiciona as caixas de rotulagem entre os cards
+         */
+        function drawRelationshipLines() {
+            const svgCanvas = document.getElementById('relationshipSvgCanvas');
+            if (!svgCanvas) return;
+            svgCanvas.innerHTML = '';
+        
+            const nodes = document.querySelectorAll('.flowchart-node-card');
+            if (nodes.length < 2) return;
+        
+            relationships.forEach(rel => {
+                const n1 = nodes[0];
+                const n2 = nodes[1];
+        
+                if (!n1 || !n2) return;
+        
+                const x1 = n1.offsetLeft + n1.offsetWidth / 2;
+                const y1 = n1.offsetTop + n1.offsetHeight / 2;
+                const x2 = n2.offsetLeft + n2.offsetWidth / 2;
+                const y2 = n2.offsetTop + n2.offsetHeight / 2;
+        
+                const lineColor = rel.color || '#40c057';
+        
+                // Linha visual SVG
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x1);
+                line.setAttribute('y1', y1);
+                line.setAttribute('x2', x2);
+                line.setAttribute('y2', y2);
+                line.setAttribute('stroke', lineColor);
+                line.setAttribute('stroke-width', '4');
+                line.setAttribute('stroke-linecap', 'round');
+                svgCanvas.appendChild(line);
+        
+                // Caixa de texto/Rótulo no centro da linha
+                const midX = (x1 + x2) / 2;
+                const midY = (y1 + y2) / 2;
+        
+                const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                rect.setAttribute('x', midX - 40);
+                rect.setAttribute('y', midY - 12);
+                rect.setAttribute('width', '80');
+                rect.setAttribute('height', '24');
+                rect.setAttribute('rx', '8');
+                rect.setAttribute('fill', lineColor);
+        
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', midX);
+                text.setAttribute('y', midY + 1);
+                text.setAttribute('fill', '#ffffff');
+                text.setAttribute('font-size', '11');
+                text.setAttribute('font-weight', 'bold');
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('dominant-baseline', 'middle');
+                text.textContent = rel.label || 'Vínculo';
+        
+                svgCanvas.appendChild(rect);
+                svgCanvas.appendChild(text);
+            });
+        }
+        
+        /**
+         * Adiciona uma nova conexão ao clicar no botão "Nova Conexão"
+         */
+        function addRelationshipConnection() {
+            const label = prompt('Digite o tipo de relacionamento (Ex: Família, Inimigos, Amantes, Reside em):', 'Família');
+            if (!label || !label.trim()) return;
+        
+            const colors = ['#e74c3c', '#40c057', '#3498db', '#9b59b6', '#f1c40f'];
+            relationships.push({
+                label: label.trim(),
+                color: colors[Math.floor(Math.random() * colors.length)]
+            });
+        
+            localStorage.setItem('diario_relacionamentos', JSON.stringify(relationships));
+            renderFlowchart();
+        }
         /* MOODBOARD */
         function updateMoodboardStorySelect() {
             const sel = document.getElementById('moodboardStorySelect');
