@@ -2386,6 +2386,10 @@
             renderFlowchart();
         }
         
+        /* ==========================================
+           BANCO DE IDEIAS: RENDERIZAÇÃO E TROCA DE CORES DOS POST-ITS
+           ========================================== */
+        
         function renderIdeas() {
             const container = document.getElementById('corkboardContainer');
             if (!container) return;
@@ -2410,7 +2414,7 @@
                     <i class="fa-solid ${pinIcon} sticky-pin-element"></i>
                     <textarea oninput="ideas[${realIndex}].text = this.value; saveIdeas();" placeholder="Escreva sua ideia...">${item.text || ''}</textarea>
                     <div class="sticky-footer">
-                        <select onchange="updateNoteColor(${realIndex}, this.value)" style="font-size:0.75rem; border:none; background:transparent; cursor:pointer;">
+                        <select onchange="updateNoteColor(${realIndex}, this.value)" style="font-size:0.8rem; border:none; background:transparent; cursor:pointer;">
                             <option value="yellow" ${item.color === 'yellow' ? 'selected' : ''}>🟡 Amarelo</option>
                             <option value="pink" ${item.color === 'pink' ? 'selected' : ''}>🌸 Rosa</option>
                             <option value="blue" ${item.color === 'blue' ? 'selected' : ''}>🔹 Azul</option>
@@ -2420,19 +2424,21 @@
                         <button type="button" class="sticky-pin-btn" onclick="toggleStickyPin(${realIndex})" title="Alternar Fixador">
                             <i class="fa-solid ${item.pinType === 'clip' ? 'fa-paperclip' : 'fa-thumbtack'}"></i>
                         </button>
-                        <i class="fa-solid fa-trash" style="cursor:pointer; color: var(--accent-pink);" onclick="deleteStickyNote(${realIndex})"></i>
+                        <i class="fa-solid fa-trash" style="cursor:pointer; color: var(--accent-pink, #e77f8d);" onclick="deleteStickyNote(${realIndex})" title="Excluir bilhete"></i>
                     </div>
                 `;
                 container.appendChild(note);
             });
         }
         
-        function updateNoteColor(index, colorValue) {
-            if (ideas[index]) {
-                ideas[index].color = colorValue;
-                saveIdeas();
-                renderIdeas();
-            }
+        /**
+         * Atualiza a cor da nota no array global e re-renderiza o mural instantaneamente
+         */
+        function updateNoteColor(index, newColor) {
+            if (!ideas[index]) return;
+            ideas[index].color = newColor;
+            saveIdeas();
+            renderIdeas();
         }
         
         function toggleStickyPin(index) {
