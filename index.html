@@ -420,70 +420,32 @@
         
         .sticky-note {
             background: #fff8a6;
-            padding: 22px 18px 14px 18px;
-            border-radius: 2px 2px 2px 18px;
-            box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.15);
+            padding: 22px 16px 12px 16px;
+            border-radius: 4px;
+            box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.18);
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             width: 240px;
             height: 220px;
-            resize: both;
-            overflow: visible;
+            resize: both; /* Permite redimensionar */
+            overflow: hidden; /* Mantém a estrutura interna organizada */
             min-width: 180px;
             min-height: 160px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin: 10px;
+            transition: box-shadow 0.2s ease;
         }
         
-        /* PALETA DE CORES DOS POST-ITS */
+        /* PALETA DE CORES */
         .sticky-note.color-yellow { background: #fff8a6 !important; }
         .sticky-note.color-pink   { background: #ffcfdf !important; }
         .sticky-note.color-blue   { background: #d0e8ff !important; }
         .sticky-note.color-green  { background: #c3f5d3 !important; }
         .sticky-note.color-purple { background: #e8d0ff !important; }
         
-        /* 1. VISUAL COM TACHINHA (Borda inferior direita levantada) */
-        .sticky-note.pin-tack {
-            transform: rotate(-1.5deg);
-        }
-        
-        .sticky-note.pin-tack::after {
-            content: "";
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, transparent 45%, rgba(0, 0, 0, 0.18) 50%, rgba(200, 180, 150, 0.8) 100%);
-            border-radius: 0 0 12px 0;
-            box-shadow: -3px -3px 5px rgba(0, 0, 0, 0.1);
-            pointer-events: none;
-        }
-        
-        .sticky-note.pin-tack::before {
-            content: "\f08d";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%) rotate(12deg);
-            font-size: 1.3rem;
-            color: #e74c3c;
-            text-shadow: 2px 3px 4px rgba(0, 0, 0, 0.35);
-            z-index: 5;
-            pointer-events: none;
-        }
-        
-        /* 2. VISUAL COM CLIPE (Maço de folhas empilhadas e desalinhadas) */
-        .sticky-note.pin-clip {
-            transform: rotate(0.5deg);
-            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.12);
-        }
-        
-        /* Folha Roxa/Rosa desalinhada atrás */
-        .sticky-note.pin-clip::before {
+        /* Maço de folhas desalinhadas (Comum para Tachinha e Clipe) */
+        .sticky-note::before {
             content: "";
             position: absolute;
             top: -4px;
@@ -491,15 +453,14 @@
             width: 100%;
             height: 100%;
             background: #e8d0ff;
-            border-radius: 2px;
-            transform: rotate(-4deg);
+            border-radius: 4px;
+            transform: rotate(-3deg);
             box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.1);
             z-index: -2;
             pointer-events: none;
         }
         
-        /* Folha Verde desalinhada atrás */
-        .sticky-note.pin-clip::after {
+        .sticky-note::after {
             content: "";
             position: absolute;
             top: 2px;
@@ -507,24 +468,35 @@
             width: 100%;
             height: 100%;
             background: #c3f5d3;
-            border-radius: 2px;
+            border-radius: 4px;
             transform: rotate(3deg);
             box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.08);
             z-index: -1;
             pointer-events: none;
         }
         
-        /* Clipe Metálico Prateado */
-        .sticky-clip-element {
+        /* Fixadores Superiores */
+        .sticky-pin-element {
             position: absolute;
-            top: -12px;
+            top: -10px;
             left: 50%;
-            transform: translateX(-50%) rotate(-25deg);
-            font-size: 1.8rem;
-            color: #555;
-            text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
+            transform: translateX(-50%);
             z-index: 10;
             pointer-events: none;
+        }
+        
+        .sticky-pin-element.fa-thumbtack {
+            font-size: 1.3rem;
+            color: #e74c3c;
+            text-shadow: 2px 3px 4px rgba(0, 0, 0, 0.35);
+            transform: translateX(-50%) rotate(12deg);
+        }
+        
+        .sticky-pin-element.fa-paperclip {
+            font-size: 1.7rem;
+            color: #555555;
+            text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.25);
+            transform: translateX(-50%) rotate(-25deg);
         }
         
         .sticky-note textarea {
@@ -2409,20 +2381,16 @@
             filteredIdeas.forEach((item) => {
                 const realIndex = ideas.indexOf(item);
                 const colorClass = `color-${item.color || 'yellow'}`;
-                const pinClass = item.pinType === 'clip' ? 'pin-clip' : 'pin-tack';
-        
-                const clipHtml = item.pinType === 'clip' 
-                    ? `<i class="fa-solid fa-paperclip sticky-clip-element"></i>` 
-                    : '';
+                const pinIcon = item.pinType === 'clip' ? 'fa-paperclip' : 'fa-thumbtack';
         
                 const note = document.createElement('div');
-                note.className = `sticky-note ${colorClass} ${pinClass}`;
+                note.className = `sticky-note ${colorClass}`;
         
                 note.innerHTML = `
-                    ${clipHtml}
-                    <textarea onchange="ideas[${realIndex}].text = this.value; saveIdeas();" placeholder="Escreva sua ideia...">${item.text || ''}</textarea>
+                    <i class="fa-solid ${pinIcon} sticky-pin-element"></i>
+                    <textarea oninput="ideas[${realIndex}].text = this.value; saveIdeas();" placeholder="Escreva sua ideia...">${item.text || ''}</textarea>
                     <div class="sticky-footer">
-                        <select onchange="ideas[${realIndex}].color = this.value; saveIdeas(); renderIdeas();" style="font-size:0.75rem; border:none; background:transparent; cursor:pointer;">
+                        <select onchange="updateNoteColor(${realIndex}, this.value)" style="font-size:0.75rem; border:none; background:transparent; cursor:pointer;">
                             <option value="yellow" ${item.color === 'yellow' ? 'selected' : ''}>🟡 Amarelo</option>
                             <option value="pink" ${item.color === 'pink' ? 'selected' : ''}>🌸 Rosa</option>
                             <option value="blue" ${item.color === 'blue' ? 'selected' : ''}>🔹 Azul</option>
@@ -2437,6 +2405,14 @@
                 `;
                 container.appendChild(note);
             });
+        }
+        
+        function updateNoteColor(index, colorValue) {
+            if (ideas[index]) {
+                ideas[index].color = colorValue;
+                saveIdeas();
+                renderIdeas();
+            }
         }
         
         function toggleStickyPin(index) {
@@ -2508,31 +2484,27 @@
             container.innerHTML = '';
             svgCanvas.innerHTML = '';
         
-            // Carrega relacionamentos salvos no localStorage
             const savedRel = localStorage.getItem('diario_relacionamentos');
             relationships = savedRel ? JSON.parse(savedRel) : [];
         
-            // Filtra personagens e locais associados à história selecionada
+            // Mapeia personagens e locais trazendo as imagens cadastradas
             const filteredChars = characters.filter(c => currentIdeasStoryId === 'global' || c.storyId === currentIdeasStoryId);
             const filteredLocs = locations.filter(l => currentIdeasStoryId === 'global' || l.storyId === currentIdeasStoryId);
         
             const allNodes = [
-                ...filteredChars.map(c => ({ id: c.id, name: c.name, img: c.avatar, type: 'person' })),
-                ...filteredLocs.map(l => ({ id: l.id, name: l.name, img: (l.photos && l.photos[0]) || '', type: 'location' }))
+                ...filteredChars.map(c => ({ id: String(c.id), name: c.name, img: c.avatar || '', type: 'person' })),
+                ...filteredLocs.map(l => ({ id: String(l.id), name: l.name, img: (l.photos && l.photos[0]) || '', type: 'location' }))
             ];
         
             if (allNodes.length === 0) {
-                container.innerHTML = `
-                    <p style="text-align:center; padding: 40px; color: var(--text-muted); width: 100%;">
-                        Cadastre personagens ou locais nesta história para visualizá-los no mural de relacionamentos!
-                    </p>`;
+                container.innerHTML = `<p style="text-align:center; padding: 40px; color: var(--text-muted); width: 100%;">Cadastre personagens ou locais nesta história para visualizá-los no mural de relacionamentos!</p>`;
                 return;
             }
         
-            // Renderiza cada card arrastável
             allNodes.forEach((node, idx) => {
                 const nodeEl = document.createElement('div');
                 nodeEl.className = 'flowchart-node-card';
+                nodeEl.dataset.nodeId = node.id;
                 nodeEl.style.cssText = `
                     position: absolute;
                     left: ${40 + (idx % 3) * 180}px;
@@ -2548,7 +2520,7 @@
                     border: 2px solid var(--border-style, #e2d9cc);
                 `;
         
-                const imgPlaceholder = node.img 
+                const imgHtml = node.img 
                     ? `<img src="${node.img}" style="width: 100%; height: 110px; object-fit: cover; border-radius: 12px; pointer-events: none;">` 
                     : `<div style="width: 100%; height: 110px; background: #f5f0eb; border-radius: 12px; display:flex; align-items:center; justify-content:center; color:#b0a090;">
                          <i class="fa-solid fa-${node.type === 'person' ? 'user' : 'map-pin'} fa-2x"></i>
@@ -2558,10 +2530,9 @@
                     <div style="font-weight: 700; font-size: 0.8rem; background: #f0ebe5; padding: 2px 6px; border-radius: 10px; margin-bottom: 6px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
                         ${node.name}
                     </div>
-                    ${imgPlaceholder}
+                    ${imgHtml}
                 `;
         
-                // Torna o card arrastável por Touch e Mouse
                 makeElementDraggable(nodeEl, () => drawRelationshipLines());
                 container.appendChild(nodeEl);
             });
@@ -2570,7 +2541,7 @@
         }
         
         /**
-         * Habilita evento de Drag & Drop nos cards (Suporte a Desktop e Celular/Touch)
+         * Habilita evento de Drag & Drop nos cards (Desktop e Mobile/Touch)
          */
         function makeElementDraggable(elmnt, onDragCallback) {
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -2628,30 +2599,31 @@
         }
         
         /**
-         * Traça as linhas SVG e posiciona as caixas de rotulagem entre os cards
+         * Desenha as linhas coloridas e os rótulos entre os elementos conectados
          */
         function drawRelationshipLines() {
             const svgCanvas = document.getElementById('relationshipSvgCanvas');
             if (!svgCanvas) return;
             svgCanvas.innerHTML = '';
         
-            const nodes = document.querySelectorAll('.flowchart-node-card');
-            if (nodes.length < 2) return;
+            relationships.forEach((rel) => {
+                const n1 = document.querySelector(`.flowchart-node-card[data-node-id="${rel.from}"]`);
+                const n2 = document.querySelector(`.flowchart-node-card[data-node-id="${rel.to}"]`);
         
-            relationships.forEach(rel => {
-                const n1 = nodes[0];
-                const n2 = nodes[1];
+                // Se não houver IDs específicos gravados, usa os 2 primeiros nós como fallback
+                const nodeA = n1 || document.querySelectorAll('.flowchart-node-card')[0];
+                const nodeB = n2 || document.querySelectorAll('.flowchart-node-card')[1];
         
-                if (!n1 || !n2) return;
+                if (!nodeA || !nodeB || nodeA === nodeB) return;
         
-                const x1 = n1.offsetLeft + n1.offsetWidth / 2;
-                const y1 = n1.offsetTop + n1.offsetHeight / 2;
-                const x2 = n2.offsetLeft + n2.offsetWidth / 2;
-                const y2 = n2.offsetTop + n2.offsetHeight / 2;
+                const x1 = nodeA.offsetLeft + nodeA.offsetWidth / 2;
+                const y1 = nodeA.offsetTop + nodeA.offsetHeight / 2;
+                const x2 = nodeB.offsetLeft + nodeB.offsetWidth / 2;
+                const y2 = nodeB.offsetTop + nodeB.offsetHeight / 2;
         
                 const lineColor = rel.color || '#40c057';
         
-                // Linha visual SVG
+                // Linha visual em SVG
                 const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                 line.setAttribute('x1', x1);
                 line.setAttribute('y1', y1);
@@ -2662,14 +2634,14 @@
                 line.setAttribute('stroke-linecap', 'round');
                 svgCanvas.appendChild(line);
         
-                // Caixa de texto/Rótulo no centro da linha
+                // Rótulo da conexão centralizado na linha
                 const midX = (x1 + x2) / 2;
                 const midY = (y1 + y2) / 2;
         
                 const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                rect.setAttribute('x', midX - 40);
+                rect.setAttribute('x', midX - 45);
                 rect.setAttribute('y', midY - 12);
-                rect.setAttribute('width', '80');
+                rect.setAttribute('width', '90');
                 rect.setAttribute('height', '24');
                 rect.setAttribute('rx', '8');
                 rect.setAttribute('fill', lineColor);
@@ -2690,14 +2662,25 @@
         }
         
         /**
-         * Adiciona uma nova conexão ao clicar no botão "Nova Conexão"
+         * Cria uma nova conexão permitindo escolher o tipo de vínculo
          */
         function addRelationshipConnection() {
             const label = prompt('Digite o tipo de relacionamento (Ex: Família, Inimigos, Amantes, Reside em):', 'Família');
             if (!label || !label.trim()) return;
         
+            const nodes = document.querySelectorAll('.flowchart-node-card');
+            if (nodes.length < 2) {
+                alert('É necessário ter pelo menos 2 elementos (personagens ou locais) no mural para criar um relacionamento.');
+                return;
+            }
+        
+            const idFrom = nodes[0].dataset.nodeId;
+            const idTo = nodes[1].dataset.nodeId;
+        
             const colors = ['#e74c3c', '#40c057', '#3498db', '#9b59b6', '#f1c40f'];
             relationships.push({
+                from: idFrom,
+                to: idTo,
                 label: label.trim(),
                 color: colors[Math.floor(Math.random() * colors.length)]
             });
