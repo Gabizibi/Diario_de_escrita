@@ -415,145 +415,137 @@
         }
 
         /* ==========================================
-           POST-ITS: EFEITO MAÇO DE PAPÉIS ESPALHADOS
+           MURAL DE IDEIAS: POST-ITS EMPILHADOS
            ========================================== */
         
-        .sticky-note {
-            background-color: #fff8a6;
-            padding: 24px 14px 10px 14px;
-            border-radius: 4px;
-            box-shadow: 3px 5px 12px rgba(0, 0, 0, 0.15);
+        /* Container Envolvente para manter as camadas relativas */
+        .sticky-note-wrapper {
             position: relative;
+            display: inline-block;
+            margin: 20px;
+        }
+        
+        /* Camadas Decorativas do Maço de Fundo */
+        .sticky-note-wrapper .layer {
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            pointer-events: none;
+        }
+        
+        .sticky-note-wrapper .layer-1 { background-color: var(--note-purple, #bdb2ff); transform: rotate(-12deg) scale(0.98); }
+        .sticky-note-wrapper .layer-2 { background-color: var(--note-pink, #ffc6ff); transform: rotate(-7deg) scale(0.99); }
+        .sticky-note-wrapper .layer-3 { background-color: var(--note-yellow, #fbf8cc); transform: rotate(-3deg); }
+        .sticky-note-wrapper .layer-4 { background-color: var(--note-green, #b9fbc0); transform: rotate(5deg) scale(1.01); }
+        
+        /* Folha Principal da Frente (Editável e Redimensionável) */
+        .sticky-note-main {
+            position: relative;
+            width: 260px;
+            height: 240px;
+            min-width: 180px;
+            min-height: 160px;
+            max-width: 500px;
+            max-height: 500px;
+            resize: both !important; /* Habilita a alça de puxar */
+            overflow: hidden !important; /* Exigido pelo navegador para mostrar o resize */
+            background-color: var(--note-yellow, #fbf8cc);
+            border-radius: 12px;
+            padding: 20px 16px 12px 16px;
+            box-sizing: border-box;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            width: 240px;
-            height: 220px;
-            
-            /* Redimensionamento ativo mantendo a alça visível no canto */
-            resize: both !important;
-            overflow: hidden !important;
-            
-            min-width: 180px;
-            min-height: 160px;
-            margin: 20px; /* Espaço para as folhas de baixo aparecerem */
-            transform: rotate(-1.5deg);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            z-index: 2;
+            transition: background-color 0.3s ease;
         }
         
-        .sticky-note:hover {
-            z-index: 10;
-            transform: scale(1.02) rotate(0deg);
-        }
-        
-        /* Folha 1 do Fundo (Desalinhada para a esquerda/roxa) */
-        .sticky-note::before {
-            content: "";
-            position: absolute;
-            top: -4px;
-            left: -8px;
-            width: 100%;
-            height: 100%;
-            background-color: #e8d0ff;
-            border-radius: 4px;
-            transform: rotate(-5deg);
-            box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.08);
-            z-index: -2;
-            pointer-events: none;
-        }
-        
-        /* Folha 2 do Fundo (Desalinhada para a direita/verde) */
-        .sticky-note::after {
-            content: "";
-            position: absolute;
-            top: 2px;
-            right: -8px;
-            width: 100%;
-            height: 100%;
-            background-color: #c3f5d3;
-            border-radius: 4px;
-            transform: rotate(4deg);
-            box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.06);
-            z-index: -1;
-            pointer-events: none;
-        }
-        
-        /* PALETA DA FOLHA PRINCIPAL DA FRENTE */
-        .sticky-note.color-yellow { background-color: #fff8a6 !important; }
-        .sticky-note.color-pink   { background-color: #ffcfdf !important; }
-        .sticky-note.color-blue   { background-color: #d0e8ff !important; }
-        .sticky-note.color-green  { background-color: #c3f5d3 !important; }
-        .sticky-note.color-purple { background-color: #e8d0ff !important; }
-        
-        /* FIXADORES SUPERIORES (Tachinha/Clipe) */
+        /* Elemento do Clipe Metálico Superior */
         .sticky-pin-element {
             position: absolute;
-            top: 4px;
+            top: -18px;
             left: 50%;
-            transform: translateX(-50%);
-            z-index: 20;
+            transform: translateX(-50%) rotate(15deg);
+            z-index: 10;
             pointer-events: none;
         }
         
-        .sticky-pin-element.fa-thumbtack {
-            font-size: 1.3rem;
-            color: #e74c3c;
-            text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
-            transform: translateX(-50%) rotate(12deg);
+        .paperclip-svg-icon {
+            width: 42px;
+            height: 70px;
+            filter: drop-shadow(2px 3px 4px rgba(0, 0, 0, 0.22));
         }
         
-        .sticky-pin-element.fa-paperclip {
-            font-size: 1.6rem;
-            color: #333333;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-            transform: translateX(-50%) rotate(-25deg);
-        }
-        
-        /* ÁREA DE TEXTO TRANSPARENTE */
-        .sticky-note textarea {
-            width: 100%;
-            height: 100%;
-            flex-grow: 1;
-            background: transparent !important;
-            border: none !important;
-            outline: none !important;
-            resize: none !important;
-            font-size: 0.95rem;
-            color: #333;
-            font-weight: 600;
-            font-family: inherit;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-        
-        /* RODAPÉ DO POST-IT */
-        .sticky-footer {
+        /* Barra Superior de Bolinhas para Escolha de Cor */
+        .sticky-color-toolbar {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            color: #666;
-            border-top: 1px dashed rgba(0, 0, 0, 0.15);
-            padding-top: 6px;
-            margin-top: 4px;
+            gap: 6px;
+            justify-content: flex-end;
+            margin-bottom: 8px;
             z-index: 5;
         }
         
-        .sticky-footer button,
-        .sticky-footer select,
-        .sticky-pin-btn {
+        .color-dot-btn {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease;
+        }
+        
+        .color-dot-btn:hover {
+            transform: scale(1.25);
+        }
+        
+        .color-dot-btn.dot-blue   { background-color: #a0c4ff; }
+        .color-dot-btn.dot-green  { background-color: #b9fbc0; }
+        .color-dot-btn.dot-yellow { background-color: #fbf8cc; }
+        .color-dot-btn.dot-purple { background-color: #bdb2ff; }
+        .color-dot-btn.dot-pink   { background-color: #ffc6ff; }
+        
+        /* Área de Texto Transparente */
+        .sticky-note-main textarea {
+            width: 100%;
+            flex: 1;
+            border: none !important;
+            outline: none !important;
+            background: transparent !important;
+            resize: none !important;
+            font-size: 0.95rem;
+            color: #333333;
+            line-height: 1.5;
+            font-family: inherit;
+            font-weight: 600;
+        }
+        
+        .sticky-note-main textarea::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Rodapé Limpo Apenas com Lixeira e Contador */
+        .sticky-action-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px dashed rgba(0, 0, 0, 0.12);
+            padding-top: 6px;
+            margin-top: 4px;
+        }
+        
+        .sticky-action-footer button {
             background: transparent !important;
             border: none !important;
-            box-shadow: none !important;
-            outline: none !important;
-            padding: 0 4px !important;
             cursor: pointer;
             font-size: 0.85rem;
             color: var(--text-muted, #8c7365);
+            transition: color 0.2s;
         }
         
-        .sticky-footer button:hover,
-        .sticky-pin-btn:hover {
+        .sticky-action-footer button:hover {
             color: var(--accent-pink, #e77f8d);
         }
         /* FICHA DE PERSONAGEM */
@@ -2388,11 +2380,11 @@
         }
         
         /* ==========================================
-           BANCO DE IDEIAS: RENDERIZAÇÃO E TROCA DE CORES
+           BANCO DE IDEIAS: RENDERIZAÇÃO & SUPABASE
            ========================================== */
         
-                /**
-         * Renderiza os post-its atribuindo um atributo data-index real para cada elemento
+        /**
+         * Renderiza os post-its com o maço empilhado em camadas, bolinhas de cor e lixeira
          */
         function renderIdeas() {
             const container = document.getElementById('corkboardContainer');
@@ -2401,89 +2393,134 @@
             loadIdeasStoryOptions();
             container.innerHTML = '';
         
-            ideas.forEach((item, realIndex) => {
-                // Aplica o filtro da história ativa
-                if (currentIdeasStoryId !== 'global' && (item.storyId || 'global') !== currentIdeasStoryId) {
-                    return;
-                }
+            // Filtra post-its pela história selecionada
+            const filteredIdeas = ideas.filter(item => {
+                if (currentIdeasStoryId === 'global') return true;
+                return (item.storyId || 'global') === currentIdeasStoryId;
+            });
         
-                const colorClass = `color-${item.color || 'yellow'}`;
-                const pinIcon = item.pinType === 'clip' ? 'fa-paperclip' : 'fa-thumbtack';
+            filteredIdeas.forEach((item) => {
+                const realIndex = ideas.indexOf(item);
+                const currentColor = item.color || '#b9fbc0'; // Verde pastel padrão
         
-                const note = document.createElement('div');
-                note.className = `sticky-note ${colorClass}`;
-                note.setAttribute('data-id', realIndex); // Identificador preciso
+                const wrapper = document.createElement('div');
+                wrapper.className = 'sticky-note-wrapper';
         
-                note.innerHTML = `
-                    <i class="fa-solid ${pinIcon} sticky-pin-element"></i>
-                    <textarea oninput="ideas[${realIndex}].text = this.value; saveIdeas();" placeholder="Escreva sua ideia...">${item.text || ''}</textarea>
-                    <div class="sticky-footer">
-                        <select onchange="updateNoteColor(${realIndex}, this.value)">
-                            <option value="yellow" ${item.color === 'yellow' ? 'selected' : ''}>🟡 Amarelo</option>
-                            <option value="pink" ${item.color === 'pink' ? 'selected' : ''}>🌸 Rosa</option>
-                            <option value="blue" ${item.color === 'blue' ? 'selected' : ''}>🔹 Azul</option>
-                            <option value="green" ${item.color === 'green' ? 'selected' : ''}>🌿 Verde</option>
-                            <option value="purple" ${item.color === 'purple' ? 'selected' : ''}>🦄 Roxo</option>
-                        </select>
-                        <button type="button" class="sticky-pin-btn" onclick="toggleStickyPin(${realIndex})" title="Alternar Fixador">
-                            <i class="fa-solid ${item.pinType === 'clip' ? 'fa-paperclip' : 'fa-thumbtack'}"></i>
-                        </button>
-                        <i class="fa-solid fa-trash" style="cursor:pointer; color: var(--accent-pink, #e77f8d);" onclick="deleteStickyNote(${realIndex})" title="Excluir bilhete"></i>
+                wrapper.innerHTML = `
+                    <!-- Camadas Decorativas do Maço de Fundo -->
+                    <div class="layer layer-1"></div>
+                    <div class="layer layer-2"></div>
+                    <div class="layer layer-3"></div>
+                    <div class="layer layer-4"></div>
+        
+                    <!-- Clipe Metálico Nativo em SVG -->
+                    <div class="sticky-pin-element">
+                        <svg class="paperclip-svg-icon" viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 30 140 L 30 50 A 20 20 0 0 1 70 50 L 70 150 A 30 30 0 0 1 10 150 L 10 60 A 40 40 0 0 1 90 60 L 90 130" 
+                                  stroke="#b0b5ba" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M 30 140 L 30 50 A 20 20 0 0 1 70 50 L 70 150 A 30 30 0 0 1 10 150 L 10 60 A 40 40 0 0 1 90 60 L 90 130" 
+                                  stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+                        </svg>
+                    </div>
+        
+                    <!-- Folha Principal (Editável, Redimensionável e Colorida) -->
+                    <div class="sticky-note-main" id="note-main-${realIndex}" style="background-color: ${currentColor};">
+                        <!-- Seletor de Cores por Bolinhas -->
+                        <div class="sticky-color-toolbar">
+                            <button type="button" class="color-dot-btn dot-blue" onclick="updateNoteColor(${realIndex}, '#a0c4ff')" title="Azul"></button>
+                            <button type="button" class="color-dot-btn dot-green" onclick="updateNoteColor(${realIndex}, '#b9fbc0')" title="Verde"></button>
+                            <button type="button" class="color-dot-btn dot-yellow" onclick="updateNoteColor(${realIndex}, '#fbf8cc')" title="Amarelo"></button>
+                            <button type="button" class="color-dot-btn dot-purple" onclick="updateNoteColor(${realIndex}, '#bdb2ff')" title="Roxo"></button>
+                            <button type="button" class="color-dot-btn dot-pink" onclick="updateNoteColor(${realIndex}, '#ffc6ff')" title="Rosa"></button>
+                        </div>
+        
+                        <!-- Área de Texto do Post-it -->
+                        <textarea onchange="ideas[${realIndex}].text = this.value; saveIdeas();" placeholder="Escreva sua ideia aqui...">${item.text || ''}</textarea>
+        
+                        <!-- Rodapé Limpo com Identificador e Lixeira -->
+                        <div class="sticky-action-footer">
+                            <span style="font-size: 0.75rem; opacity: 0.6; font-weight: 700;">#${realIndex + 1}</span>
+                            <button type="button" onclick="deleteStickyNote(${realIndex})" title="Excluir Post-it">
+                                <i class="fa-solid fa-trash" style="color: var(--accent-pink, #e77f8d);"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
-                container.appendChild(note);
+        
+                container.appendChild(wrapper);
             });
         }
         
         /**
-         * Atualiza a cor no array global e troca a classe CSS diretamente no elemento do DOM
+         * Atualiza a cor de fundo do post-it instantaneamente e salva no banco
          */
-        function updateNoteColor(index, newColor) {
+        function updateNoteColor(index, colorHex) {
             if (!ideas[index]) return;
         
-            // 1. Salva no estado e no localStorage
-            ideas[index].color = newColor;
-            saveIdeas();
-        
-            // 2. Localiza os cards no container e atualiza as classes visuais do post-it selecionado
-            const container = document.getElementById('corkboardContainer');
-            if (container) {
-                const notes = container.querySelectorAll('.sticky-note');
-                if (notes[index]) {
-                    notes[index].classList.remove('color-yellow', 'color-pink', 'color-blue', 'color-green', 'color-purple');
-                    notes[index].classList.add(`color-${newColor}`);
-                }
+            ideas[index].color = colorHex;
+            
+            const noteMain = document.getElementById(`note-main-${index}`);
+            if (noteMain) {
+                noteMain.style.backgroundColor = colorHex;
             }
-        }
         
-        function toggleStickyPin(index) {
-            if (!ideas[index]) return;
-            ideas[index].pinType = (ideas[index].pinType === 'clip') ? 'tack' : 'clip';
             saveIdeas();
-            renderIdeas();
         }
         
+        /**
+         * Adiciona um novo post-it ao array e renderiza
+         */
         function addStickyNote() {
             ideas.push({
                 text: 'Nova ideia...',
-                pinType: 'tack',
-                color: 'yellow',
+                color: '#fbf8cc',
                 storyId: currentIdeasStoryId
             });
             saveIdeas();
             renderIdeas();
         }
         
+        /**
+         * Exclui um post-it do array
+         */
         function deleteStickyNote(index) {
-            ideas.splice(index, 1);
-            saveIdeas();
-            renderIdeas();
+            if (confirm('Deseja excluir este post-it?')) {
+                ideas.splice(index, 1);
+                saveIdeas();
+                renderIdeas();
+            }
         }
         
-        function saveIdeas() {
+        /**
+         * Salva no localStorage e sincroniza no Supabase
+         */
+        async function saveIdeas() {
+            // 1. Salva no localStorage
             localStorage.setItem('diario_ideias', JSON.stringify(ideas));
+        
+            // 2. Sincroniza no Supabase
+            if (supabaseClient) {
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (session) {
+                        const userId = session.user.id;
+                        await supabaseClient
+                            .from('user_data')
+                            .upsert({ 
+                                user_id: userId, 
+                                ideas_data: ideas,
+                                updated_at: new Date().toISOString()
+                            }, { onConflict: 'user_id' });
+                    }
+                } catch (err) {
+                    console.error("Erro ao sincronizar no Supabase:", err);
+                }
+            }
         }
         
+        /**
+         * Altera a aba ativa do Banco de Ideias (Mural / Fluxograma)
+         */
         function switchIdeasTab(tabName) {
             const btnPostits = document.getElementById('tabBtnPostits');
             const btnFlowchart = document.getElementById('tabBtnFlowchart');
