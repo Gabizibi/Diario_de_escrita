@@ -1043,14 +1043,23 @@
             .btn { padding: 6px 10px !important; font-size: 0.8rem !important; gap: 4px !important; }
             .change-banner-btn { padding: 4px 8px !important; font-size: 0.75rem !important; }
         
-            /* Ajuste responsivo da Ficha de Personagem para empilhar no celular */
+            /* Empilhamento vertical da Ficha no celular */
             .sheet-grid {
-                grid-template-columns: 1fr !important;
+                display: flex !important;
+                flex-direction: column !important;
                 gap: 16px !important;
             }
+            
             .left-col, 
             .right-col {
                 width: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+        
+            /* Reordenação no celular: Coloca o card do Spotify (1º da coluna direita) no topo */
+            .right-col .card:first-child {
+                order: -1 !important;
             }
         }
         /* VINCULAÇÃO DE MUNDO & LOCAIS NA HISTÓRIA */
