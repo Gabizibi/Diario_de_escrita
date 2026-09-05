@@ -415,14 +415,14 @@
         }
 
         /* ==========================================
-           POST-ITS: REDIMENSIONAMENTO, CORES E LAYOUT
+           POST-ITS: EFEITO MAÇO DE PAPÉIS ESPALHADOS
            ========================================== */
         
         .sticky-note {
-            background-color: #fff8a6; /* Cor padrão amarelo */
+            background-color: #fff8a6;
             padding: 24px 14px 10px 14px;
             border-radius: 4px;
-            box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.18);
+            box-shadow: 3px 5px 12px rgba(0, 0, 0, 0.15);
             position: relative;
             display: flex;
             flex-direction: column;
@@ -430,22 +430,55 @@
             width: 240px;
             height: 220px;
             
-            /* Habilita o redimensionamento nativo e exibe a alça no canto */
+            /* Redimensionamento ativo mantendo a alça visível no canto */
             resize: both !important;
             overflow: hidden !important;
             
             min-width: 180px;
             min-height: 160px;
-            margin: 12px;
+            margin: 20px; /* Espaço para as folhas de baixo aparecerem */
             transform: rotate(-1.5deg);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-
+        
         .sticky-note:hover {
             z-index: 10;
+            transform: scale(1.02) rotate(0deg);
         }
-
-        /* PALETA DE CORES COM MÁXIMA PRIORIDADE */
+        
+        /* Folha 1 do Fundo (Desalinhada para a esquerda/roxa) */
+        .sticky-note::before {
+            content: "";
+            position: absolute;
+            top: -4px;
+            left: -8px;
+            width: 100%;
+            height: 100%;
+            background-color: #e8d0ff;
+            border-radius: 4px;
+            transform: rotate(-5deg);
+            box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.08);
+            z-index: -2;
+            pointer-events: none;
+        }
+        
+        /* Folha 2 do Fundo (Desalinhada para a direita/verde) */
+        .sticky-note::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            right: -8px;
+            width: 100%;
+            height: 100%;
+            background-color: #c3f5d3;
+            border-radius: 4px;
+            transform: rotate(4deg);
+            box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.06);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* PALETA DA FOLHA PRINCIPAL DA FRENTE */
         .sticky-note,
         .sticky-note.color-yellow { background-color: #fff8a6 !important; }
         .sticky-note.color-pink   { background-color: #ffcfdf !important; }
@@ -471,10 +504,10 @@
         }
         
         .sticky-pin-element.fa-paperclip {
-            font-size: 1.5rem;
-            color: #4a4a4a;
+            font-size: 1.6rem;
+            color: #333333;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-            transform: translateX(-50%) rotate(-20deg);
+            transform: translateX(-50%) rotate(-25deg);
         }
         
         /* ÁREA DE TEXTO TRANSPARENTE */
