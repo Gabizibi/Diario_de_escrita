@@ -2431,14 +2431,27 @@
             });
         }
         
-        /**
-         * Atualiza a cor da nota no array global e re-renderiza o mural instantaneamente
+                /**
+         * Atualiza a cor da nota no array global, grava no localStorage e aplica a cor na tela
          */
         function updateNoteColor(index, newColor) {
             if (!ideas[index]) return;
+        
+            // 1. Atualiza no estado global
             ideas[index].color = newColor;
             saveIdeas();
-            renderIdeas();
+        
+            // 2. Localiza o post-it no DOM e troca a classe visual imediatamente
+            const corkboard = document.getElementById('corkboardContainer');
+            if (corkboard) {
+                const notes = corkboard.querySelectorAll('.sticky-note');
+                if (notes[index]) {
+                    // Remove classes de cor antigas
+                    notes[index].classList.remove('color-yellow', 'color-pink', 'color-blue', 'color-green', 'color-purple');
+                    // Adiciona a nova cor escolhida
+                    notes[index].classList.add(`color-${newColor}`);
+                }
+            }
         }
         
         function toggleStickyPin(index) {
