@@ -419,7 +419,6 @@
            ========================================== */
         
         .sticky-note {
-            background: #fff8a6;
             padding: 24px 14px 10px 14px;
             border-radius: 4px;
             box-shadow: 4px 6px 14px rgba(0, 0, 0, 0.18);
@@ -429,8 +428,8 @@
             justify-content: space-between;
             width: 240px;
             height: 220px;
-            resize: both !important; /* Habilita a alça no canto inferior direito */
-            overflow: visible !important; /* Mantém os fixadores no topo e esconde barras de rolagem */
+            resize: both !important; /* Habilita a alça de redimensionar */
+            overflow: auto !important; /* Permite que a alça seja clicável */
             min-width: 180px;
             min-height: 160px;
             margin: 16px;
@@ -441,13 +440,15 @@
         .sticky-note:nth-child(even) { transform: rotate(1.5deg); }
         .sticky-note:nth-child(3n) { transform: rotate(-2deg); }
         
-        /* Remove barras de rolagem indesejadas */
+        /* Oculta barras de rolagem cinzas indesejadas */
         .sticky-note::-webkit-scrollbar {
             display: none;
+            width: 0;
+            height: 0;
         }
         
-        /* PALETA DE CORES (Força a cor de fundo diretamente no card principal) */
-        .sticky-note.color-yellow { background-color: #fff8a6 !important; }
+        /* PALETA DE CORES (Garante sobreposição prioritária) */
+        .sticky-note, .sticky-note.color-yellow { background-color: #fff8a6 !important; }
         .sticky-note.color-pink   { background-color: #ffcfdf !important; }
         .sticky-note.color-blue   { background-color: #d0e8ff !important; }
         .sticky-note.color-green  { background-color: #c3f5d3 !important; }
@@ -487,7 +488,7 @@
         /* FIXADORES SUPERIORES SEM CORTE */
         .sticky-pin-element {
             position: absolute;
-            top: -14px;
+            top: 4px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 20;
@@ -521,11 +522,11 @@
             color: #333;
             font-weight: 600;
             font-family: inherit;
-            margin-top: 8px;
+            margin-top: 12px;
             overflow: hidden;
         }
         
-        /* RODAPÉ: REMOÇÃO DA BORDA E FUNDO FEIO DOS BOTÕES E SELECT */
+        /* RODAPÉ: REMOÇÃO DA BORDA E FUNDO DOS BOTÕES E SELECT */
         .sticky-footer {
             display: flex;
             justify-content: space-between;
@@ -2402,13 +2403,13 @@
                 return (item.storyId || 'global') === currentIdeasStoryId;
             });
         
-            filteredIdeas.forEach((item) => {
-                const realIndex = ideas.indexOf(item);
+            filteredIdeas.forEach((item, realIndex) => {
                 const colorClass = `color-${item.color || 'yellow'}`;
                 const pinIcon = item.pinType === 'clip' ? 'fa-paperclip' : 'fa-thumbtack';
         
                 const note = document.createElement('div');
                 note.className = `sticky-note ${colorClass}`;
+                note.dataset.index = realIndex;
         
                 note.innerHTML = `
                     <i class="fa-solid ${pinIcon} sticky-pin-element"></i>
@@ -2431,26 +2432,21 @@
             });
         }
         
-                /**
-         * Atualiza a cor da nota no array global, grava no localStorage e aplica a cor na tela
+        /**
+         * Atualiza a cor no array e altera a classe do elemento no DOM em tempo real
          */
         function updateNoteColor(index, newColor) {
             if (!ideas[index]) return;
         
-            // 1. Atualiza no estado global
             ideas[index].color = newColor;
             saveIdeas();
         
-            // 2. Localiza o post-it no DOM e troca a classe visual imediatamente
-            const corkboard = document.getElementById('corkboardContainer');
-            if (corkboard) {
-                const notes = corkboard.querySelectorAll('.sticky-note');
-                if (notes[index]) {
-                    // Remove classes de cor antigas
-                    notes[index].classList.remove('color-yellow', 'color-pink', 'color-blue', 'color-green', 'color-purple');
-                    // Adiciona a nova cor escolhida
-                    notes[index].classList.add(`color-${newColor}`);
-                }
+            const noteEl = document.querySelector(`.sticky-note[data-index="${index}"]`);
+            if (noteEl) {
+                noteEl.classList.remove('color-yellow', 'color-pink', 'color-blue', 'color-green', 'color-purple');
+                noteEl.classList.add(`color-${newColor}`);
+            } else {
+                renderIdeas();
             }
         }
         
