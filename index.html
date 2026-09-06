@@ -1113,99 +1113,88 @@
             margin-bottom: 4px;
         }
 
-        /* WORKSPACE ESTILO NOTION */
-        .notion-workspace {
+        /* ==========================================
+           EDITOR DE CENAS REORDENÁVEIS (CAPÍTULOS)
+           ========================================== */
+        .scenes-workspace {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
-
-        .notion-blocks-container {
+        
+        .scenes-container {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 16px;
             width: 100%;
-            background-color: #ffffff;
-            border: 2px solid var(--border-style, #dcd3c1);
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02), 0 2px 6px rgba(0, 0, 0, 0.04);
         }
-
-        .notion-block {
+        
+        .scene-card-block {
             position: relative;
+            background: #ffffff;
+            border: 2px solid var(--border-style, #d2c0a8);
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .scene-card-block.dragging {
+            opacity: 0.5;
+            border-style: dashed;
+            background-color: #fcf8f2;
+        }
+        
+        .scene-card-header {
             display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            padding: 6px 8px;
-            border-radius: 6px;
-            background: transparent;
-            transition: background-color 0.2s ease;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-style, #d2c0a8);
         }
-
-        .notion-block:hover { background-color: #fcf9f2; }
-
-        .notion-block.dragging {
-            opacity: 0.4;
-            background-color: #ffffff;
-            border: 1px dashed var(--accent-brown, #8b5a2b);
-        }
-
-        .notion-block-handle {
+        
+        .scene-drag-handle {
+            cursor: grab;
+            color: var(--accent-brown, #a86b4a);
+            font-weight: 700;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 4px;
-            opacity: 0.3;
-            cursor: grab;
-            padding-top: 8px;
+            gap: 8px;
             user-select: none;
-            transition: opacity 0.2s ease;
         }
-
-        .notion-block:hover .notion-block-handle { opacity: 1; }
-        .notion-block-handle:active { cursor: grabbing; }
-
-        .btn-delete-block {
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            padding: 2px 4px;
-            font-size: 0.8rem;
-            opacity: 0;
-            transition: opacity 0.2s ease;
+        
+        .scene-drag-handle:active {
+            cursor: grabbing;
         }
-
-        .notion-block:hover .btn-delete-block { opacity: 0.7; }
-        .btn-delete-block:hover { opacity: 1 !important; }
-
-        .notion-textarea {
-            flex: 1;
+        
+        .scene-textarea {
             width: 100%;
-            min-height: 40px;
+            min-height: 120px;
             border: none;
             outline: none;
             resize: none;
             font-family: 'Nunito', sans-serif;
             font-size: 1.05rem;
             line-height: 1.7;
-            color: var(--text-dark, #2c2523);
+            color: var(--text-dark, #4a3b32);
             background: transparent;
-            padding: 4px 0;
             overflow: hidden;
         }
-
-        .notion-textarea::placeholder {
-            color: var(--text-muted, #a09385);
+        
+        .scene-textarea::placeholder {
+            color: var(--text-muted, #8c7365);
             font-style: italic;
         }
-
+        
         .btn-add-block {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             background: #ffffff;
-            border: 1px dashed var(--border-style, #dcd3c1);
+            border: 1px dashed var(--border-style, #d2c0a8);
             border-radius: 8px;
             padding: 10px 16px;
             color: var(--accent-brown, #8b5a2b);
@@ -1218,12 +1207,11 @@
             width: 100%;
             justify-content: center;
         }
-
+        
         .btn-add-block:hover {
             background-color: #fbf8f1;
             border-color: var(--accent-brown, #8b5a2b);
         }
-
         .editor-footer-stats {
             display: flex;
             justify-content: space-between;
