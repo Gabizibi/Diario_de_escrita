@@ -1882,57 +1882,61 @@
                         </div>
                     </div>
                     <div class="open-book-container">
-                        <div class="chapter-controls-container">
-                            <div class="chapter-header-top">
-                                <div class="dropdown-wrapper">
-                                    <span class="label-text"><i class="fa-solid fa-book-bookmark"></i> Capítulo:</span>
-                                    <select id="chapterSelect" class="chapter-dropdown" onchange="loadChapterContent()"></select>
-                                </div>
-                                <button type="button" class="btn btn-outline btn-sm" onclick="renameCurrentChapter()" title="Renomear Capítulo">
-                                    <i class="fa-solid fa-pen" style="color:var(--accent-brown);"></i> Renomear
-                                </button>
+                    <div class="chapter-controls-container">
+                        <!-- Linha Superior: Seleção e Renomear -->
+                        <div class="chapter-header-top">
+                            <div class="dropdown-wrapper">
+                                <span class="label-text"><i class="fa-solid fa-book-bookmark"></i> Capítulo:</span>
+                                <select id="chapterSelect" class="chapter-dropdown" onchange="loadChapterContent()"></select>
                             </div>
-
-                            <div class="chapter-buttons-grid">
-                                <button type="button" class="btn btn-outline" onclick="addNewChapterToStory()">
-                                    <i class="fa-solid fa-folder-plus"></i> Novo Cap.
-                                </button>
-                                <button type="button" class="btn btn-outline" onclick="addSharedReader()">
-                                    <i class="fa-solid fa-user-plus" style="color: var(--accent-brown);"></i> Colaborador
-                                </button>
-                                <button type="button" class="btn btn-outline" onclick="generatePublicShareLink()">
-                                    <i class="fa-solid fa-share-nodes" style="color: var(--accent-pink);"></i> Link
-                                </button>
-                                <button type="button" class="btn btn-outline" onclick="exportStoryToTxt()">
-                                    <i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar
-                                </button>
-                                <button type="button" class="btn btn-primary" onclick="saveCurrentStory()">
-                                    <i class="fa-solid fa-bookmark"></i> Salvar
-                                </button>
-                                <button type="button" class="btn btn-outline btn-danger-soft" onclick="deleteCurrentChapter()">
-                                    <i class="fa-solid fa-trash" style="color:var(--accent-pink);"></i> Excluir
-                                </button>
-                            </div>
-
-                            <div class="chapter-longline-container">
-                                <label for="chapterLonglineText"><i class="fa-solid fa-feather"></i> Longline do Capítulo:</label>
-                                <input type="text" id="chapterLonglineText" class="form-control" placeholder="Escreva o objetivo central do capítulo..." style="background: transparent; border-color: var(--border-style);">
-                            </div>
-
-                            <div class="notion-workspace">
-                                <div id="notionBlocksContainer" class="notion-blocks-container"></div>
-                                <button type="button" class="btn-add-block" onclick="addNewBlockToChapter()">
-                                    <i class="fa-solid fa-plus"></i> Adicionar parágrafo
-                                </button>
-                            </div>
-
-                            <div class="editor-footer-stats">
-                                <span id="chapterWordCount"><i class="fa-solid fa-pen-nib"></i> 0 palavras</span>
-                                <span id="chapterCharCount">0 caracteres</span>
-                            </div>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="renameCurrentChapter()" title="Renomear Capítulo">
+                                <i class="fa-solid fa-pen" style="color:var(--accent-brown);"></i> Renomear
+                            </button>
                         </div>
-                    </div> <!-- Fechamento do open-book-container -->
-
+                
+                        <!-- Grade de Botões Responsiva -->
+                        <div class="chapter-buttons-grid">
+                            <button type="button" class="btn btn-outline" onclick="addNewChapterToStory()">
+                                <i class="fa-solid fa-folder-plus"></i> Novo Cap.
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="addSharedReader()">
+                                <i class="fa-solid fa-user-plus" style="color: var(--accent-brown);"></i> Colaborador
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="generatePublicShareLink()">
+                                <i class="fa-solid fa-share-nodes" style="color: var(--accent-pink);"></i> Link
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="exportStoryToTxt()">
+                                <i class="fa-solid fa-file-arrow-down" style="color: var(--accent-brown);"></i> Exportar
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="saveCurrentStory()">
+                                <i class="fa-solid fa-bookmark"></i> Salvar
+                            </button>
+                            <button type="button" class="btn btn-outline btn-danger-soft" onclick="deleteCurrentChapter()">
+                                <i class="fa-solid fa-trash" style="color:var(--accent-pink);"></i> Excluir
+                            </button>
+                        </div>
+                
+                        <!-- Longline do Capítulo -->
+                        <div class="chapter-longline-container">
+                            <label for="chapterLonglineText"><i class="fa-solid fa-feather"></i> Longline do Capítulo:</label>
+                            <input type="text" id="chapterLonglineText" class="form-control" placeholder="Escreva o objetivo central do capítulo..." style="background: transparent; border-color: var(--border-style);">
+                        </div>
+                
+                        <!-- Container de Cenas Reordenáveis -->
+                        <div class="scenes-workspace">
+                            <div id="scenesContainer" class="scenes-container"></div>
+                            <button type="button" class="btn-add-block" onclick="addNewSceneToChapter()">
+                                <i class="fa-solid fa-plus"></i> Adicionar Nova Cena
+                            </button>
+                        </div>
+                
+                        <!-- Estatísticas do Editor -->
+                        <div class="editor-footer-stats">
+                            <span id="chapterWordCount"><i class="fa-solid fa-pen-nib"></i> 0 palavras</span>
+                            <span id="chapterCharCount">0 caracteres</span>
+                        </div>
+                    </div>
+                </div>
                     <!-- COLI AQUI A TABELA DE RESUMO E LONGLINES DOS CAPÍTULOS -->
                     <div class="card" style="margin-top: 24px;">
                         <h3 class="section-title">
