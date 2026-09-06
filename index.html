@@ -448,7 +448,7 @@
             justify-content: space-between;
             z-index: 2;
             transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
-            resize: both; /* HABILITA REDIMENSIONAMENTO DO POST-IT */
+            resize: both;
             overflow: hidden;
         }
 
@@ -457,13 +457,12 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16), inset -4px -4px 10px rgba(0, 0, 0, 0.07);
         }
         
-        /* POSICIONAMENTO DO CLIPE PARA NÃO COBRIR O BOTÃO AZUL */
         .sticky-pin-element {
             position: absolute;
             top: -22px;
             left: 20px;
             z-index: 10;
-            pointer-events: none; /* Permite cliques através da área do clipe */
+            pointer-events: none;
         }
         
         .paperclip-svg-icon {
@@ -477,7 +476,7 @@
             gap: 6px;
             justify-content: flex-end;
             margin-bottom: 8px;
-            z-index: 20; /* Fica acima da camada de papel */
+            z-index: 20;
             position: relative;
         }
         
@@ -1166,6 +1165,9 @@
                         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                             <button type="button" class="btn btn-outline" id="btnFlowchartConnect" onclick="toggleFlowchartConnectMode()">
                                 <i class="fa-solid fa-link"></i> <span id="btnFlowchartConnectText">Criar Conexão</span>
+                            </button>
+                            <button type="button" class="btn btn-outline" onclick="addNoteToFlowchart()">
+                                <i class="fa-solid fa-note-sticky" style="color: var(--accent-gold);"></i> + Lembrete
                             </button>
                             <button type="button" class="btn btn-primary" onclick="openAddFlowchartCardModal()">
                                 <i class="fa-solid fa-plus"></i> Adicionar Card
@@ -2177,13 +2179,34 @@
             }
         }
 
-        /* FLUXOGRAMA DE RELACIONAMENTOS COMPLETO (BUSCA CORRIGIDA DE LOCAIS E PERSONAGENS) */
+        /* FLUXOGRAMA DE RELACIONAMENTOS COMPLETO (RENOMEAR PÍLULAS E POST-ITS SOLTOS) */
         function getCurrentStoryFlowchartData() {
             const storyKey = currentIdeasStoryId || 'global';
             if (!flowchartDataByStory[storyKey]) {
                 flowchartDataByStory[storyKey] = { nodes: [], connections: [] };
             }
             return flowchartDataByStory[storyKey];
+        }
+
+        function addNoteToFlowchart() {
+            const textoNota = prompt("Digite o texto do seu lembrete para o fluxograma:", "Anotação...");
+            if (!textoNota || !textoNota.trim()) return;
+
+            const currentData = getCurrentStoryFlowchartData();
+            const count = currentData.nodes.length;
+            const newX = 60 + (count % 3) * 160;
+            const newY = 60 + Math.floor(count / 3) * 160;
+
+            currentData.nodes.push({
+                instanceId: 'note_' + Date.now(),
+                type: 'note',
+                text: textoNota.trim(),
+                x: newX,
+                y: newY
+            });
+
+            saveFlowchartData();
+            renderFlowchart();
         }
 
         function openAddFlowchartCardModal() {
@@ -2220,7 +2243,6 @@
                     itemSelect.appendChild(opt);
                 });
             } else if (selectedType === 'location') {
-                // Busca em todo o banco de locais cadastrados
                 let locsToDisplay = locations || [];
                 if (locsToDisplay.length === 0) {
                     const savedLocs = localStorage.getItem('diario_locais');
@@ -2289,24 +2311,13 @@
                     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: var(--text-muted); width: 80%;">
                         <i class="fa-solid fa-diagram-project fa-3x" style="margin-bottom: 12px; color: var(--accent-pink); opacity: 0.6;"></i>
                         <p style="font-weight: 700; margin: 0;">Nenhum elemento no fluxograma desta história.</p>
-                        <p style="font-size: 0.85rem; margin-top: 4px;">Clique em <strong>+ Adicionar Card</strong> para vincular personagens ou locais.</p>
+                        <p style="font-size: 0.85rem; margin-top: 4px;">Clique em <strong>+ Adicionar Card</strong> ou <strong>+ Lembrete</strong> para montar seu mural.</p>
                     </div>
                 `;
                 return;
             }
 
             currentData.nodes.forEach((node) => {
-                let name = 'Sem nome';
-                let bgImg = '';
-
-                if (node.type === 'person') {
-                    const char = characters.find(c => String(c.id) === String(node.id));
-                    if (char) { name = char.name; bgImg = char.image || char.avatar || ''; }
-                } else if (node.type === 'location') {
-                    const loc = locations.find(l => String(l.id) === String(node.id));
-                    if (loc) { name = loc.name; bgImg = (loc.photos && loc.photos[0]) || ''; }
-                }
-
                 const card = document.createElement('div');
                 card.className = 'flowchart-card';
                 card.id = `fc_node_${node.instanceId}`;
@@ -2314,25 +2325,60 @@
                 card.style.left = `${node.x || 60}px`;
                 card.style.top = `${node.y || 60}px`;
 
-                if (bgImg) {
-                    card.style.backgroundImage = `url('${bgImg}')`;
+                if (node.type === 'note') {
+                    card.style.backgroundColor = '#fbf8cc';
+                    card.style.border = '1px solid #e0d880';
+                    card.style.borderRadius = '8px';
+                    card.style.padding = '12px';
+                    card.style.fontSize = '0.85rem';
+                    card.style.color = '#4a3b32';
+                    card.style.fontWeight = '600';
+                    card.style.boxShadow = '0 4px 10px rgba(0,0,0,0.12)';
+                    card.style.width = '160px';
+                    card.style.height = 'auto';
+                    card.style.minHeight = '100px';
+                    card.innerText = node.text || 'Lembrete...';
+
+                    card.ondblclick = () => {
+                        const t = prompt("Editar texto da nota:", node.text);
+                        if (t !== null && t.trim() !== "") {
+                            node.text = t.trim();
+                            saveFlowchartData();
+                            renderFlowchart();
+                        }
+                    };
                 } else {
-                    card.style.backgroundColor = node.type === 'person' ? '#e2e8f0' : '#d8f3dc';
-                    card.style.display = 'flex';
-                    card.style.alignItems = 'center';
-                    card.style.justifyContent = 'center';
-                }
+                    let name = 'Sem nome';
+                    let bgImg = '';
 
-                const badge = document.createElement('div');
-                badge.className = 'card-name-badge';
-                badge.innerText = name;
-                card.appendChild(badge);
+                    if (node.type === 'person') {
+                        const char = characters.find(c => String(c.id) === String(node.id));
+                        if (char) { name = char.name; bgImg = char.image || char.avatar || ''; }
+                    } else if (node.type === 'location') {
+                        const loc = locations.find(l => String(l.id) === String(node.id));
+                        if (loc) { name = loc.name; bgImg = (loc.photos && loc.photos[0]) || ''; }
+                    }
 
-                if (!bgImg) {
-                    const icon = document.createElement('i');
-                    icon.className = node.type === 'person' ? 'fa-solid fa-user fa-2x' : 'fa-solid fa-map-pin fa-2x';
-                    icon.style.color = 'var(--text-muted)';
-                    card.appendChild(icon);
+                    if (bgImg) {
+                        card.style.backgroundImage = `url('${bgImg}')`;
+                    } else {
+                        card.style.backgroundColor = node.type === 'person' ? '#e2e8f0' : '#d8f3dc';
+                        card.style.display = 'flex';
+                        card.style.alignItems = 'center';
+                        card.style.justifyContent = 'center';
+                    }
+
+                    const badge = document.createElement('div');
+                    badge.className = 'card-name-badge';
+                    badge.innerText = name;
+                    card.appendChild(badge);
+
+                    if (!bgImg) {
+                        const icon = document.createElement('i');
+                        icon.className = node.type === 'person' ? 'fa-solid fa-user fa-2x' : 'fa-solid fa-map-pin fa-2x';
+                        icon.style.color = 'var(--text-muted)';
+                        card.appendChild(icon);
+                    }
                 }
 
                 const removeBtn = document.createElement('button');
@@ -2473,12 +2519,18 @@
                     <i class="fa-solid fa-xmark btn-del-pill" title="Excluir conexão"></i>
                 `;
 
+                // Permite renomear ao clicar no texto da pílula
                 pill.onclick = (e) => {
                     e.stopPropagation();
                     if (e.target.classList.contains('btn-del-pill')) {
                         deleteFlowchartConnection(conn.id);
                     } else {
-                        editFlowchartConnectionLabel(conn);
+                        const novoTexto = prompt("Renomear relacionamento:", conn.label);
+                        if (novoTexto !== null && novoTexto.trim() !== "") {
+                            conn.label = novoTexto.trim();
+                            saveFlowchartData();
+                            updateFlowchartConnections();
+                        }
                     }
                 };
 
@@ -2530,15 +2582,6 @@
                 selectedFirstCard.classList.remove('selected-for-link');
                 selectedFirstCard = null;
                 toggleFlowchartConnectMode();
-            }
-        }
-
-        function editFlowchartConnectionLabel(conn) {
-            const newLabel = prompt("Editar tipo de relacionamento:", conn.label);
-            if (newLabel !== null && newLabel.trim() !== "") {
-                conn.label = newLabel.trim();
-                saveFlowchartData();
-                updateFlowchartConnections();
             }
         }
 
