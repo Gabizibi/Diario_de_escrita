@@ -1612,113 +1612,111 @@
                 </div>
 
                 <div id="charFormView" class="hidden">
-                    <div class="sheet-grid">
-                        <div class="left-col">
-                            <div class="card profile-card">
-                                <div class="avatar-upload" onclick="triggerCharImageUpload()" title="Clique para trocar a foto">
-                                    <i class="fa-solid fa-camera" id="avatarPlaceholderIcon"></i>
-                                    <span id="avatarPlaceholderText">Trocar Foto Rosto</span>
-                                    <img id="avatarPreview" class="hidden" src="" alt="Avatar">
-                                </div>
-                                <div class="form-group">
-                                    <label for="char-story-select"><i class="fa-solid fa-book"></i> História Pertencente</label>
-                                    <select id="char-story-select" class="form-control"></select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="char-name">Nome Completo</label>
-                                    <input type="text" id="char-name" class="form-control" placeholder="Ex: Elena Vance">
-                                </div>
-                                <div class="form-group">
-                                    <label for="char-nickname">Apelido / Título</label>
-                                    <input type="text" id="char-nickname" class="form-control" placeholder="Ex: A Sombra de Prata">
-                                </div>
-                                <div class="form-group">
-                                    <label for="char-role">Papel / Função</label>
-                                    <select id="char-role" class="form-control">
-                                        <option>Protagonista</option>
-                                        <option>Antagonista</option>
-                                        <option>Co-protagonista</option>
-                                        <option>Secundário</option>
-                                        <option>Mentor</option>
-                                    </select>
-                                </div>
-                                <button class="btn btn-outline" style="width:100%; border-color:var(--accent-pink); color:var(--accent-pink); margin-top:8px;" onclick="deleteCurrentCharFromForm()"><i class="fa-solid fa-trash"></i> Excluir Personagem</button>
+                <div class="sheet-grid">
+                    <!-- COLUNA DA ESQUERDA -->
+                    <div class="left-col">
+                        <div class="card profile-card">
+                            <div class="avatar-upload" onclick="triggerCharImageUpload()" title="Clique para trocar a foto">
+                                <i class="fa-solid fa-camera" id="avatarPlaceholderIcon"></i>
+                                <span id="avatarPlaceholderText">Trocar Foto Rosto</span>
+                                <img id="avatarPreview" class="hidden" src="" alt="Avatar">
                             </div>
-
-                            <div class="card">
-                                <h3 class="section-title"><i class="fa-solid fa-person"></i> Corporeidade & Figurino</h3>
-                                <div class="fullbody-upload" onclick="triggerCharFullBodyUpload()" title="Clique para trocar a imagem de corpo inteiro">
-                                    <i class="fa-solid fa-image" id="fullbodyPlaceholderIcon" style="font-size: 1.8rem; margin-bottom: 4px;"></i>
-                                    <span id="fullbodyPlaceholderText" style="font-size: 0.85rem; font-weight: 700;">Trocar Foto Corpo Inteiro</span>
-                                    <img id="fullbodyPreview" class="hidden" src="" alt="Corpo Inteiro">
-                                </div>
+                            <div class="form-group">
+                                <label for="char-story-select"><i class="fa-solid fa-book"></i> História Pertencente</label>
+                                <select id="char-story-select" class="form-control"></select>
                             </div>
-
-                            <div class="card">
-                                <h3 class="section-title"><i class="fa-solid fa-sparkles"></i> Atributos Físicos & Voz</h3>
-                                <div class="form-group">
-                                    <label for="char-age">Idade</label>
-                                    <input type="text" id="char-age" class="form-control" placeholder="Ex: 24 anos">
-                                </div>
-                                <div class="form-group">
-                                    <label for="char-mbti"><i class="fa-solid fa-brain"></i> MBTI</label>
-                                    <input type="text" id="char-mbti" class="form-control" placeholder="Ex: INFJ">
-                                </div>
-                                <div class="form-group">
-                                    <label for="char-height"><i class="fa-solid fa-ruler-vertical"></i> Altura</label>
-                                    <input type="text" id="char-height" class="form-control" placeholder="Ex: 1,72 m">
-                                </div>
-                                <div class="form-group">
-                                    <label for="char-voice"><i class="fa-solid fa-microphone"></i> Voz / Tom</label>
-                                    <input type="text" id="char-voice" class="form-control" placeholder="Ex: Suave e aveludada">
-                                </div>
-                                <div class="form-group">
-                                    <label for="char-gender">Gênero</label>
-                                    <input type="text" id="char-gender" class="form-control" placeholder="Ex: Feminino">
-                                </div>
-                                <div class="form-group">
-                                    <label for="char-appearance">Aparência Marcante</label>
-                                    <textarea id="char-appearance" class="form-control" placeholder="Cabelos, olhos, cicatrizes..."></textarea>
-                                </div>
+                            <div class="form-group">
+                                <label for="char-name">Nome Completo</label>
+                                <input type="text" id="char-name" class="form-control" placeholder="Ex: Elena Vance">
+                            </div>
+                            <div class="form-group">
+                                <label for="char-nickname">Apelido / Título</label>
+                                <input type="text" id="char-nickname" class="form-control" placeholder="Ex: A Sombra de Prata">
+                            </div>
+                            <div class="form-group">
+                                <label for="char-role">Papel / Função</label>
+                                <select id="char-role" class="form-control">
+                                    <option>Protagonista</option>
+                                    <option>Antagonista</option>
+                                    <option>Co-protagonista</option>
+                                    <option>Secundário</option>
+                                    <option>Mentor</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-outline" style="width:100%; border-color:var(--accent-pink); color:var(--accent-pink); margin-top:8px;" onclick="deleteCurrentCharFromForm()"><i class="fa-solid fa-trash"></i> Excluir Personagem</button>
+                        </div>
+            
+                        <div class="card">
+                            <h3 class="section-title"><i class="fa-solid fa-person"></i> Corporeidade & Figurino</h3>
+                            <div class="fullbody-upload" onclick="triggerCharFullBodyUpload()" title="Clique para trocar a imagem de corpo inteiro">
+                                <i class="fa-solid fa-image" id="fullbodyPlaceholderIcon" style="font-size: 1.8rem; margin-bottom: 4px;"></i>
+                                <span id="fullbodyPlaceholderText" style="font-size: 0.85rem; font-weight: 700;">Trocar Foto Corpo Inteiro</span>
+                                <img id="fullbodyPreview" class="hidden" src="" alt="Corpo Inteiro">
                             </div>
                         </div>
-
-                        <div class="right-col">
-                            <!-- Card do Spotify com id="spotifyCard" adicionado para reordenação no mobile -->
-                            <div class="card" id="spotifyCard">
-                                <h3 class="section-title"><i class="fa-brands fa-spotify" style="color: #1db954;"></i> Música Tema (Spotify)</h3>
-                                <div class="form-group">
-                                    <label for="charSpotifyUrl">Link no Spotify</label>
-                                    <input type="text" id="charSpotifyUrl" class="form-control" placeholder="Cole o link do Spotify aqui..." oninput="updateCharSpotifyPlayer()">
-                                </div>
-                                <div class="spotify-container" id="charSpotifyPlayer"></div>
+            
+                        <div class="card">
+                            <h3 class="section-title"><i class="fa-solid fa-sparkles"></i> Atributos Físicos & Voz</h3>
+                            <div class="form-group">
+                                <label for="char-age">Idade</label>
+                                <input type="text" id="char-age" class="form-control" placeholder="Ex: 24 anos">
                             </div>
+                            <div class="form-group">
+                                <label for="char-mbti"><i class="fa-solid fa-brain"></i> MBTI</label>
+                                <input type="text" id="char-mbti" class="form-control" placeholder="Ex: INFJ">
                             </div>
-
-                            <div class="card">
-                                <h3 class="section-title"><i class="fa-solid fa-brain"></i> Psicologia & Personalidade</h3>
-                                <div class="form-group">
-                                    <label for="char-motive">Motivação Principal</label>
-                                    <input type="text" id="char-motive" class="form-control" placeholder="O que ele(a) mais deseja?">
-                                </div>
-                                <div class="form-group">
-                                    <label for="char-personality">Resumo da Personalidade</label>
-                                    <textarea id="char-personality" class="form-control" placeholder="Como se comporta sob pressão..."></textarea>
-                                </div>
+                            <div class="form-group">
+                                <label for="char-height"><i class="fa-solid fa-ruler-vertical"></i> Altura</label>
+                                <input type="text" id="char-height" class="form-control" placeholder="Ex: 1,72 m">
                             </div>
-
-                            <div class="card">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                                    <h3 class="section-title" style="margin:0;"><i class="fa-solid fa-puzzle-piece"></i> Campos Personalizados</h3>
-                                    <button class="btn btn-outline" onclick="addCustomField()"><i class="fa-solid fa-plus"></i> Novo Campo</button>
-                                </div>
-                                <div id="customFieldsContainer"></div>
+                            <div class="form-group">
+                                <label for="char-voice"><i class="fa-solid fa-microphone"></i> Voz / Tom</label>
+                                <input type="text" id="char-voice" class="form-control" placeholder="Ex: Suave e aveludada">
                             </div>
+                            <div class="form-group">
+                                <label for="char-gender">Gênero</label>
+                                <input type="text" id="char-gender" class="form-control" placeholder="Ex: Feminino">
+                            </div>
+                            <div class="form-group">
+                                <label for="char-appearance">Aparência Marcante</label>
+                                <textarea id="char-appearance" class="form-control" placeholder="Cabelos, olhos, cicatrizes..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- COLUNA DA DIREITA -->
+                    <div class="right-col">
+                        <div class="card" id="spotifyCard">
+                            <h3 class="section-title"><i class="fa-brands fa-spotify" style="color: #1db954;"></i> Música Tema (Spotify)</h3>
+                            <div class="form-group">
+                                <label for="charSpotifyUrl">Link no Spotify</label>
+                                <input type="text" id="charSpotifyUrl" class="form-control" placeholder="Cole o link do Spotify aqui..." oninput="updateCharSpotifyPlayer()">
+                            </div>
+                            <div class="spotify-container" id="charSpotifyPlayer"></div>
+                        </div>
+            
+                        <div class="card">
+                            <h3 class="section-title"><i class="fa-solid fa-brain"></i> Psicologia & Personalidade</h3>
+                            <div class="form-group">
+                                <label for="char-motive">Motivação Principal</label>
+                                <input type="text" id="char-motive" class="form-control" placeholder="O que ele(a) mais deseja?">
+                            </div>
+                            <div class="form-group">
+                                <label for="char-personality">Resumo da Personalidade</label>
+                                <textarea id="char-personality" class="form-control" placeholder="Como se comporta sob pressão..."></textarea>
+                            </div>
+                        </div>
+            
+                        <div class="card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <h3 class="section-title" style="margin:0;"><i class="fa-solid fa-puzzle-piece"></i> Campos Personalizados</h3>
+                                <button class="btn btn-outline" onclick="addCustomField()"><i class="fa-solid fa-plus"></i> Novo Campo</button>
+                            </div>
+                            <div id="customFieldsContainer"></div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <!-- SECTION 3: BANCO DE IDEIAS E FLUXOGRAMA -->
             <div id="ideasSection" class="hidden">
                 <!-- Abas Internas de Navegação -->
