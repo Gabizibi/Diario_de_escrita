@@ -553,53 +553,54 @@
             transition: stroke 0.2s ease;
         }
 
+        /* Eleva a camada de pílulas para ficar sempre acima dos cards */
         .flowchart-pill-layer {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 2;
+            pointer-events: none; 
+            z-index: 20 !important; /* Ficando acima dos cards (z-index 3 ou 10) */
         }
-
+        
+        /* Pílula de relacionamento */
         .relation-pill {
             position: absolute;
             transform: translate(-50%, -50%);
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 6px 12px;
+            border-radius: 14px;
             color: #ffffff;
             font-size: 11px;
             font-weight: 700;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
             cursor: pointer;
-            pointer-events: auto;
+            pointer-events: auto !important; /* Garante captura do clique */
             white-space: nowrap;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 6px;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            gap: 8px;
             user-select: none;
+            transition: transform 0.15s ease;
         }
-
+        
         .relation-pill:hover {
-            transform: translate(-50%, -50%) scale(1.08);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22);
+            transform: translate(-50%, -50%) scale(1.1);
         }
-
+        
         .relation-pill .pill-label-text {
             padding-right: 2px;
+            cursor: pointer;
         }
-
+        
         .relation-pill .btn-del-pill {
-            font-size: 10px;
-            opacity: 0.8;
-            padding: 2px 4px;
+            font-size: 11px;
+            padding: 2px 5px;
             border-radius: 50%;
-            transition: opacity 0.2s, background-color 0.2s;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
         }
-
+        
         .relation-pill .btn-del-pill:hover {
-            opacity: 1;
-            background-color: rgba(0, 0, 0, 0.2);
+            background-color: rgba(0, 0, 0, 0.3);
         }
-
         .flowchart-card {
             position: absolute;
             width: 130px;
@@ -2496,59 +2497,71 @@
             }
         }
 
-        function updateFlowchartConnections() {
+                function updateFlowchartConnections() {
             const svgLayer = document.getElementById('flowchartSvgLayer');
             const pillLayer = document.getElementById('flowchartPillLayer');
             const board = document.getElementById('flowchartBoard');
-
+        
             if (!svgLayer || !pillLayer || !board) return;
-
+        
             svgLayer.innerHTML = '';
             pillLayer.innerHTML = '';
-
+        
             const currentData = getCurrentStoryFlowchartData();
             const boardRect = board.getBoundingClientRect();
-
+        
             currentData.connections.forEach((conn) => {
                 const elA = document.getElementById(`fc_node_${conn.from}`);
                 const elB = document.getElementById(`fc_node_${conn.to}`);
-
+        
                 if (!elA || !elB) return;
-
+        
                 const rectA = elA.getBoundingClientRect();
                 const rectB = elB.getBoundingClientRect();
-
+        
                 const x1 = rectA.left + rectA.width / 2 - boardRect.left;
                 const y1 = rectA.top + rectA.height / 2 - boardRect.top;
                 const x2 = rectB.left + rectB.width / 2 - boardRect.left;
                 const y2 = rectB.top + rectB.height / 2 - boardRect.top;
-
+        
+                // Linha visual SVG
                 const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                 line.setAttribute('x1', x1); line.setAttribute('y1', y1);
                 line.setAttribute('x2', x2); line.setAttribute('y2', y2);
                 line.setAttribute('class', 'connection-line');
                 line.setAttribute('stroke', conn.color || '#e77f8d');
                 svgLayer.appendChild(line);
-
+        
+                // Pílula / Rótulo no centro da linha
                 const midX = (x1 + x2) / 2;
                 const midY = (y1 + y2) / 2;
-
+        
                 const pill = document.createElement('div');
                 pill.className = 'relation-pill';
                 pill.style.left = `${midX}px`;
                 pill.style.top = `${midY}px`;
                 pill.style.backgroundColor = conn.color || '#e77f8d';
-
+        
                 pill.innerHTML = `
-                    <span class="pill-label-text">${conn.label}</span>
+                    <span class="pill-label-text" title="Clique para renomear">${conn.label}</span>
                     <i class="fa-solid fa-xmark btn-del-pill" title="Excluir conexão"></i>
                 `;
-
+        
+                // Manipulação de eventos isolada
+                pill.addEventListener('mousedown', (e) => e.stopPropagation());
+                pill.addEventListener('touchstart', (e) => e.stopPropagation());
+        
                 pill.onclick = (e) => {
+                    e.preventDefault();
                     e.stopPropagation();
-                    if (e.target.classList.contains('btn-del-pill') || e.target.closest('.btn-del-pill')) {
+        
+                    const isDeleteBtn = e.target.classList.contains('btn-del-pill') || e.target.closest('.btn-del-pill');
+        
+                    if (isDeleteBtn) {
+                        // Clique no botão X -> Exclui a conexão
                         deleteFlowchartConnection(conn.id);
                     } else {
+                        // Clique em qualquer outro lugar da pílula -> Renomeia
                         const novoTexto = prompt("Renomear tipo de relacionamento:", conn.label);
                         if (novoTexto !== null && novoTexto.trim() !== "") {
                             conn.label = novoTexto.trim();
@@ -2557,11 +2570,10 @@
                         }
                     }
                 };
-
+        
                 pillLayer.appendChild(pill);
             });
         }
-
         function toggleFlowchartConnectMode() {
             connectMode = !connectMode;
             const btn = document.getElementById('btnFlowchartConnect');
