@@ -61,7 +61,7 @@
             top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: rgba(74, 59, 50, 0.6);
             backdrop-filter: blur(5px);
-            z-index: 1000;
+            z-index: 10000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -575,6 +575,7 @@
             align-items: center;
             gap: 6px;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
+            user-select: none;
         }
 
         .relation-pill:hover {
@@ -582,8 +583,22 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22);
         }
 
-        .relation-pill .btn-del-pill { font-size: 10px; opacity: 0.7; transition: opacity 0.2s; }
-        .relation-pill .btn-del-pill:hover { opacity: 1; }
+        .relation-pill .pill-label-text {
+            padding-right: 2px;
+        }
+
+        .relation-pill .btn-del-pill {
+            font-size: 10px;
+            opacity: 0.8;
+            padding: 2px 4px;
+            border-radius: 50%;
+            transition: opacity 0.2s, background-color 0.2s;
+        }
+
+        .relation-pill .btn-del-pill:hover {
+            opacity: 1;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
 
         .flowchart-card {
             position: absolute;
@@ -813,25 +828,6 @@
             .chapter-header-top .dropdown-wrapper { flex: 1; display: flex; align-items: center; gap: 6px; }
             .chapter-buttons-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; width: 100%; }
             .chapter-buttons-grid .btn { width: 100% !important; padding: 8px 6px !important; font-size: 0.8rem !important; justify-content: center !important; }
-        }
-        .relation-pill {
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        .relation-pill .pill-label-text {
-            padding-right: 4px;
-        }
-        
-        .relation-pill .btn-del-pill {
-            padding: 2px 4px;
-            margin-left: 2px;
-            border-radius: 50%;
-            transition: background-color 0.2s;
-        }
-        
-        .relation-pill .btn-del-pill:hover {
-            background-color: rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -1452,7 +1448,7 @@
     </main>
 
     <script>
-        /* INICIALIZAÇÃO E AUTENTICAÇÃO SUPABASE */
+        /* INICIALIZAÇÃO E AUTENTICAÇÃO SUPABASE CORRIGIDA */
         let supabaseClient = null;
         const SUPABASE_URL_DEFAULT = "https://opsybfoxbwmbzrpujyyf.supabase.co";
         const SUPABASE_KEY_DEFAULT = "sb_publishable_vhKLX4_s4tz_kJJUgsdbXw_gX_UsUL2"; 
@@ -1470,7 +1466,10 @@
                     checkUserSession();
                 } catch (err) {
                     console.error("Erro ao inicializar Supabase:", err);
+                    document.getElementById('authOverlay').style.display = 'flex';
                 }
+            } else {
+                document.getElementById('authOverlay').style.display = 'flex';
             }
         }
 
@@ -1496,7 +1495,10 @@
         }
 
         async function checkUserSession() {
-            if (!supabaseClient) return;
+            if (!supabaseClient) {
+                document.getElementById('authOverlay').style.display = 'flex';
+                return;
+            }
 
             const urlParams = new URLSearchParams(window.location.search);
             const storyToRead = urlParams.get('read_story');
@@ -1507,11 +1509,16 @@
                 if (chapterToRead) sessionStorage.setItem('pending_read_chapter', chapterToRead);
             }
 
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) {
-                document.getElementById('authOverlay').style.display = 'none';
-                processPendingReadLink();
-            } else {
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session) {
+                    document.getElementById('authOverlay').style.display = 'none';
+                    processPendingReadLink();
+                } else {
+                    document.getElementById('authOverlay').style.display = 'flex';
+                }
+            } catch (err) {
+                console.error("Erro na checagem de sessão:", err);
                 document.getElementById('authOverlay').style.display = 'flex';
             }
         }
@@ -2119,7 +2126,6 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = 'sticky-note-wrapper';
         
-                // Clipe de Papel Metálico Padrão e Fixo
                 const pinHtml = `
                     <svg class="paperclip-svg-icon" viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M 30 140 L 30 50 A 20 20 0 0 1 70 50 L 70 150 A 30 30 0 0 1 10 150 L 10 60 A 40 40 0 0 1 90 60 L 90 130" stroke="#b0b5ba" stroke-width="8" stroke-linecap="round"/>
@@ -2527,37 +2533,35 @@
                 const midX = (x1 + x2) / 2;
                 const midY = (y1 + y2) / 2;
 
-            const pill = document.createElement('div');
-            pill.className = 'relation-pill';
-            pill.style.left = `${midX}px`;
-            pill.style.top = `${midY}px`;
-            pill.style.backgroundColor = conn.color || '#e77f8d';
-            
-            // Isolamos o texto em um <span> com classe dedicada para separar do ícone do X
-            pill.innerHTML = `
-                <span class="pill-label-text">${conn.label}</span>
-                <i class="fa-solid fa-xmark btn-del-pill" title="Excluir conexão"></i>
-            `;
-            
-            // Evento de clique preciso: verifica se clicou no X ou no texto/corpo da pílula
-            pill.onclick = (e) => {
-                e.stopPropagation();
-                
-                // Se o clique foi no botão 'X' de excluir
-                if (e.target.classList.contains('btn-del-pill') || e.target.closest('.btn-del-pill')) {
-                    deleteFlowchartConnection(conn.id);
-                } else {
-                    // Se o clique foi no texto ou na pílula, abre a janela para renomear
-                    const novoTexto = prompt("Renomear tipo de relacionamento:", conn.label);
-                    if (novoTexto !== null && novoTexto.trim() !== "") {
-                        conn.label = novoTexto.trim();
-                        saveFlowchartData();
-                        updateFlowchartConnections();
+                const pill = document.createElement('div');
+                pill.className = 'relation-pill';
+                pill.style.left = `${midX}px`;
+                pill.style.top = `${midY}px`;
+                pill.style.backgroundColor = conn.color || '#e77f8d';
+
+                pill.innerHTML = `
+                    <span class="pill-label-text">${conn.label}</span>
+                    <i class="fa-solid fa-xmark btn-del-pill" title="Excluir conexão"></i>
+                `;
+
+                pill.onclick = (e) => {
+                    e.stopPropagation();
+                    if (e.target.classList.contains('btn-del-pill') || e.target.closest('.btn-del-pill')) {
+                        deleteFlowchartConnection(conn.id);
+                    } else {
+                        const novoTexto = prompt("Renomear tipo de relacionamento:", conn.label);
+                        if (novoTexto !== null && novoTexto.trim() !== "") {
+                            conn.label = novoTexto.trim();
+                            saveFlowchartData();
+                            updateFlowchartConnections();
+                        }
                     }
-                }
-            };
-            
-            pillLayer.appendChild(pill);
+                };
+
+                pillLayer.appendChild(pill);
+            });
+        }
+
         function toggleFlowchartConnectMode() {
             connectMode = !connectMode;
             const btn = document.getElementById('btnFlowchartConnect');
