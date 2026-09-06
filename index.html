@@ -1174,6 +1174,150 @@
             background-color: #ffffff;
             box-shadow: 0 0 0 3px rgba(231, 127, 141, 0.2);
         }
+        /* ==========================================
+           MURAL DE RELACIONAMENTOS (FLUXOGRAMA)
+           ========================================== */
+        
+        /* Quadro Quadriculado */
+        .flowchart-board {
+            background-image: 
+                linear-gradient(to right, rgba(210, 192, 168, 0.2) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(210, 192, 168, 0.2) 1px, transparent 1px) !important;
+            background-size: 30px 30px !important;
+            position: relative;
+            user-select: none;
+        }
+        
+        /* Layer SVG para as linhas de conexão */
+        svg.flowchart-svg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .connection-line {
+            stroke-width: 3px;
+            stroke-linecap: round;
+            transition: stroke 0.2s ease;
+        }
+        
+        /* Layer de Pílulas de Conexão */
+        .flowchart-pill-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        .relation-pill {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            padding: 4px 10px;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            pointer-events: auto;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        
+        .relation-pill:hover {
+            transform: translate(-50%, -50%) scale(1.08);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22);
+        }
+        
+        .relation-pill .btn-del-pill {
+            font-size: 10px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .relation-pill .btn-del-pill:hover {
+            opacity: 1;
+        }
+        
+        /* Cards dos Personagens e Locais no Mural */
+        .flowchart-card {
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border-radius: 20px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+            cursor: grab;
+            z-index: 3;
+            border: 3px solid var(--paper-bg, #ffffff);
+            transition: outline 0.15s ease, transform 0.15s ease;
+        }
+        
+        .flowchart-card:active {
+            cursor: grabbing;
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+        }
+        
+        .flowchart-card.selected-for-link {
+            outline: 4px solid var(--accent-pink, #e77f8d);
+        }
+        
+        /* Badge do Nome do Elemento */
+        .flowchart-card .card-name-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--paper-bg, #ffffff);
+            color: var(--text-dark, #4a3b32);
+            font-weight: 700;
+            font-size: 0.78rem;
+            padding: 3px 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+            border: 1px solid var(--border-style, #d2c0a8);
+            white-space: nowrap;
+            pointer-events: none;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Botão de Excluir do Card no Mural */
+        .flowchart-card .card-remove-btn {
+            position: absolute;
+            bottom: -8px;
+            right: -8px;
+            background: #ffffff;
+            color: var(--accent-pink, #e77f8d);
+            border: 1px solid var(--border-style, #d2c0a8);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        
+        .flowchart-card .card-remove-btn:hover {
+            transform: scale(1.15);
+            background-color: #fff0f3;
+        }
     </style>
 </head>
 <body>
@@ -1514,20 +1658,65 @@
             
                 <!-- Visão 2: Fluxograma Visual de Relacionamentos -->
                 <div id="ideasFlowchartView" class="hidden">
+                    <!-- Barra Superior de Ações do Fluxograma -->
                     <div style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                        <p style="color: var(--text-muted); margin: 0;">Conecte personagens e locais para visualizar os laços do seu universo literário.</p>
-                        <button type="button" class="btn btn-primary" onclick="addRelationshipConnection()"><i class="fa-solid fa-link"></i> Nova Conexão</button>
+                        <p style="color: var(--text-muted); margin: 0;">
+                            Conecte personagens e locais para visualizar os laços do seu universo literário.
+                        </p>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-outline" id="btnFlowchartConnect" onclick="toggleFlowchartConnectMode()">
+                                <i class="fa-solid fa-link"></i> <span id="btnFlowchartConnectText">Criar Conexão</span>
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="openAddFlowchartCardModal()">
+                                <i class="fa-solid fa-plus"></i> Adicionar Card
+                            </button>
+                        </div>
                     </div>
-            
-                    <div class="card" style="position: relative; min-height: 520px; background: #fffdfa; overflow: auto; border: 3px solid var(--border-style);">
-                        <!-- Canvas/SVG de Linhas Conectoras -->
-                        <svg id="relationshipSvgCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></svg>
+                
+                    <!-- Quadro Quadriculado do Mural -->
+                    <div class="card flowchart-board" id="flowchartBoard" style="position: relative; min-height: 560px; background-color: #fafafa; overflow: auto; border: 3px solid var(--border-style); padding: 0;">
+                        <!-- Layer SVG de Linhas de Conexão -->
+                        <svg id="flowchartSvgLayer" class="flowchart-svg-layer"></svg>
                         
-                        <!-- Container onde os Cards dos Personagens/Locais Conectados serão Renderizados -->
-                        <div id="flowchartNodesContainer" style="position: relative; z-index: 2; width: 100%; height: 100%; min-height: 500px;"></div>
+                        <!-- Layer de Pílulas de Texto da Conexão -->
+                        <div id="flowchartPillLayer" class="flowchart-pill-layer"></div>
+                
+                        <!-- Container de Cards Inseridos no Mural -->
+                        <div id="flowchartCardsContainer" style="position: relative; z-index: 3; width: 100%; height: 100%; min-height: 560px;"></div>
+                    </div>
+                
+                    <!-- MODAL: Adicionar Card ao Mural (Escolher entre Personagem ou Local) -->
+                    <div id="flowchartAddCardModal" class="hidden" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(74, 59, 50, 0.5); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+                        <div class="card" style="max-width: 420px; width: 100%; background: var(--paper-bg); border: 3px solid var(--border-style); border-radius: 20px; padding: 24px; position: relative;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 2px dashed var(--border-style); padding-bottom: 8px;">
+                                <h3 class="section-title" style="margin: 0; font-size: 1.2rem;">
+                                    <i class="fa-solid fa-folder-plus" style="color: var(--accent-pink);"></i> Adicionar ao Mural
+                                </h3>
+                                <i class="fa-solid fa-xmark" onclick="closeAddFlowchartCardModal()" style="cursor: pointer; font-size: 1.2rem; color: var(--text-muted);"></i>
+                            </div>
+                
+                            <div class="form-group">
+                                <label for="flowchartElementTypeSelect"><i class="fa-solid fa-filter"></i> Tipo de Elemento:</label>
+                                <select id="flowchartElementTypeSelect" class="form-control" onchange="updateFlowchartElementOptions()">
+                                    <option value="person">👤 Personagem (Ficha de Personagem)</option>
+                                    <option value="location">📍 Local (Atlas de Locais)</option>
+                                </select>
+                            </div>
+                
+                            <div class="form-group">
+                                <label for="flowchartItemSelect"><i class="fa-solid fa-list-check"></i> Selecione o Cadastrado:</label>
+                                <select id="flowchartItemSelect" class="form-control"></select>
+                            </div>
+                
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button type="button" class="btn btn-outline" style="flex: 1; justify-content: center;" onclick="closeAddFlowchartCardModal()">Cancelar</button>
+                                <button type="button" class="btn btn-primary" style="flex: 1; justify-content: center;" onclick="confirmAddCardToFlowchart()">
+                                    <i class="fa-solid fa-check"></i> Adicionar
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
             <!-- SECTION 4: MOODBOARD -->
             <div id="moodboardSection" class="hidden">
@@ -2518,253 +2707,361 @@
             }
         }
         
-        /**
-         * Altera a aba ativa do Banco de Ideias (Mural / Fluxograma)
-         */
-        function switchIdeasTab(tabName) {
-            const btnPostits = document.getElementById('tabBtnPostits');
-            const btnFlowchart = document.getElementById('tabBtnFlowchart');
-            const viewPostits = document.getElementById('ideasPostitsView');
-            const viewFlowchart = document.getElementById('ideasFlowchartView');
-        
-            if (tabName === 'postits') {
-                if (btnPostits) btnPostits.classList.add('active');
-                if (btnFlowchart) btnFlowchart.classList.remove('active');
-        
-                if (viewPostits) viewPostits.classList.remove('hidden');
-                if (viewFlowchart) viewFlowchart.classList.add('hidden');
-        
-                renderIdeas();
-            } else if (tabName === 'flowchart') {
-                if (btnFlowchart) btnFlowchart.classList.add('active');
-                if (btnPostits) btnPostits.classList.remove('active');
-        
-                if (viewFlowchart) viewFlowchart.classList.remove('hidden');
-                if (viewPostits) viewPostits.classList.add('hidden');
-        
-                renderFlowchart();
-            }
-        }
         /* ==========================================
            BANCO DE IDEIAS: MURAL DE RELACIONAMENTOS (FLUXOGRAMA)
            ========================================== */
         
-        let relationships = [];
-        
         /**
-         * Renderiza o Canvas SVG, Cards dos Personagens/Locais e as Linhas de Conexão
+         * Renderiza o Quadro Quadriculado, Cards dos Personagens/Locais e Conexões
          */
         function renderFlowchart() {
-            const container = document.getElementById('flowchartNodesContainer');
-            const svgCanvas = document.getElementById('relationshipSvgCanvas');
-            if (!container || !svgCanvas) return;
+            const board = document.getElementById('flowchartBoard');
+            const cardsContainer = document.getElementById('flowchartCardsContainer');
+            const svgLayer = document.getElementById('flowchartSvgLayer');
+            const pillLayer = document.getElementById('flowchartPillLayer');
         
-            container.innerHTML = '';
-            svgCanvas.innerHTML = '';
+            if (!board || !cardsContainer || !svgLayer || !pillLayer) return;
         
-            const savedRel = localStorage.getItem('diario_relacionamentos');
-            relationships = savedRel ? JSON.parse(savedRel) : [];
+            loadIdeasStoryOptions();
         
-            // Mapeia personagens e locais trazendo as imagens cadastradas
-            const filteredChars = characters.filter(c => currentIdeasStoryId === 'global' || c.storyId === currentIdeasStoryId);
-            const filteredLocs = locations.filter(l => currentIdeasStoryId === 'global' || l.storyId === currentIdeasStoryId);
+            cardsContainer.innerHTML = '';
+            svgLayer.innerHTML = '';
+            pillLayer.innerHTML = '';
         
-            const allNodes = [
-                ...filteredChars.map(c => ({ id: String(c.id), name: c.name, img: c.avatar || '', type: 'person' })),
-                ...filteredLocs.map(l => ({ id: String(l.id), name: l.name, img: (l.photos && l.photos[0]) || '', type: 'location' }))
-            ];
+            const currentData = getCurrentStoryFlowchartData();
         
-            if (allNodes.length === 0) {
-                container.innerHTML = `<p style="text-align:center; padding: 40px; color: var(--text-muted); width: 100%;">Cadastre personagens ou locais nesta história para visualizá-los no mural de relacionamentos!</p>`;
+            if (currentData.nodes.length === 0) {
+                cardsContainer.innerHTML = `
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: var(--text-muted); width: 80%;">
+                        <i class="fa-solid fa-diagram-project fa-3x" style="margin-bottom: 12px; color: var(--accent-pink); opacity: 0.6;"></i>
+                        <p style="font-weight: 700; margin: 0;">Nenhum elemento adicionado a este fluxograma.</p>
+                        <p style="font-size: 0.85rem; margin-top: 4px;">Clique em <strong>+ Adicionar Card</strong> para escolher personagens ou locais do seu universo.</p>
+                    </div>
+                `;
                 return;
             }
         
-            allNodes.forEach((node, idx) => {
-                const nodeEl = document.createElement('div');
-                nodeEl.className = 'flowchart-node-card';
-                nodeEl.dataset.nodeId = node.id;
-                nodeEl.style.cssText = `
-                    position: absolute;
-                    left: ${40 + (idx % 3) * 180}px;
-                    top: ${30 + Math.floor(idx / 3) * 190}px;
-                    width: 130px;
-                    background: #ffffff;
-                    border-radius: 16px;
-                    padding: 8px;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                    cursor: move;
-                    user-select: none;
-                    text-align: center;
-                    border: 2px solid var(--border-style, #e2d9cc);
-                `;
+            currentData.nodes.forEach((node) => {
+                let name = 'Sem nome';
+                let bgImg = '';
         
-                const imgHtml = node.img 
-                    ? `<img src="${node.img}" style="width: 100%; height: 110px; object-fit: cover; border-radius: 12px; pointer-events: none;">` 
-                    : `<div style="width: 100%; height: 110px; background: #f5f0eb; border-radius: 12px; display:flex; align-items:center; justify-content:center; color:#b0a090;">
-                         <i class="fa-solid fa-${node.type === 'person' ? 'user' : 'map-pin'} fa-2x"></i>
-                       </div>`;
+                if (node.type === 'person') {
+                    const char = characters.find(c => String(c.id) === String(node.id));
+                    if (char) {
+                        name = char.name;
+                        bgImg = char.image || char.avatar || '';
+                    }
+                } else if (node.type === 'location') {
+                    const loc = locations.find(l => String(l.id) === String(node.id));
+                    if (loc) {
+                        name = loc.name;
+                        bgImg = (loc.photos && loc.photos[0]) || '';
+                    }
+                }
         
-                nodeEl.innerHTML = `
-                    <div style="font-weight: 700; font-size: 0.8rem; background: #f0ebe5; padding: 2px 6px; border-radius: 10px; margin-bottom: 6px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
-                        ${node.name}
-                    </div>
-                    ${imgHtml}
-                `;
+                const card = document.createElement('div');
+                card.className = 'flowchart-card';
+                card.id = `fc_node_${node.instanceId}`;
+                card.dataset.instanceId = node.instanceId;
+                card.style.left = `${node.x || 60}px`;
+                card.style.top = `${node.y || 60}px`;
         
-                makeElementDraggable(nodeEl, () => drawRelationshipLines());
-                container.appendChild(nodeEl);
+                if (bgImg) {
+                    card.style.backgroundImage = `url('${bgImg}')`;
+                } else {
+                    card.style.backgroundColor = node.type === 'person' ? '#e2e8f0' : '#d8f3dc';
+                    card.style.display = 'flex';
+                    card.style.alignItems = 'center';
+                    card.style.justifyContent = 'center';
+                }
+        
+                const badge = document.createElement('div');
+                badge.className = 'card-name-badge';
+                badge.innerText = name;
+                card.appendChild(badge);
+        
+                if (!bgImg) {
+                    const icon = document.createElement('i');
+                    icon.className = node.type === 'person' ? 'fa-solid fa-user fa-2x' : 'fa-solid fa-map-pin fa-2x';
+                    icon.style.color = 'var(--text-muted)';
+                    card.appendChild(icon);
+                }
+        
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'card-remove-btn';
+                removeBtn.title = 'Remover do mural';
+                removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                removeBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    removeCardFromFlowchart(node.instanceId);
+                };
+                card.appendChild(removeBtn);
+        
+                makeCardDraggable(card);
+                cardsContainer.appendChild(card);
             });
         
-            drawRelationshipLines();
+            updateFlowchartConnections();
         }
         
         /**
-         * Habilita evento de Drag & Drop nos cards (Desktop e Mobile/Touch)
+         * Torna o Card Arrastável no Quadro (Suporte a Mouse e Touch)
          */
-        function makeElementDraggable(elmnt, onDragCallback) {
-            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        function makeCardDraggable(element) {
+            let active = false;
+            let initialX, initialY;
         
-            elmnt.onmousedown = dragMouseDown;
-            elmnt.ontouchstart = dragTouchStart;
+            element.addEventListener('mousedown', dragStart);
+            element.addEventListener('touchstart', dragStart, { passive: false });
         
-            function dragMouseDown(e) {
+            function dragStart(e) {
+                if (e.target.classList.contains('card-remove-btn')) return;
+        
+                if (connectMode) {
+                    handleCardClickForConnection(element);
+                    return;
+                }
+        
+                const rect = element.getBoundingClientRect();
+                const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+                const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+        
+                initialX = clientX - rect.left;
+                initialY = clientY - rect.top;
+        
+                active = true;
+                element.style.zIndex = 10;
+        
+                window.addEventListener('mousemove', drag);
+                window.addEventListener('touchmove', drag, { passive: false });
+                window.addEventListener('mouseup', dragEnd);
+                window.addEventListener('touchend', dragEnd);
+            }
+        
+            function drag(e) {
+                if (!active) return;
                 e.preventDefault();
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                document.onmouseup = closeDragElement;
-                document.onmousemove = elementDrag;
+        
+                const board = document.getElementById('flowchartBoard');
+                const boardRect = board.getBoundingClientRect();
+        
+                const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+                const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+        
+                let newX = clientX - boardRect.left - initialX;
+                let newY = clientY - boardRect.top - initialY;
+        
+                newX = Math.max(10, Math.min(newX, boardRect.width - 140));
+                newY = Math.max(10, Math.min(newY, boardRect.height - 140));
+        
+                element.style.left = `${newX}px`;
+                element.style.top = `${newY}px`;
+        
+                const instanceId = element.dataset.instanceId;
+                const currentData = getCurrentStoryFlowchartData();
+                const node = currentData.nodes.find(n => String(n.instanceId) === String(instanceId));
+                if (node) {
+                    node.x = newX;
+                    node.y = newY;
+                }
+        
+                updateFlowchartConnections();
             }
         
-            function elementDrag(e) {
-                e.preventDefault();
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-                if (onDragCallback) onDragCallback();
-            }
+            function dragEnd() {
+                if (!active) return;
+                active = false;
+                element.style.zIndex = 3;
         
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
+                window.removeEventListener('mousemove', drag);
+                window.removeEventListener('touchmove', drag);
+                window.removeEventListener('mouseup', dragEnd);
+                window.removeEventListener('touchend', dragEnd);
         
-            function dragTouchStart(e) {
-                const touch = e.touches[0];
-                pos3 = touch.clientX;
-                pos4 = touch.clientY;
-                document.ontouchend = closeTouchElement;
-                document.ontouchmove = touchDrag;
-            }
-        
-            function touchDrag(e) {
-                const touch = e.touches[0];
-                pos1 = pos3 - touch.clientX;
-                pos2 = pos4 - touch.clientY;
-                pos3 = touch.clientX;
-                pos4 = touch.clientY;
-                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-                if (onDragCallback) onDragCallback();
-            }
-        
-            function closeTouchElement() {
-                document.ontouchend = null;
-                document.ontouchmove = null;
+                saveFlowchartData();
             }
         }
         
         /**
-         * Desenha as linhas coloridas e os rótulos entre os elementos conectados
+         * Desenha Linhas SVG e Pílulas de Texto entre os Cards Conectados
          */
-        function drawRelationshipLines() {
-            const svgCanvas = document.getElementById('relationshipSvgCanvas');
-            if (!svgCanvas) return;
-            svgCanvas.innerHTML = '';
+        function updateFlowchartConnections() {
+            const svgLayer = document.getElementById('flowchartSvgLayer');
+            const pillLayer = document.getElementById('flowchartPillLayer');
+            const board = document.getElementById('flowchartBoard');
         
-            relationships.forEach((rel) => {
-                const n1 = document.querySelector(`.flowchart-node-card[data-node-id="${rel.from}"]`);
-                const n2 = document.querySelector(`.flowchart-node-card[data-node-id="${rel.to}"]`);
+            if (!svgLayer || !pillLayer || !board) return;
         
-                // Se não houver IDs específicos gravados, usa os 2 primeiros nós como fallback
-                const nodeA = n1 || document.querySelectorAll('.flowchart-node-card')[0];
-                const nodeB = n2 || document.querySelectorAll('.flowchart-node-card')[1];
+            svgLayer.innerHTML = '';
+            pillLayer.innerHTML = '';
         
-                if (!nodeA || !nodeB || nodeA === nodeB) return;
+            const currentData = getCurrentStoryFlowchartData();
+            const boardRect = board.getBoundingClientRect();
         
-                const x1 = nodeA.offsetLeft + nodeA.offsetWidth / 2;
-                const y1 = nodeA.offsetTop + nodeA.offsetHeight / 2;
-                const x2 = nodeB.offsetLeft + nodeB.offsetWidth / 2;
-                const y2 = nodeB.offsetTop + nodeB.offsetHeight / 2;
+            currentData.connections.forEach((conn) => {
+                const elA = document.getElementById(`fc_node_${conn.from}`);
+                const elB = document.getElementById(`fc_node_${conn.to}`);
         
-                const lineColor = rel.color || '#40c057';
+                if (!elA || !elB) return;
         
-                // Linha visual em SVG
+                const rectA = elA.getBoundingClientRect();
+                const rectB = elB.getBoundingClientRect();
+        
+                const x1 = rectA.left + rectA.width / 2 - boardRect.left;
+                const y1 = rectA.top + rectA.height / 2 - boardRect.top;
+                const x2 = rectB.left + rectB.width / 2 - boardRect.left;
+                const y2 = rectB.top + rectB.height / 2 - boardRect.top;
+        
+                // Linha SVG
                 const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                 line.setAttribute('x1', x1);
                 line.setAttribute('y1', y1);
                 line.setAttribute('x2', x2);
                 line.setAttribute('y2', y2);
-                line.setAttribute('stroke', lineColor);
-                line.setAttribute('stroke-width', '4');
-                line.setAttribute('stroke-linecap', 'round');
-                svgCanvas.appendChild(line);
+                line.setAttribute('class', 'connection-line');
+                line.setAttribute('stroke', conn.color || '#e77f8d');
+                svgLayer.appendChild(line);
         
-                // Rótulo da conexão centralizado na linha
+                // Pílula HTML centralizada
                 const midX = (x1 + x2) / 2;
                 const midY = (y1 + y2) / 2;
         
-                const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                rect.setAttribute('x', midX - 45);
-                rect.setAttribute('y', midY - 12);
-                rect.setAttribute('width', '90');
-                rect.setAttribute('height', '24');
-                rect.setAttribute('rx', '8');
-                rect.setAttribute('fill', lineColor);
+                const pill = document.createElement('div');
+                pill.className = 'relation-pill';
+                pill.style.left = `${midX}px`;
+                pill.style.top = `${midY}px`;
+                pill.style.backgroundColor = conn.color || '#e77f8d';
         
-                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                text.setAttribute('x', midX);
-                text.setAttribute('y', midY + 1);
-                text.setAttribute('fill', '#ffffff');
-                text.setAttribute('font-size', '11');
-                text.setAttribute('font-weight', 'bold');
-                text.setAttribute('text-anchor', 'middle');
-                text.setAttribute('dominant-baseline', 'middle');
-                text.textContent = rel.label || 'Vínculo';
+                pill.innerHTML = `
+                    <span>${conn.label}</span>
+                    <i class="fa-solid fa-xmark btn-del-pill" title="Excluir conexão"></i>
+                `;
         
-                svgCanvas.appendChild(rect);
-                svgCanvas.appendChild(text);
+                pill.onclick = (e) => {
+                    e.stopPropagation();
+                    if (e.target.classList.contains('btn-del-pill')) {
+                        deleteFlowchartConnection(conn.id);
+                    } else {
+                        editFlowchartConnectionLabel(conn);
+                    }
+                };
+        
+                pillLayer.appendChild(pill);
             });
         }
         
         /**
-         * Cria uma nova conexão permitindo escolher o tipo de vínculo
+         * Ativa / Desativa o Modo de Conexão entre 2 Cards
          */
-        function addRelationshipConnection() {
-            const label = prompt('Digite o tipo de relacionamento (Ex: Família, Inimigos, Amantes, Reside em):', 'Família');
-            if (!label || !label.trim()) return;
+        function toggleFlowchartConnectMode() {
+            connectMode = !connectMode;
+            const btn = document.getElementById('btnFlowchartConnect');
+            const btnText = document.getElementById('btnFlowchartConnectText');
         
-            const nodes = document.querySelectorAll('.flowchart-node-card');
-            if (nodes.length < 2) {
-                alert('É necessário ter pelo menos 2 elementos (personagens ou locais) no mural para criar um relacionamento.');
-                return;
+            if (connectMode) {
+                if (btn) btn.classList.add('active');
+                if (btnText) btnText.innerText = '🎯 Clique em 2 Cards';
+            } else {
+                if (btn) btn.classList.remove('active');
+                if (btnText) btnText.innerText = 'Criar Conexão';
+                if (selectedFirstCard) {
+                    selectedFirstCard.classList.remove('selected-for-link');
+                    selectedFirstCard = null;
+                }
             }
+        }
         
-            const idFrom = nodes[0].dataset.nodeId;
-            const idTo = nodes[1].dataset.nodeId;
+        /**
+         * Trata o Clique em Cards durante o Modo Conexão
+         */
+        function handleCardClickForConnection(card) {
+            if (!selectedFirstCard) {
+                selectedFirstCard = card;
+                card.classList.add('selected-for-link');
+            } else if (selectedFirstCard !== card) {
+                const label = prompt("Digite o tipo de relacionamento (ex: Família, Amigos, Inimigos, Reside em):", "Conexão");
+                if (label && label.trim()) {
+                    const colors = ['#e77f8d', '#88b795', '#4a90e2', '#e5a93c', '#9b59b6'];
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
         
-            const colors = ['#e74c3c', '#40c057', '#3498db', '#9b59b6', '#f1c40f'];
-            relationships.push({
-                from: idFrom,
-                to: idTo,
-                label: label.trim(),
-                color: colors[Math.floor(Math.random() * colors.length)]
-            });
+                    const currentData = getCurrentStoryFlowchartData();
+                    currentData.connections.push({
+                        id: 'conn_' + Date.now(),
+                        from: selectedFirstCard.dataset.instanceId,
+                        to: card.dataset.instanceId,
+                        label: label.trim(),
+                        color: randomColor
+                    });
         
-            localStorage.setItem('diario_relacionamentos', JSON.stringify(relationships));
+                    saveFlowchartData();
+                    updateFlowchartConnections();
+                }
+        
+                selectedFirstCard.classList.remove('selected-for-link');
+                selectedFirstCard = null;
+                toggleFlowchartConnectMode();
+            }
+        }
+        
+        /**
+         * Edita o texto do rótulo da pílula
+         */
+        function editFlowchartConnectionLabel(conn) {
+            const newLabel = prompt("Editar tipo de relacionamento:", conn.label);
+            if (newLabel !== null && newLabel.trim() !== "") {
+                conn.label = newLabel.trim();
+                saveFlowchartData();
+                updateFlowchartConnections();
+            }
+        }
+        
+        /**
+         * Exclui uma conexão específica
+         */
+        function deleteFlowchartConnection(connId) {
+            const currentData = getCurrentStoryFlowchartData();
+            currentData.connections = currentData.connections.filter(c => c.id !== connId);
+            saveFlowchartData();
+            updateFlowchartConnections();
+        }
+        
+        /**
+         * Remove um Card do mural (sem deletar do cadastro de personagens/locais)
+         */
+        function removeCardFromFlowchart(instanceId) {
+            const currentData = getCurrentStoryFlowchartData();
+        
+            currentData.nodes = currentData.nodes.filter(n => String(n.instanceId) !== String(instanceId));
+            currentData.connections = currentData.connections.filter(c => c.from !== String(instanceId) && c.to !== String(instanceId));
+        
+            saveFlowchartData();
             renderFlowchart();
+        }
+        
+        /**
+         * Salva os fluxogramas no LocalStorage e sincroniza no Supabase
+         */
+        async function saveFlowchartData() {
+            localStorage.setItem('diario_flowchart_data_v2', JSON.stringify(flowchartDataByStory));
+        
+            if (supabaseClient) {
+                try {
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (session) {
+                        const userId = session.user.id;
+                        await supabaseClient
+                            .from('user_data')
+                            .upsert({
+                                user_id: userId,
+                                flowchart_data: flowchartDataByStory,
+                                updated_at: new Date().toISOString()
+                            }, { onConflict: 'user_id' });
+                    }
+                } catch (err) {
+                    console.error("Erro ao sincronizar o fluxograma no Supabase:", err);
+                }
+            }
         }
         /* MOODBOARD */
         function updateMoodboardStorySelect() {
