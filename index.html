@@ -814,6 +814,25 @@
             .chapter-buttons-grid { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; width: 100%; }
             .chapter-buttons-grid .btn { width: 100% !important; padding: 8px 6px !important; font-size: 0.8rem !important; justify-content: center !important; }
         }
+        .relation-pill {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .relation-pill .pill-label-text {
+            padding-right: 4px;
+        }
+        
+        .relation-pill .btn-del-pill {
+            padding: 2px 4px;
+            margin-left: 2px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        
+        .relation-pill .btn-del-pill:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -2508,36 +2527,37 @@
                 const midX = (x1 + x2) / 2;
                 const midY = (y1 + y2) / 2;
 
-                const pill = document.createElement('div');
-                pill.className = 'relation-pill';
-                pill.style.left = `${midX}px`;
-                pill.style.top = `${midY}px`;
-                pill.style.backgroundColor = conn.color || '#e77f8d';
-
-                pill.innerHTML = `
-                    <span>${conn.label}</span>
-                    <i class="fa-solid fa-xmark btn-del-pill" title="Excluir conexão"></i>
-                `;
-
-                // Permite renomear ao clicar no texto da pílula
-                pill.onclick = (e) => {
-                    e.stopPropagation();
-                    if (e.target.classList.contains('btn-del-pill')) {
-                        deleteFlowchartConnection(conn.id);
-                    } else {
-                        const novoTexto = prompt("Renomear relacionamento:", conn.label);
-                        if (novoTexto !== null && novoTexto.trim() !== "") {
-                            conn.label = novoTexto.trim();
-                            saveFlowchartData();
-                            updateFlowchartConnections();
-                        }
+            const pill = document.createElement('div');
+            pill.className = 'relation-pill';
+            pill.style.left = `${midX}px`;
+            pill.style.top = `${midY}px`;
+            pill.style.backgroundColor = conn.color || '#e77f8d';
+            
+            // Isolamos o texto em um <span> com classe dedicada para separar do ícone do X
+            pill.innerHTML = `
+                <span class="pill-label-text">${conn.label}</span>
+                <i class="fa-solid fa-xmark btn-del-pill" title="Excluir conexão"></i>
+            `;
+            
+            // Evento de clique preciso: verifica se clicou no X ou no texto/corpo da pílula
+            pill.onclick = (e) => {
+                e.stopPropagation();
+                
+                // Se o clique foi no botão 'X' de excluir
+                if (e.target.classList.contains('btn-del-pill') || e.target.closest('.btn-del-pill')) {
+                    deleteFlowchartConnection(conn.id);
+                } else {
+                    // Se o clique foi no texto ou na pílula, abre a janela para renomear
+                    const novoTexto = prompt("Renomear tipo de relacionamento:", conn.label);
+                    if (novoTexto !== null && novoTexto.trim() !== "") {
+                        conn.label = novoTexto.trim();
+                        saveFlowchartData();
+                        updateFlowchartConnections();
                     }
-                };
-
-                pillLayer.appendChild(pill);
-            });
-        }
-
+                }
+            };
+            
+            pillLayer.appendChild(pill);
         function toggleFlowchartConnectMode() {
             connectMode = !connectMode;
             const btn = document.getElementById('btnFlowchartConnect');
